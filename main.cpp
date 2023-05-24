@@ -1,9 +1,12 @@
 #include <iostream>
-
+#include "imgui/imgui.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 using tigl::Vertex;
 
@@ -56,6 +59,14 @@ int main()
 	tigl::shader->enableColor(true);
 	tigl::shader->enableAlphaTest(true);
 	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
+
+	//init imgui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
