@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
-
+#include "hand.h"
 #include "GameObject.h"
 
 using tigl::Vertex;
@@ -28,52 +28,60 @@ GLFWwindow* window;
 
 int main()
 {
-	if (!glfwInit())
-		throw "Could not initialize glwf";
-
-	//Get primary monitor size so that the fullscreen application can have the correct resolution
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &width, &height);
-
-	window = glfwCreateWindow(width, height, "A1 Augmented Reality", monitor, nullptr);
-
-	//Check if the window was successfully made
-	if (!window)
+	bool isHand = true;
+	if (isHand)
 	{
+		hand();
+	}
+	else
+	{
+		if (!glfwInit())
+			throw "Could not initialize glwf";
+
+		//Get primary monitor size so that the fullscreen application can have the correct resolution
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &width, &height);
+
+		window = glfwCreateWindow(width, height, "A1 Augmented Reality", monitor, nullptr);
+
+		//Check if the window was successfully made
+		if (!window)
+		{
+			glfwTerminate();
+			throw "Could not initialize glwf";
+		}
+		glfwMakeContextCurrent(window);
+
+		//Escape key callback to quit application
+		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+			{
+				if (key == GLFW_KEY_ESCAPE)
+					glfwSetWindowShouldClose(window, true);
+			});
+
+		//Init
+		OpenGLInit();
+
+		//Test object
+		gameObjects.push_back(GameObject("C:/Users/larsv/Desktop/gpu/rtx4090.obj"));
+
+		//MAIN LOOP
+		while (!glfwWindowShouldClose(window))
+		{
+			//program cycle
+			Update();
+			Draw();
+
+			//glfw cycle
+			glfwSwapBuffers(window);
+			glfwPollEvents();
+		}
+
+		//Termination
+		glfwDestroyWindow(window);
 		glfwTerminate();
-		throw "Could not initialize glwf";
+		return 0;
 	}
-	glfwMakeContextCurrent(window);
-
-	//Escape key callback to quit application
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-	{
-		if (key == GLFW_KEY_ESCAPE)
-			glfwSetWindowShouldClose(window, true);
-	});
-
-	//Init
-	OpenGLInit();
-
-	//Test object
-	gameObjects.push_back(GameObject("C:/Users/larsv/Desktop/gpu/rtx4090.obj"));
-
-	//MAIN LOOP
-	while (!glfwWindowShouldClose(window))
-	{
-		//program cycle
-		Update();
-		Draw();
-
-		//glfw cycle
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-
-	//Termination
-	glfwDestroyWindow(window);
-	glfwTerminate();
-	return 0;
 }
 
 void OpenGLInit()
@@ -88,7 +96,7 @@ void OpenGLInit()
 		100.f
 	));
 
-	
+
 
 	tigl::shader->setViewMatrix(glm::lookAt(
 		glm::vec3(0, 10, 10),
@@ -102,7 +110,7 @@ void OpenGLInit()
 	tigl::shader->enableLighting(true);
 
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0, (float) 196 / 255, (float) 255 / 255, 1);
+	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
 }
 
 void Update()

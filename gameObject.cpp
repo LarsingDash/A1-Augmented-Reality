@@ -7,7 +7,7 @@
 
 #include "Material.h"
 #include "tigl.h"
-#include "MaterialInfo.h"
+// #include "MaterialInfo.h"
 
 //Loads an object model 
 GameObject::GameObject(const std::string& fileName)

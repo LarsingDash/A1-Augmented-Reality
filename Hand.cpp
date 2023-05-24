@@ -1,6 +1,7 @@
-#include <iostream>
-#include <>
-int main()
+#include "hand.h"
+
+
+void hand()
 {
     // Step 1: Create video capture object
     cv::VideoCapture cap(0);
@@ -9,7 +10,7 @@ int main()
     if (!cap.isOpened())
     {
         std::cout << "Failed to open the camera." << std::endl;
-        return -1;
+
     }
 
     // Create a window to display the camera feed
@@ -78,5 +79,4 @@ int main()
     cap.release();
     cv::destroyAllWindows();
 
-    return 0;
 }
