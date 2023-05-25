@@ -1,5 +1,7 @@
 #include <iostream>
-
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "tigl.h"
@@ -19,6 +21,16 @@ const int width = 700;
 const int height = 700;
 
 GLFWwindow* window;
+
+void initImGui()
+{
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+}
 
 int main()
 {
@@ -57,6 +69,8 @@ int main()
 	tigl::shader->enableAlphaTest(true);
 	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
 
+	initImGui();
+
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
 	{
@@ -64,16 +78,29 @@ int main()
 		update();
 		draw();
 
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::Begin("Test");
+		ImGui::Text("Hello world");
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		//glfw cycle
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
 	//Termination
-	glfwDestroyWindow(window);
-	glfwTerminate();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	return 0;
 }
+
 
 void update()
 {
@@ -83,24 +110,6 @@ void draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//	std::vector<Vertex> vert1 = std::vector<Vertex>{
-	//			Vertex::PC(glm::vec3(1, 1, 0.0f), glm::vec4(0.5, 0.5, 0.5, 0.5)),
-	//			Vertex::PC(glm::vec3(1, -1, 0.0f), glm::vec4(0.5, 0.5, 0.5, 0.5)),
-	//			Vertex::PC(glm::vec3(-1, -1, 0.0f), glm::vec4(0.5, 0.5, 0.5, 0.5)),
-	//			Vertex::PC(glm::vec3(-1, 1, 0.0f), glm::vec4(0.5, 0.5, 0.5, 0.5)),
-	//	};
-	//	tigl::VBO* rect1 = tigl::createVbo(vert1);
-	//
-	//	std::vector<Vertex> vert2 = std::vector<Vertex>{
-	//			Vertex::PC(glm::vec3(1.5, 1.5, 1), glm::vec4(0, 0.5, 0, 0.5)),
-	//			Vertex::PC(glm::vec3(1.5, -0.5, 1), glm::vec4(0, 0.5, 0, 0.5)),
-	//			Vertex::PC(glm::vec3(-0.5, -0.5, 1), glm::vec4(0, 0.5, 0, 0.5)),
-	//			Vertex::PC(glm::vec3(-0.5, 1.5, 1), glm::vec4(0, 0.5, 0, 0.5)),
-	//	};
-	//	tigl::VBO* rect2 = tigl::createVbo(vert2);
-
-	//	tigl::drawVertices(GL_QUADS, rect1);
-	//	tigl::drawVertices(GL_QUADS, rect2);
 
 	tigl::begin(GL_TRIANGLES);
 	tigl::addVertex(Vertex::PC(glm::vec3(-2, -1, -4), glm::vec4(1, 0, 0, 1)));
