@@ -86,6 +86,20 @@ int main()
 		ImGui::Text("Hello world");
 		ImGui::End();
 
+		static bool show_window = true;
+		ImGui::Begin("My Window", &show_window);
+
+		if (ImGui::Button("Save"))
+		{
+			std::cout << "Button Pressed"; //or your IDE equivalent output log
+		}
+
+		if (ImGui::Button("Cancel"))
+		{
+			std::cout << "Button Pressed"; //or your IDE equivalent output log
+		}
+		ImGui::End();
+
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
