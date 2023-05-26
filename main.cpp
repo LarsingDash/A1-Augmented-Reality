@@ -1,11 +1,11 @@
+#include "GameObject.h"
+
 #include <iostream>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
-
-#include "GameObject.h"
 
 using tigl::Vertex;
 
@@ -19,8 +19,9 @@ void OpenGLInit();
 void Update();
 void Draw();
 
-int width = 700;
-int height = 700;
+//Default window size, will be overridden by fullscreen values
+int windowWidth = 700;
+int windowHeight = 700;
 
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
@@ -33,9 +34,9 @@ int main()
 
 	//Get primary monitor size so that the fullscreen application can have the correct resolution
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &width, &height);
+	glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &windowWidth, &windowHeight);
 
-	window = glfwCreateWindow(width, height, "A1 Augmented Reality", monitor, nullptr);
+	window = glfwCreateWindow(windowWidth, windowHeight, "A1 Augmented Reality", monitor, nullptr);
 
 	//Check if the window was successfully made
 	if (!window)
@@ -55,8 +56,8 @@ int main()
 	//Init
 	OpenGLInit();
 
-	//Test object
-	gameObjects.push_back(GameObject("C:/Users/larsv/Desktop/gpu/rtx4090.obj"));
+	//Create test object
+	gameObjects.push_back(GameObject("C:/Users/larsv/Desktop/cube/cube.obj"));
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
@@ -78,31 +79,32 @@ int main()
 
 void OpenGLInit()
 {
+	//Init
 	tigl::init();
 
-	//First time shaders
+	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(
 		glm::radians(90.f),
-		(float)width / height,
+		(float) windowWidth / (float) windowHeight,
 		0.1f,
 		100.f
 	));
 
-	
-
+	//Camera position
 	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0, 10, 10),
+		glm::vec3(0, 2, -5),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	));
 
+	//Shader settings
 	tigl::shader->enableColor(true);
 	tigl::shader->enableAlphaTest(true);
 	tigl::shader->enableTexture(true);
-	tigl::shader->enableLighting(true);
 
+	//GL settings
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0, (float) 196 / 255, (float) 255 / 255, 1);
+	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
 }
 
 void Update()

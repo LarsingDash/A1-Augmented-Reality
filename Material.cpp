@@ -1,15 +1,24 @@
 #include "Material.h"
-#include "tigl.h"
 
-Material::Material()
-= default;
+#include <iostream>
 
-void Material::SetAmbient(const glm::vec3 newAmbient)
+Material::Material(const std::string& matName)
 {
-	ambient = newAmbient;
+	name = matName;
+}
+
+void Material::SetTexture(const std::string& texturePath)
+{
+	tex = texturePath;
 }
 
 void Material::SelectMaterial() const
 {
-	tigl::shader->setLightAmbient(1, ambient);
+	Texture texture = Texture(tex);
+	texture.bind();
+}
+
+std::string Material::GetName()
+{
+	return name;
 }

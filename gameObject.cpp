@@ -4,14 +4,15 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Material.h"
 #include "tigl.h"
-#include "MaterialInfo.h"
 
 //Loads an object model 
 GameObject::GameObject(const std::string& fileName)
 {
+	//Clean fileName
 	std::cout << "Loading " << fileName << std::endl;
 	std::string dirName = fileName;
 	if (dirName.rfind('/') != std::string::npos)
@@ -21,7 +22,7 @@ GameObject::GameObject(const std::string& fileName)
 	if (fileName == dirName)
 		dirName = "";
 
-
+	//Open obj file
 	std::ifstream pFile(fileName.c_str());
 
 	if (!pFile.is_open())
@@ -30,84 +31,125 @@ GameObject::GameObject(const std::string& fileName)
 		return;
 	}
 
-
-	ObjectGroup* currentGroup = new ObjectGroup();
+	//Start new mtl group
+	auto* currentGroup = new ObjectGroup();
 	currentGroup->materialIndex = -1;
 
-
+	//Read all lines in the file
 	while (!pFile.eof())
 	{
 		std::string line;
 		std::getline(pFile, line);
 		line = CleanLine(line);
-		if (line == "" || line[0] == '#') //skip empty or commented line
+		if (line.empty() || line[0] == '#')
 			continue;
 
+		//Split parameters into separate strings
 		std::vector<std::string> params = Split(line, " ");
 		params[0] = ToLower(params[0]);
 
+		//Vetrex
 		if (params[0] == "v")
 			vertices.push_back(glm::vec3((float)atof(params[1].c_str()), (float)atof(params[2].c_str()),
 			                             (float)atof(params[3].c_str())));
+		//Vertex normal
 		else if (params[0] == "vn")
 			normals.push_back(glm::vec3((float)atof(params[1].c_str()), (float)atof(params[2].c_str()),
 			                            (float)atof(params[3].c_str())));
+
+		//Vertex texture coordinate
 		else if (params[0] == "vt")
 			textureCoords.push_back(glm::vec2((float)atof(params[1].c_str()), (float)atof(params[2].c_str())));
+
+		//Face
 		else if (params[0] == "f")
 		{
-			for (size_t ii = 4; ii <= params.size(); ii++)
-			{
-				std::vector<IndexedVertex> face;
+			//All shapes
+			// for (size_t ii = 4; ii <= params.size(); ii++)
+			// {
+			// 	std::vector<IndexedVertex> face;
+			//
+			// 	for (size_t i = ii - 3; i < ii; i++)
+			// 	{
+			// 		IndexedVertex vertex = IndexedVertex();
+			// 		std::vector<std::string> indices = Split(params[i == (ii - 3) ? 1 : i], "/");
+			// 		if (indices.size() >= 1)
+			// 			vertex.pos = atoi(indices[0].c_str()) - 1;
+			// 		if (indices.size() == 2)
+			// 			vertex.texture = atoi(indices[1].c_str()) - 1;
+			// 		if (indices.size() == 3)
+			// 		{
+			// 			if (!indices[1].empty())
+			// 				vertex.texture = atoi(indices[1].c_str()) - 1;
+			// 			vertex.normal = atoi(indices[2].c_str()) - 1;
+			// 		}
+			// 		face.push_back(vertex);
+			// 	}
+			// 	currentGroup->faces.push_back(face);
+			// }
 
-				for (size_t i = ii - 3; i < ii; i++) //magische forlus om van quads triangles te maken ;)
-				{
-					IndexedVertex vertex;
-					std::vector<std::string> indices = Split(params[i == (ii - 3) ? 1 : i], "/");
-					if (indices.size() >= 1) //er is een positie
-						vertex.pos = atoi(indices[0].c_str()) - 1;
-					if (indices.size() == 2) //alleen texture
-						vertex.texture = atoi(indices[1].c_str()) - 1;
-					if (indices.size() == 3) //v/t/n of v//n
-					{
-						if (!indices[1].empty())
-							vertex.texture = atoi(indices[1].c_str()) - 1;
-						vertex.normal = atoi(indices[2].c_str()) - 1;
-					}
-					face.push_back(vertex);
-				}
-				currentGroup->faces.push_back(face);
+			//Triangle only
+			//Create vertex list
+			std::vector<IndexedVertex> face = std::vector<IndexedVertex>();
+
+			//For each parameter
+			for (size_t i = 1; i < params.size(); i++)
+			{
+				//Create new vertex
+				IndexedVertex vertex = IndexedVertex();
+
+				//Split position, normal and texture coordinate
+				std::vector<std::string> indices = Split(params[i], "/");
+
+				//Assign values
+				vertex.pos = atoi(indices[0].c_str()) - 1;
+				vertex.texture = atoi(indices[1].c_str()) - 1;
+				vertex.normal = atoi(indices[2].c_str()) - 1;
+
+				//Add vertex to face
+				face.push_back(vertex);
 			}
+			//Add face to group
+			currentGroup->faces.push_back(face);
 		}
-		else if (params[0] == "s")
-		{
-			//smoothing groups
-		}
+
+		//Load material file
 		else if (params[0] == "mtllib")
 		{
 			LoadMaterialFile(dirName + "/" + params[1], dirName);
 		}
+
+		//Switch to a new group
 		else if (params[0] == "usemtl")
 		{
+			//Save group that was last being worked on
 			if (!currentGroup->faces.empty())
 				groups.push_back(currentGroup);
+
+			//Create new group
 			currentGroup = new ObjectGroup();
 			currentGroup->materialIndex = -1;
 
+			//Search for the corresponding mtl using the name
 			for (size_t i = 0; i < materials.size(); i++)
 			{
 				Material* mat = materials[i];
-				if (mat->name == params[1])
+				if (mat->GetName() == params[1])
 				{
+					//Save mtl values for the group
 					currentGroup->materialIndex = i;
-					currentGroup->name = mat->name;
+					currentGroup->name = mat->GetName();
 					break;
 				}
 			}
+
+			//Error handle 
 			if (currentGroup->materialIndex == -1)
 				std::cout << "Could not find material name " << params[1] << std::endl;
 		}
 	}
+
+	//Add group to list of groups
 	groups.push_back(currentGroup);
 }
 
@@ -117,28 +159,37 @@ GameObject::~GameObject(void) = default;
 //Draw the object
 void GameObject::Draw() const
 {
+	//Start drawing
+	tigl::begin(GL_TRIANGLES);
+
+	//All vertices are grouped by their unique mtl
 	for (const auto group : groups)
 	{
-		//todo change material
+		//Select the groups mtl
+		materials[group->materialIndex]->SelectMaterial();
 
+		//A group can contain multiple faces, go through each
 		for (const auto& face : group->faces)
 		{
-			tigl::begin(GL_TRIANGLES);
-
+			//Draw each vertex on the face
 			for (const auto indexedVertex : face)
 			{
-				glm::vec3 pos = vertices[indexedVertex.pos];
-				tigl::addVertex(tigl::Vertex::PC(pos, glm::vec4(1, 1, 1, 1)));
+				addVertex(tigl::Vertex::PT(vertices[indexedVertex.pos],
+				                           textureCoords[indexedVertex.texture]
+				                           // normals[indexedVertex.normal]
+				));
 			}
-
-			tigl::end();
 		}
 	}
+
+	//Stop drawing
+	tigl::end();
 }
 
-//Load a material file with the specied name and path
+//Load a material file with the specified name and path
 void GameObject::LoadMaterialFile(const std::string& fileName, const std::string& dirName)
 {
+	//Open the file
 	std::cout << "Loading " << fileName << std::endl;
 	std::ifstream pFile(fileName.c_str());
 	if (!pFile.is_open())
@@ -147,51 +198,51 @@ void GameObject::LoadMaterialFile(const std::string& fileName, const std::string
 		return;
 	}
 
-	Material* currentMaterial = NULL;
-
+	//Read all lines and write the data to the material file
+	Material* currentMaterial = nullptr;
 	while (!pFile.eof())
 	{
+		//Save and clean current line
 		std::string line;
 		std::getline(pFile, line);
 		line = CleanLine(line);
+
+		//Ignore empty and commented lines
 		if (line == "" || line[0] == '#')
 			continue;
 
+		//Split parameters into separate strings
 		std::vector<std::string> params = Split(line, " ");
 		params[0] = ToLower(params[0]);
 
-		if (params[0] == "newmtl")
+		if (params[0] == "newmtl")	//Create new mtl
 		{
-			if (currentMaterial != NULL)
+			//Save the mtl that was being worked on
+			if (currentMaterial != nullptr)
 			{
 				materials.push_back(currentMaterial);
 			}
-			currentMaterial = new Material();
-			currentMaterial->name = params[1];
+
+			//Create new mtl
+			currentMaterial = new Material(params[1]);
 		}
-		else if (params[0] == "map_kd")
+		else if (params[0] == "map_kd")	//texture diffuse (normal color)
 		{
+			//Make sure the path is in the same directory as the mtl file
 			std::string tex = params[1];
 			if (tex.find("/"))
 				tex = tex.substr(tex.rfind("/") + 1);
 			if (tex.find("\\"))
 				tex = tex.substr(tex.rfind("\\") + 1);
-			//TODO
-			// currentMaterial->texture = dirName + "/" + tex;
-		}
-		else if (params[0] == "kd")
-		{
-			//TODO, diffuse color
-		}
-		else if (params[0] == "ka")
-		{
-			currentMaterial->SetAmbient(glm::vec3(atof(params[1].c_str()), atof(params[2].c_str()), atof(params[3].c_str())));
-		}
-		else if (params[0] == "ks")
-		{
-			//TODO, specular color
+
+			//Save the texture path to the mtl
+			currentMaterial->SetTexture(dirName + "/" + tex);
+			// currentMaterial->SetTexture(tex);
 		}
 		else if (
+			params[0] == "kd" ||
+			params[0] == "ka" ||
+			params[0] == "ks" ||
 			params[0] == "illum" ||
 			params[0] == "map_bump" ||
 			params[0] == "map_ke" ||
@@ -205,12 +256,14 @@ void GameObject::LoadMaterialFile(const std::string& fileName, const std::string
 			params[0] == "tf" ||
 			params[0] == "tr")
 		{
-			//these values are usually not used for rendering at this time, so ignore them
+			//Ignored params
 		}
 		else
-			std::cout << "Didn't parse " << params[0] << " in material file" << std::endl;
+			std::cout << "Didn't parse {" << params[0] << "} in material file" << std::endl;
 	}
-	if (currentMaterial != NULL)
+
+	//Save mtl
+	if (currentMaterial != nullptr)
 		materials.push_back(currentMaterial);
 }
 

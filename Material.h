@@ -1,18 +1,21 @@
 #pragma once
 
-#include <glm/gtc/matrix_transform.hpp>
 #include <string>
+
+#include "Texture.h"
 
 class Material
 {
 	public:
-		Material();
+		Material(const std::string& name);
 
-		void SetAmbient(const glm::vec3 newAmbient);
+		void SetTexture(const std::string& texture);
 		void SelectMaterial() const;
 
-		std::string name;
+		std::string GetName();
 
 	private:
-		glm::vec3 ambient{};
+		std::string name;
+		std::string tex;
+		// Texture texture;
 };
