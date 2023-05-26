@@ -5,10 +5,28 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "BaseScreen.h"
+#include "StartScreen.h"
+#include "PcBuilderScreen.h"
+#include "TutorialScreen.h"
+
+ImVector<BaseScreen> screens = ImVector<BaseScreen>();
+GLFWwindow* window;
 
 GUIManager::GUIManager(GLFWwindow* window)
     : window(window)
 {
+}
+
+void addScreens()
+{
+    StartScreen startScreen = StartScreen(window);
+    PcBuilderScreen pcBuilderScreen = PcBuilderScreen(window);
+    TutorialScreen tutorialScreen = TutorialScreen(window);
+
+    screens.push_back(startScreen);
+    screens.push_back(pcBuilderScreen);
+    screens.push_back(tutorialScreen);
 }
 
 /// <summary>
