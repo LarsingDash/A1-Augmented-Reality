@@ -6,4 +6,5 @@ using namespace std;
 using namespace cv;
 
 void hand();
-void detectAndDisplay(cv::Mat frame, cv::CascadeClassifier& hand_cascade_classifier);
+Mat detectAndDisplay(cv::Mat frame, cv::CascadeClassifier& hand_cascade_classifier);
+Mat addFilter(Mat frame);
