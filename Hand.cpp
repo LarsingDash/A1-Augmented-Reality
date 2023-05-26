@@ -1,5 +1,7 @@
 #include "hand.h"
 
+CascadeClassifier hand_cascade; // Declare the hand cascade classifier
+
 void hand()
 {
     // Step 1: Create video capture object
@@ -10,6 +12,7 @@ void hand()
     {
         std::cout << "Failed to open the camera." << std::endl;
     }
+    hand_cascade.load("rpalm.xml"); // Path to palm cascade XML file
 
     // Create a window to display the camera feed
     cv::namedWindow("Hand Detection", cv::WINDOW_NORMAL);
@@ -66,6 +69,7 @@ void hand()
 
         // Step 10: Display the output frame
         cv::imshow("Hand Detection", black_frame);
+        detectAndDisplay(frame, hand_cascade);
 
         // Step 11: Finish when the Esc key is pressed
         if (cv::waitKey(1) == 27)
@@ -77,4 +81,23 @@ void hand()
     // Release the video capture object and close the windows
     cap.release();
     cv::destroyAllWindows();
+}
+
+void detectAndDisplay(cv::Mat frame, cv::CascadeClassifier& hand_cascade_classifier)
+{
+    cv::Mat frame_gray;
+    cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
+    cv::equalizeHist(frame_gray, frame_gray);
+
+    //-- Detect hands
+    std::vector<cv::Rect> hands;
+    hand_cascade_classifier.detectMultiScale(frame_gray, hands);
+    for (size_t i = 0; i < hands.size(); i++)
+    {
+        cv::Point center(hands[i].x + hands[i].width / 2, hands[i].y + hands[i].height / 2);
+        cv::ellipse(frame, center, cv::Size(hands[i].width / 2, hands[i].height / 2), 0, 0, 360, cv::Scalar(255, 0, 255), 4);
+    }
+
+    //-- Show what you got
+    cv::imshow("Capture - Hand detection", frame);
 }
