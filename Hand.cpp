@@ -1,6 +1,5 @@
 #include "hand.h"
 
-
 void hand()
 {
     // Step 1: Create video capture object
@@ -10,7 +9,6 @@ void hand()
     if (!cap.isOpened())
     {
         std::cout << "Failed to open the camera." << std::endl;
-
     }
 
     // Create a window to display the camera feed
@@ -57,18 +55,19 @@ void hand()
             }
         }
 
-        // Step 8: Draw a contour around the hand
-        cv::Mat hand_mask = cv::Mat::zeros(frame.size(), CV_8UC3);
+        // Step 8: Create a black frame
+        cv::Mat black_frame = cv::Mat::zeros(frame.size(), CV_8UC3);
+
+        // Step 9: Draw the hand contour on the black frame
         if (max_contour_index != -1)
         {
-            cv::drawContours(hand_mask, contours, max_contour_index, cv::Scalar(0, 255, 0), 2);
+            cv::drawContours(black_frame, contours, max_contour_index, cv::Scalar(255, 255, 255), cv::FILLED);
         }
 
-        // Step 9: Display the hand mask
-        cv::imshow("Hand Detection", hand_mask);
-        cv::imshow(" test", frame);
+        // Step 10: Display the output frame
+        cv::imshow("Hand Detection", black_frame);
 
-        // Step 10: Finish when the Esc key is pressed
+        // Step 11: Finish when the Esc key is pressed
         if (cv::waitKey(1) == 27)
         {
             break;
@@ -78,5 +77,4 @@ void hand()
     // Release the video capture object and close the windows
     cap.release();
     cv::destroyAllWindows();
-
 }
