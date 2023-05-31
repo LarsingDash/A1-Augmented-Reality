@@ -23,6 +23,15 @@ void Draw();
 int windowWidth = 700;
 int windowHeight = 700;
 
+//temp rotate var
+float angle_x = 0.f;
+float angle_y = 0.f;
+float angle_z = 0.f;
+glm::mat4 trans = glm::mat4(1.0f);
+float rotate_x = 1.f;
+float rotate_y = 0.f;
+float rotate_z = 0.f;
+
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
 GLFWwindow* window;
@@ -57,7 +66,7 @@ int main()
 	OpenGLInit();
 
 	//Create test object
-	gameObjects.push_back(GameObject("C:/Users/larsv/Desktop/cube/cube.obj"));
+	gameObjects.push_back(GameObject("game_objects/cube/cube.obj"));
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
@@ -109,16 +118,52 @@ void OpenGLInit()
 
 void Update()
 {
+
 }
 
 void Draw()
 {
+
 	//Clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glm::mat4 trans = glm::mat4(1.0f); // Initialize the transformation matrix
 
-	//Draw all GameObjects each frame
+	if (glfwGetKey(window, GLFW_KEY_X))
+	{
+		angle_x += 0.2f;
+		trans = glm::rotate(trans, glm::radians(angle_x), glm::vec3(1.f, 0.f, 0.f));
+	}
+	else
+	{
+		angle_x = 0.f;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Y))
+	{
+		angle_y += 0.2f;
+		trans = glm::rotate(trans, glm::radians(angle_y), glm::vec3(0.f, 1.f, 0.f));
+	}
+	else 
+	{
+		angle_y = 0.f;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Z))
+	{
+		angle_z += 0.2f;
+		trans = glm::rotate(trans, glm::radians(angle_z), glm::vec3(0.f, 0.f, 1.f));
+	}
+	else
+	{
+		angle_z = 0.f;
+	}
+
 	for (const GameObject& gameObject : gameObjects)
 	{
-		gameObject.Draw();
+		gameObject.Draw(trans);
 	}
+	
+	//glm::vec3 empty_vec = glm::vec3(1.f, 1.f, 1.f);	//Draw all GameObjects each frame
+	
+	
 }

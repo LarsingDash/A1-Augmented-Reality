@@ -40,7 +40,7 @@ class GameObject
 		GameObject(const std::string& fileName);
 		~GameObject(void);
 
-		void Draw() const;
+		void Draw(glm::mat4 translation) const;
 };
 
 //String extension methods
