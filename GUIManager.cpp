@@ -111,7 +111,7 @@ void GUIManager::drawTutorialScreen()
 }
 void GUIManager::drawPCBuilderScreen()
 {
-    ImGui::Begin("PC Builder");
+    ImGui::Begin("PC Builder", nullptr, ImGuiWindowFlags_NoTitleBar);
 
     float buttonPosX = (ImGui::GetWindowSize().x - 150.0f) * 0.5f;
     float buttonPosY = (ImGui::GetWindowSize().y - 30.0f) * 0.5f;
@@ -121,6 +121,8 @@ void GUIManager::drawPCBuilderScreen()
     static int selectedPowerSupply = -1;
     static int selectedMotherboard = -1;
     static int selectedRAM = -1;
+
+
     switch (selectedCPU)
     {
     case 0:
@@ -239,18 +241,36 @@ void GUIManager::drawPCBuilderScreen()
 
     ImGui::EndChild();
 
-    ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 100.0f, 0.0f));
-    ImGui::BeginChild("DebugWindow", ImVec2(100.0f, 100.0f), true);
+    ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 300.0f, 0.0f));
+    ImGui::BeginChild("DebugWindow", ImVec2(300.0f, 250.0f), true);
 
-    if (ImGui::Button("Button 1", ImVec2(80.0f, 25.0f)))
+    if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
     }
 
-    if (ImGui::Button("Button 2", ImVec2(80.0f, 25.0f)))
+    if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
     }
 
-    if (ImGui::Button("Button 3", ImVec2(80.0f, 25.0f)))
+    if (ImGui::Button("Show PC part list", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+    {
+    }
+
+
+    ImGui::Text("Pc parts list:");
+    ImGui::Text("CPU: "); ImGui::SameLine();
+    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TEST");
+    ImGui::Text("GPU: "); ImGui::SameLine();
+    ImGui::Text("Test");
+    ImGui::Text("Power supply: "); ImGui::SameLine();
+    ImGui::Text("Test");
+    ImGui::Text("Motherboard: "); ImGui::SameLine();
+    ImGui::Text("Test");
+    ImGui::Text("RAM: "); ImGui::SameLine();
+    ImGui::Text("Test");
+    ImGui::SetCursorPos(ImVec2(buttonPosX, buttonPosY));
+
+    if (ImGui::Button("PC Builder", ImVec2(150, 30)))
     {
     }
 
