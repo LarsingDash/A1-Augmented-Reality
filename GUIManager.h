@@ -15,6 +15,7 @@ private:
     bool showMenuScreen = true;
     bool showTutorialScreen = false;
     bool showPcBuilderScreen = false;
+    bool showPcPartList = false;
 
     void drawMenuScreen();
     void drawTutorialScreen();

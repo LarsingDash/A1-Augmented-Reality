@@ -28,7 +28,7 @@ void GUIManager::init()
 }
 void GUIManager::update()
 {
-    // Clear the background
+    // Clear achtergrond
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -52,7 +52,7 @@ void GUIManager::update()
 
 void GUIManager::draw()
 {
-    // Draw your OpenGL content here
+    
 }
 
 void GUIManager::drawMenuScreen()
@@ -61,11 +61,9 @@ void GUIManager::drawMenuScreen()
 
     ImGui::Begin("Main Menu", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-    // Center the text horizontally and vertically
     ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("PC builder application").x) * 0.5f);
     ImGui::SetCursorPosY((ImGui::GetWindowSize().y - ImGui::CalcTextSize("PC builder application").y) * 0.5f);
-
-    // Increase the text size and thickness using ImGui::SetWindowFontScale and ImGui::PushStyleVar
+    
     ImGui::Text("PC builder application");
 
     ImGui::Spacing();
@@ -203,13 +201,13 @@ void GUIManager::drawPCBuilderScreen()
     switch (selectedRAM)
     {
     case 0:
-        ramText = "G.SKILL Trident Z RGB 16GB (2 x 8GB) DDR4 3600MHz";
+        ramText = "G.SKILL Trident Z RGB 16GB DDR4 3600MHz";
         break;
     case 1:
         ramText = "Corsair Vengeance RGB Pro 32GB (2 x 16GB) DDR4 3200MHz";
         break;
     case 2:
-        ramText = "Crucial Ballistix RGB 16GB (2 x 8GB) DDR4 3200MHz";
+        ramText = "Crucial Ballistix RGB 16GB DDR4 3200MHz";
         break;
     default:
         ramText = "";
@@ -248,9 +246,9 @@ void GUIManager::drawPCBuilderScreen()
 
     if (ImGui::CollapsingHeader("RAM"))
     {
-        ImGui::RadioButton("G.SKILL Trident Z RGB 16GB (2 x 8GB) DDR4 3600MHz", &selectedRAM, 0);
+        ImGui::RadioButton("G.SKILL Trident Z RGB 16GB DDR4 3600MHz", &selectedRAM, 0);
         ImGui::RadioButton("Corsair Vengeance RGB Pro 32GB (2 x 16GB) DDR4 3200MHz", &selectedRAM, 1);
-        ImGui::RadioButton("Crucial Ballistix RGB 16GB (2 x 8GB) DDR4 3200MHz", &selectedRAM, 2);
+        ImGui::RadioButton("Crucial Ballistix RGB 16GB DDR4 3200MHz", &selectedRAM, 2);
     }
 
     ImGui::EndChild();
@@ -268,19 +266,23 @@ void GUIManager::drawPCBuilderScreen()
 
     if (ImGui::Button("Show PC part list", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
+        showPcPartList = !showPcPartList; 
     }
 
-    ImGui::Text("Pc parts list:");
-    ImGui::Text("CPU: "); ImGui::SameLine();
-    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cpuText.c_str());
-    ImGui::Text("GPU: "); ImGui::SameLine();
-    ImGui::Text(gpuText.c_str());
-    ImGui::Text("PSU: "); ImGui::SameLine();
-    ImGui::Text(powerSupplyText.c_str());
-    ImGui::Text("MBU: "); ImGui::SameLine();
-    ImGui::Text(motherboardText.c_str());
-    ImGui::Text("RAM: "); ImGui::SameLine();
-    ImGui::Text(ramText.c_str());
+    if (showPcPartList)
+    {
+        ImGui::Text("Pc parts list:");
+        ImGui::Text("CPU: "); ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", cpuText.c_str());
+        ImGui::Text("GPU: "); ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "%s", gpuText.c_str());
+        ImGui::Text("PSU: "); ImGui::SameLine();
+        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "%s", powerSupplyText.c_str());
+        ImGui::Text("MBU: "); ImGui::SameLine();
+        ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "%s", motherboardText.c_str());
+        ImGui::Text("RAM: "); ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "%s", ramText.c_str());
+    }
 
     ImGui::SetCursorPos(ImVec2(buttonPosX, buttonPosY));
 
