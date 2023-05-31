@@ -2,7 +2,7 @@
 *.d
 
 #game objects
-game_object/
+game_objects/
 
 # Compiled Object files
 *.slo
