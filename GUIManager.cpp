@@ -5,10 +5,13 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "PcPart.h"
+
 
 GUIManager::GUIManager(GLFWwindow* window)
     : window(window)
 {
+
 }
 
 void GUIManager::init()
@@ -20,6 +23,8 @@ void GUIManager::init()
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    
 }
 void GUIManager::update()
 {
@@ -109,6 +114,9 @@ void GUIManager::drawTutorialScreen()
 
     ImGui::End();
 }
+
+
+
 void GUIManager::drawPCBuilderScreen()
 {
     ImGui::Begin("PC Builder", nullptr, ImGuiWindowFlags_NoTitleBar);
@@ -122,127 +130,133 @@ void GUIManager::drawPCBuilderScreen()
     static int selectedMotherboard = -1;
     static int selectedRAM = -1;
 
+    std::string cpuText;
+    std::string gpuText;
+    std::string powerSupplyText;
+    std::string motherboardText;
+    std::string ramText;
 
     switch (selectedCPU)
     {
     case 0:
-        // CPU 1 selected
+        cpuText = "AMD Ryzen 5 5600X";
         break;
     case 1:
-        // CPU 2 selected
+        cpuText = "Intel Core i7-10700K";
         break;
     case 2:
-        // CPU 3 selected
+        cpuText = "AMD Ryzen 7 5800X";
         break;
     default:
-        // No CPU selected
+        cpuText = "";
         break;
     }
 
     switch (selectedGPU)
     {
     case 0:
-        // GPU 1 selected
+        gpuText = "NVIDIA GeForce RTX 3080";
         break;
     case 1:
-        // GPU 2 selected
+        gpuText = "AMD Radeon RX 6800 XT";
         break;
     case 2:
-        // GPU 3 selected
+        gpuText = "NVIDIA GeForce RTX 3070";
         break;
     default:
-        // No GPU selected
+        gpuText = "";
         break;
     }
 
     switch (selectedPowerSupply)
     {
     case 0:
-        // Power supply 1 selected
+        powerSupplyText = "Corsair RM750";
         break;
     case 1:
-        // Power supply 2 selected
+        powerSupplyText = "EVGA SuperNOVA 850 G3";
         break;
     case 2:
-        // Power supply 3 selected
+        powerSupplyText = "Seasonic Focus GX-750";
         break;
     default:
-        // No power supply selected
+        powerSupplyText = "";
         break;
     }
 
     switch (selectedMotherboard)
     {
     case 0:
-        // Motherboard 1 selected
+        motherboardText = "ASUS ROG Strix B550-F Gaming";
         break;
     case 1:
-        // Motherboard 2 selected
+        motherboardText = "GIGABYTE X570 AORUS Elite";
         break;
     case 2:
-        // Motherboard 3 selected
+        motherboardText = "MSI MPG Z490 Gaming Edge WiFi";
         break;
     default:
-        // No motherboard selected
+        motherboardText = "";
         break;
     }
 
     switch (selectedRAM)
     {
     case 0:
-        // RAM 1 selected
+        ramText = "G.SKILL Trident Z RGB 16GB (2 x 8GB) DDR4 3600MHz";
         break;
     case 1:
-        // RAM 2 selected
+        ramText = "Corsair Vengeance RGB Pro 32GB (2 x 16GB) DDR4 3200MHz";
         break;
     case 2:
-        // RAM 3 selected
+        ramText = "Crucial Ballistix RGB 16GB (2 x 8GB) DDR4 3200MHz";
         break;
     default:
-        // No RAM selected
+        ramText = "";
         break;
     }
+
     ImGui::BeginChild("LeftWindow", ImVec2(ImGui::GetWindowWidth() * 0.25f, ImGui::GetWindowHeight()), true);
 
     if (ImGui::CollapsingHeader("CPU's"))
     {
-        ImGui::RadioButton("CPU 1", &selectedCPU, 0);
-        ImGui::RadioButton("CPU 2", &selectedCPU, 1);
-        ImGui::RadioButton("CPU 3", &selectedCPU, 2);
+        ImGui::RadioButton("AMD Ryzen 5 5600X", &selectedCPU, 0);
+        ImGui::RadioButton("Intel Core i7-10700K", &selectedCPU, 1);
+        ImGui::RadioButton("AMD Ryzen 7 5800X", &selectedCPU, 2);
     }
 
     if (ImGui::CollapsingHeader("GPU's"))
     {
-        ImGui::RadioButton("GPU 1", &selectedGPU, 0);
-        ImGui::RadioButton("GPU 2", &selectedGPU, 1);
-        ImGui::RadioButton("GPU 3", &selectedGPU, 2);
+        ImGui::RadioButton("NVIDIA GeForce RTX 3080", &selectedGPU, 0);
+        ImGui::RadioButton("AMD Radeon RX 6800 XT", &selectedGPU, 1);
+        ImGui::RadioButton("NVIDIA GeForce RTX 3070", &selectedGPU, 2);
     }
 
     if (ImGui::CollapsingHeader("Power Supplies"))
     {
-        ImGui::RadioButton("Power supply 1", &selectedPowerSupply, 0);
-        ImGui::RadioButton("Power supply 2", &selectedPowerSupply, 1);
-        ImGui::RadioButton("Power supply 3", &selectedPowerSupply, 2);
+        ImGui::RadioButton("Corsair RM750", &selectedPowerSupply, 0);
+        ImGui::RadioButton("EVGA SuperNOVA 850 G3", &selectedPowerSupply, 1);
+        ImGui::RadioButton("Seasonic Focus GX-750", &selectedPowerSupply, 2);
     }
 
     if (ImGui::CollapsingHeader("Motherboards"))
     {
-        ImGui::RadioButton("Motherboard 1", &selectedMotherboard, 0);
-        ImGui::RadioButton("Motherboard 2", &selectedMotherboard, 1);
-        ImGui::RadioButton("Motherboard 3", &selectedMotherboard, 2);
+        ImGui::RadioButton("ASUS ROG Strix B550-F Gaming", &selectedMotherboard, 0);
+        ImGui::RadioButton("GIGABYTE X570 AORUS Elite", &selectedMotherboard, 1);
+        ImGui::RadioButton("MSI MPG Z490 Gaming Edge WiFi", &selectedMotherboard, 2);
     }
 
     if (ImGui::CollapsingHeader("RAM"))
     {
-        ImGui::RadioButton("RAM 1", &selectedRAM, 0);
-        ImGui::RadioButton("RAM 2", &selectedRAM, 1);
-        ImGui::RadioButton("RAM 3", &selectedRAM, 2);
+        ImGui::RadioButton("G.SKILL Trident Z RGB 16GB (2 x 8GB) DDR4 3600MHz", &selectedRAM, 0);
+        ImGui::RadioButton("Corsair Vengeance RGB Pro 32GB (2 x 16GB) DDR4 3200MHz", &selectedRAM, 1);
+        ImGui::RadioButton("Crucial Ballistix RGB 16GB (2 x 8GB) DDR4 3200MHz", &selectedRAM, 2);
     }
 
     ImGui::EndChild();
 
-    ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 300.0f, 0.0f));
-    ImGui::BeginChild("DebugWindow", ImVec2(300.0f, 250.0f), true);
+    ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 400.0f, 0.0f));
+    ImGui::BeginChild("DebugWindow", ImVec2(400.0f, 250.0f), true);
 
     if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
@@ -256,18 +270,18 @@ void GUIManager::drawPCBuilderScreen()
     {
     }
 
-
     ImGui::Text("Pc parts list:");
     ImGui::Text("CPU: "); ImGui::SameLine();
-    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TEST");
+    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cpuText.c_str());
     ImGui::Text("GPU: "); ImGui::SameLine();
-    ImGui::Text("Test");
-    ImGui::Text("Power supply: "); ImGui::SameLine();
-    ImGui::Text("Test");
-    ImGui::Text("Motherboard: "); ImGui::SameLine();
-    ImGui::Text("Test");
+    ImGui::Text(gpuText.c_str());
+    ImGui::Text("PSU: "); ImGui::SameLine();
+    ImGui::Text(powerSupplyText.c_str());
+    ImGui::Text("MBU: "); ImGui::SameLine();
+    ImGui::Text(motherboardText.c_str());
     ImGui::Text("RAM: "); ImGui::SameLine();
-    ImGui::Text("Test");
+    ImGui::Text(ramText.c_str());
+
     ImGui::SetCursorPos(ImVec2(buttonPosX, buttonPosY));
 
     if (ImGui::Button("PC Builder", ImVec2(150, 30)))

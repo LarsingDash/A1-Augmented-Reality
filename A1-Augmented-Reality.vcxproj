@@ -185,6 +185,9 @@
   <ItemGroup>
     <Image Include="D:\AA Web Downloads\ChromeDownloads5\opengl_logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="TestData.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
