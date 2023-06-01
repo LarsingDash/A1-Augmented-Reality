@@ -65,52 +65,52 @@ GameObject::GameObject(const std::string& fileName)
 		else if (params[0] == "f")
 		{
 			//All shapes
-			// for (size_t ii = 4; ii <= params.size(); ii++)
-			// {
-			// 	std::vector<IndexedVertex> face;
-			//
-			// 	for (size_t i = ii - 3; i < ii; i++)
-			// 	{
-			// 		IndexedVertex vertex = IndexedVertex();
-			// 		std::vector<std::string> indices = Split(params[i == (ii - 3) ? 1 : i], "/");
-			// 		if (indices.size() >= 1)
-			// 			vertex.pos = atoi(indices[0].c_str()) - 1;
-			// 		if (indices.size() == 2)
-			// 			vertex.texture = atoi(indices[1].c_str()) - 1;
-			// 		if (indices.size() == 3)
-			// 		{
-			// 			if (!indices[1].empty())
-			// 				vertex.texture = atoi(indices[1].c_str()) - 1;
-			// 			vertex.normal = atoi(indices[2].c_str()) - 1;
-			// 		}
-			// 		face.push_back(vertex);
-			// 	}
-			// 	currentGroup->faces.push_back(face);
-			// }
+			for (size_t ii = 4; ii <= params.size(); ii++)
+			{
+				std::vector<IndexedVertex> face;
+			
+				for (size_t i = ii - 3; i < ii; i++)
+				{
+					IndexedVertex vertex = IndexedVertex();
+					std::vector<std::string> indices = Split(params[i == (ii - 3) ? 1 : i], "/");
+					if (indices.size() >= 1)
+						vertex.pos = atoi(indices[0].c_str()) - 1;
+					if (indices.size() == 2)
+						vertex.texture = atoi(indices[1].c_str()) - 1;
+					if (indices.size() == 3)
+					{
+						if (!indices[1].empty())
+							vertex.texture = atoi(indices[1].c_str()) - 1;
+						vertex.normal = atoi(indices[2].c_str()) - 1;
+					}
+					face.push_back(vertex);
+				}
+				currentGroup->faces.push_back(face);
+			}
 
 			//Triangle only
 			//Create vertex list
-			std::vector<IndexedVertex> face = std::vector<IndexedVertex>();
-
-			//For each parameter
-			for (size_t i = 1; i < params.size(); i++)
-			{
-				//Create new vertex
-				IndexedVertex vertex = IndexedVertex();
-
-				//Split position, normal and texture coordinate
-				std::vector<std::string> indices = Split(params[i], "/");
-
-				//Assign values
-				vertex.pos = atoi(indices[0].c_str()) - 1;
-				vertex.texture = atoi(indices[1].c_str()) - 1;
-				vertex.normal = atoi(indices[2].c_str()) - 1;
-
-				//Add vertex to face
-				face.push_back(vertex);
-			}
-			//Add face to group
-			currentGroup->faces.push_back(face);
+			// std::vector<IndexedVertex> face = std::vector<IndexedVertex>();
+			//
+			// //For each parameter
+			// for (size_t i = 1; i < params.size(); i++)
+			// {
+			// 	//Create new vertex
+			// 	IndexedVertex vertex = IndexedVertex();
+			//
+			// 	//Split position, normal and texture coordinate
+			// 	std::vector<std::string> indices = Split(params[i], "/");
+			//
+			// 	//Assign values
+			// 	vertex.pos = atoi(indices[0].c_str()) - 1;
+			// 	vertex.texture = atoi(indices[1].c_str()) - 1;
+			// 	vertex.normal = atoi(indices[2].c_str()) - 1;
+			//
+			// 	//Add vertex to face
+			// 	face.push_back(vertex);
+			// }
+			// //Add face to group
+			// currentGroup->faces.push_back(face);
 		}
 
 		//Load material file
@@ -159,12 +159,12 @@ GameObject::~GameObject(void) = default;
 //Draw the object
 void GameObject::Draw(glm::mat4 translation) const
 {
-	//Start drawing
-	tigl::begin(GL_TRIANGLES);
-
 	//All vertices are grouped by their unique mtl
 	for (const auto group : groups)
 	{
+		//Start drawing
+		tigl::begin(GL_TRIANGLES);
+
 		//Select the groups mtl
 		materials[group->materialIndex]->SelectMaterial();
 
@@ -180,10 +180,10 @@ void GameObject::Draw(glm::mat4 translation) const
 				));
 			}
 		}
-	}
 
-	//Stop drawing
-	tigl::end();
+		//Stop drawing
+		tigl::end();
+	}
 }
 
 //Load a material file with the specified name and path
@@ -239,8 +239,15 @@ void GameObject::LoadMaterialFile(const std::string& fileName, const std::string
 			currentMaterial->SetTexture(dirName + "/" + tex);
 			// currentMaterial->SetTexture(tex);
 		}
+		else if (params[0] == "kd")
+		{
+			currentMaterial->SetMaterialColor(glm::vec4(
+				atof(params[1].c_str()),
+				atof(params[2].c_str()),
+				atof(params[3].c_str()),
+				1));
+		}
 		else if (
-			params[0] == "kd" ||
 			params[0] == "ka" ||
 			params[0] == "ks" ||
 			params[0] == "illum" ||

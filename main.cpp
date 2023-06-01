@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
 #include <iostream>
+#include <Windows.h>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -24,13 +25,10 @@ int windowWidth = 700;
 int windowHeight = 700;
 
 //temp rotate var
-float angle_x = 0.f;
-float angle_y = 0.f;
-float angle_z = 0.f;
-glm::mat4 trans = glm::mat4(1.0f);
-float rotate_x = 1.f;
-float rotate_y = 0.f;
-float rotate_z = 0.f;
+float angleX = 0.f;
+float angleY = 0.f;
+float angleZ = 0.f;
+glm::mat4 trans;
 
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
@@ -38,6 +36,11 @@ GLFWwindow* window;
 
 int main()
 {
+	char buffer[MAX_PATH];
+	GetModuleFileNameA(NULL, buffer, MAX_PATH);
+	std::cout << buffer << std::endl;
+
+	//Test initiate glfw
 	if (!glfwInit())
 		throw "Could not initialize glwf";
 
@@ -66,12 +69,13 @@ int main()
 	OpenGLInit();
 
 	//Create test object
-	gameObjects.push_back(GameObject("game_objects/cube/cube.obj"));
+	// gameObjects.push_back(GameObject("game_objects/cube/cube.obj"));
+	gameObjects.push_back(GameObject("C:\\Users\\larsv\\Desktop\\components\\cube\\cube.obj"));
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
 	{
-		//program cycle
+		//Program cycle
 		Update();
 		Draw();
 
@@ -101,15 +105,13 @@ void OpenGLInit()
 
 	//Camera position
 	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0, 2, -5),
-		glm::vec3(0, 0, 0),
+		glm::vec3(0, 2, 5),
+		glm::vec3(0, 1.5, 0),
 		glm::vec3(0, 1, 0)
 	));
 
 	//Shader settings
-	tigl::shader->enableColor(true);
 	tigl::shader->enableAlphaTest(true);
-	tigl::shader->enableTexture(true);
 
 	//GL settings
 	glEnable(GL_DEPTH_TEST);
@@ -118,47 +120,36 @@ void OpenGLInit()
 
 void Update()
 {
-
-}
-
-void Draw()
-{
-
-	//Clear
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glm::mat4 trans = glm::mat4(1.0f); // Initialize the transformation matrix
+	trans = glm::mat4(1.0f); // Initialize the transformation matrix
 
 	if (glfwGetKey(window, GLFW_KEY_X))
 	{
-		angle_x += 0.2f;
+		angleX += 5.f;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_Y))
 	{
-		angle_y += 0.2f;
+		angleY += 5.f;
 	}
 	
 	if (glfwGetKey(window, GLFW_KEY_Z))
 	{
-		angle_z += 0.2f;
-	}
-	if (!glfwGetKey(window, GLFW_KEY_X) && !glfwGetKey(window, GLFW_KEY_Y) && !glfwGetKey(window, GLFW_KEY_Z))
-	{
-		angle_x = 0;
-		angle_y = 0;
-		angle_z = 0;
+		angleZ += 5.f;
 	}
 
-	trans = glm::rotate(trans, glm::radians(angle_z), glm::vec3(0.f, 0.f, 1.f));
-	trans = glm::rotate(trans, glm::radians(angle_y), glm::vec3(0.f, 1.f, 0.f));
-	trans = glm::rotate(trans, glm::radians(angle_x), glm::vec3(1.f, 0.f, 0.f));
+	trans = glm::rotate(trans, glm::radians(angleZ), glm::vec3(0.f, 0.f, 1.f));
+	trans = glm::rotate(trans, glm::radians(angleY), glm::vec3(0.f, 1.f, 0.f));
+	trans = glm::rotate(trans, glm::radians(angleX), glm::vec3(1.f, 0.f, 0.f));
+}
 
+void Draw()
+{
+	//Clear
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//Draw
 	for (const GameObject& gameObject : gameObjects)
 	{
 		gameObject.Draw(trans);
 	}
-	
-	//glm::vec3 empty_vec = glm::vec3(1.f, 1.f, 1.f);	//Draw all GameObjects each frame
-	
-	
 }
