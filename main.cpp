@@ -131,32 +131,27 @@ void Draw()
 	if (glfwGetKey(window, GLFW_KEY_X))
 	{
 		angle_x += 0.2f;
-		trans = glm::rotate(trans, glm::radians(angle_x), glm::vec3(1.f, 0.f, 0.f));
-	}
-	else
-	{
-		angle_x = 0.f;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_Y))
 	{
 		angle_y += 0.2f;
-		trans = glm::rotate(trans, glm::radians(angle_y), glm::vec3(0.f, 1.f, 0.f));
 	}
-	else 
-	{
-		angle_y = 0.f;
-	}
-
+	
 	if (glfwGetKey(window, GLFW_KEY_Z))
 	{
 		angle_z += 0.2f;
-		trans = glm::rotate(trans, glm::radians(angle_z), glm::vec3(0.f, 0.f, 1.f));
 	}
-	else
+	if (!glfwGetKey(window, GLFW_KEY_X) && !glfwGetKey(window, GLFW_KEY_Y) && !glfwGetKey(window, GLFW_KEY_Z))
 	{
-		angle_z = 0.f;
+		angle_x = 0;
+		angle_y = 0;
+		angle_z = 0;
 	}
+
+	trans = glm::rotate(trans, glm::radians(angle_z), glm::vec3(0.f, 0.f, 1.f));
+	trans = glm::rotate(trans, glm::radians(angle_y), glm::vec3(0.f, 1.f, 0.f));
+	trans = glm::rotate(trans, glm::radians(angle_x), glm::vec3(1.f, 0.f, 0.f));
 
 	for (const GameObject& gameObject : gameObjects)
 	{
