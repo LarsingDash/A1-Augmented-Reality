@@ -1,115 +1,74 @@
+#include <iostream>
 #include "hand.h"
 
-CascadeClassifier hand_cascade; // Declare the hand cascade classifier
+// Constants for cursor control
+const int SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
+const int SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
 
-void hand()
-{
-    // Step 1: Create video capture object
-    cv::VideoCapture cap(0);
+// Function to move the cursor
+void moveCursor(int x, int y) {
+    int newX = SCREEN_WIDTH - ((x * SCREEN_WIDTH) / 607);  // Reverse and map the x-coordinate to the screen width
+    int newY = (y * SCREEN_HEIGHT) / 342;  // Mapping the y-coordinate to the screen height
 
-    // Check if video capture is successful
-    if (!cap.isOpened())
-    {
-        std::cout << "Failed to open the camera." << std::endl;
+    SetCursorPos(newX, newY);
+}
+
+int hand() {
+    cv::VideoCapture cap(1);
+
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, 607); // valueX = your wanted width
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 342); // valueY = your wanted heigth
+
+    if (!cap.isOpened()) {
+        std::cerr << "Failed to open camera." << std::endl;
+        return -1;
     }
-    hand_cascade.load("rpalm.xml"); // Path to palm cascade XML file
 
-    // Create a window to display the camera feed
-    cv::namedWindow("Hand Detection", cv::WINDOW_NORMAL);
+    cv::CascadeClassifier handCascade;
+    handCascade.load("rpalm.xml");  // Path to the hand cascade XML file
+
+    if (handCascade.empty()) {
+        std::cerr << "Failed to load hand cascade file." << std::endl;
+        return -1;
+    }
 
     cv::Mat frame;
+    while (true) {
+        cap >> frame;
 
-    while (true)
-    {
-        // Step 1: Read a frame from the video capture
-        cap.read(frame);
-        Mat detected_frame = detectAndDisplay(frame, hand_cascade);
-
-        Mat filtered_frame = addFilter(detected_frame);
-
-        imshow("Frame", filtered_frame);
-        imshow("Frame1", detected_frame);
-
-        // Step 11: Finish when the Esc key is pressed
-        if (cv::waitKey(1) == 27)
-        {
+        if (frame.empty()) {
+            std::cerr << "Failed to capture frame." << std::endl;
             break;
         }
-    }
 
-    // Release the video capture object and close the windows
-    cap.release();
-    cv::destroyAllWindows();
-}
+        cv::Mat frameGray;
+        cv::cvtColor(frame, frameGray, cv::COLOR_BGR2GRAY);
+        cv::equalizeHist(frameGray, frameGray);
 
-Mat detectAndDisplay(cv::Mat frame, cv::CascadeClassifier& hand_cascade_classifier)
-{
-    cv::Mat frame_gray;
-    cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
-    cv::equalizeHist(frame_gray, frame_gray);
+        std::vector<cv::Rect> hands;
+        handCascade.detectMultiScale(frameGray, hands, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
-    //-- Detect hands
-    std::vector<cv::Rect> hands;
-    hand_cascade_classifier.detectMultiScale(frame_gray, hands);
-    for (size_t i = 0; i < hands.size(); i++)
-    {
-        cv::Point center(hands[i].x + hands[i].width / 2, hands[i].y + hands[i].height / 2);
-        cv::ellipse(frame, center, cv::Size(hands[i].width / 2, hands[i].height / 2), 0, 0, 360, cv::Scalar(255, 255, 255), 4);
-    }
+        for (const auto& hand : hands) {
+            cv::Point center(hand.x + hand.width / 2, hand.y + hand.height / 2);
+            cv::circle(frame, center, hand.width / 2, cv::Scalar(255, 0, 255), 2);
 
-    //-- Show what you got
-    // cv::imshow("Capture - Hand detection", frame);
-    return frame;
-}
+            // Determine hand status based on hand area
+            std::string handStatus = (hand.width * hand.height < 6000) ? "Closed" : "Open";
+            cv::putText(frame, handStatus, cv::Point(hand.x, hand.y - 10), cv::FONT_HERSHEY_SIMPLEX, 0.9, cv::Scalar(255, 0, 255), 2);
 
-Mat addFilter(Mat frame)
-{
+            // Move the cursor based on hand position
+            moveCursor(center.x, center.y);
+        }
 
-    // Step 2: Convert the frame to HSV color space
-    cv::Mat hsv_frame;
-    cv::cvtColor(frame, hsv_frame, cv::COLOR_BGR2HSV);
+        cv::imshow("Hand Recognition", frame);
 
-    // Step 3: Define skin color range in HSV
-    cv::Scalar lower_skin_color(0, 10, 60);
-    cv::Scalar upper_skin_color(20, 150, 255);
-
-    // Step 4: Create a binary mask to detect skin color regions
-    cv::Mat skin_mask;
-    cv::inRange(hsv_frame, lower_skin_color, upper_skin_color, skin_mask);
-
-    // Step 5: Apply morphological operations to reduce noise
-    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5));
-    cv::morphologyEx(skin_mask, skin_mask, cv::MORPH_OPEN, kernel);
-    cv::morphologyEx(skin_mask, skin_mask, cv::MORPH_CLOSE, kernel);
-
-    // Step 6: Find contours of skin regions
-    std::vector<std::vector<cv::Point>> contours;
-    cv::findContours(skin_mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-    // Step 7: Find the largest contour (assumed to be the hand)
-    int max_contour_index = -1;
-    double max_contour_area = 0.0;
-    for (size_t i = 0; i < contours.size(); i++)
-    {
-        double contour_area = cv::contourArea(contours[i]);
-        if (contour_area > max_contour_area)
-        {
-            max_contour_area = contour_area;
-            max_contour_index = i;
+        if (cv::waitKey(1) == 27) {
+            break;  // Exit if ESC is pressed
         }
     }
 
-    // Step 8: Create a black frame
-    cv::Mat black_frame = cv::Mat::zeros(frame.size(), CV_8UC3);
+    cap.release();
+    cv::destroyAllWindows();
 
-    // Step 9: Draw the hand contour on the black frame
-    if (max_contour_index != -1)
-    {
-        cv::drawContours(black_frame, contours, max_contour_index, cv::Scalar(255, 255, 255), cv::FILLED);
-    }
-
-    // Step 10: Display the output frame
-
-
-    return black_frame;
+    return 0;
 }
