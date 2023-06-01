@@ -89,5 +89,71 @@ void update()
 
 void draw()
 {
-   
+    glm::vec4 color = glm::vec4(1, 0, 0, 1);
+    glm::vec4 colorLeft = glm::vec4(0, 1, 0, 1);
+    glm::vec4 colorRight = glm::vec4(0, 0, 1, 1);
+    glm::vec4 colorFront = glm::vec4(1, 1, 0, 1);
+    glm::vec4 colorUp = glm::vec4(0, 1, 1, 1);
+
+    glm::vec4 bottomLeft = glm::vec4(0, 0, 0, 0);
+    glm::vec4 bottomRight = glm::vec4(1, 0, 0, 0);
+    glm::vec4 topLeft = glm::vec4(0, 1, 0, 0);
+    glm::vec4 topRight = glm::vec4(1, 1, 0, 0);
+
+    glm::vec4 bottomLeftFront = glm::vec4(- 1, - 1, -10, 1);// *camera->getInverseMatrix();
+    glm::vec4 bottomLeftBack = glm::vec4(- 1, - 1, 0, 1);// *camera->getInverseMatrix();
+    glm::vec4 bottomRightFront = glm::vec4(1, - 1, -10, 1);// *camera->getInverseMatrix();
+    glm::vec4 bottomRightBack = glm::vec4(1, - 1, 0, 1);// *camera->getInverseMatrix();
+    glm::vec4 topLeftFront = glm::vec4(- 1, 1, -10, 1);// *camera->getInverseMatrix();
+    glm::vec4 topLeftBack = glm::vec4(- 1, 1, 0, 1);// *camera->getInverseMatrix();
+    glm::vec4 topRightFront = glm::vec4(1, 1, -10, 1);// *camera->getInverseMatrix();
+    glm::vec4 topRightBack = glm::vec4(1, 1, 0, 1);// *camera->getInverseMatrix();
+
+    tigl::begin(GL_QUADS);
+    tigl::addVertex(Vertex::PT(bottomLeftFront, bottomLeft));
+    tigl::addVertex(Vertex::PT(bottomRightFront, bottomRight));
+    tigl::addVertex(Vertex::PT(bottomRightFront, bottomRight));
+    tigl::addVertex(Vertex::PT(topRightBack, topRight));
+    tigl::addVertex(Vertex::PT(topRightBack, topRight));
+    tigl::addVertex(Vertex::PT(topLeftBack, topLeft));
+    tigl::addVertex(Vertex::PT(topLeftBack, topLeft));
+    tigl::addVertex(Vertex::PT(bottomLeftFront, bottomLeft));
+
+    tigl::addVertex(Vertex::PT(bottomLeftFront, bottomLeft));
+    tigl::addVertex(Vertex::PT(bottomLeftBack, bottomRight));
+    tigl::addVertex(Vertex::PT(bottomLeftBack, bottomRight));
+    tigl::addVertex(Vertex::PT(topLeftBack, topRight));
+    tigl::addVertex(Vertex::PT(topLeftBack, topRight));
+    tigl::addVertex(Vertex::PT(topLeftFront, topLeft));
+    tigl::addVertex(Vertex::PT(topLeftFront, topLeft));
+    tigl::addVertex(Vertex::PT(bottomLeftFront, bottomLeft));
+
+    tigl::addVertex(Vertex::PT(bottomRightFront, bottomRight));
+    tigl::addVertex(Vertex::PT(bottomRightBack, bottomLeft));
+    tigl::addVertex(Vertex::PT(bottomRightBack, bottomLeft));
+    tigl::addVertex(Vertex::PT(topRightBack, topLeft));
+    tigl::addVertex(Vertex::PT(topRightBack, topLeft));
+    tigl::addVertex(Vertex::PT(topRightFront, topRight));
+    tigl::addVertex(Vertex::PT(topRightFront, topRight));
+    tigl::addVertex(Vertex::PT(bottomRightFront, bottomRight));
+
+    tigl::addVertex(Vertex::PT(bottomLeftBack, bottomLeft));
+    tigl::addVertex(Vertex::PT(bottomRightBack, bottomRight));
+    tigl::addVertex(Vertex::PT(bottomRightBack, bottomRight));
+    tigl::addVertex(Vertex::PT(topRightBack, topRight));
+    tigl::addVertex(Vertex::PT(topRightBack, topRight));
+    tigl::addVertex(Vertex::PT(topLeftBack, topLeft));
+    tigl::addVertex(Vertex::PT(topLeftBack, topLeft));
+    tigl::addVertex(Vertex::PT(bottomLeftBack, bottomLeft));
+
+    tigl::addVertex(Vertex::PT(topLeftFront, bottomLeft));
+    tigl::addVertex(Vertex::PT(topRightFront, bottomRight));
+    tigl::addVertex(Vertex::PT(topRightFront, bottomRight));
+    tigl::addVertex(Vertex::PT(topRightBack, topRight));
+    tigl::addVertex(Vertex::PT(topRightBack, topRight));
+    tigl::addVertex(Vertex::PT(topLeftBack, topLeft));
+    tigl::addVertex(Vertex::PT(topLeftBack, topLeft));
+    tigl::addVertex(Vertex::PT(topLeftFront, bottomLeft));
+
+    tigl::end();
 }
