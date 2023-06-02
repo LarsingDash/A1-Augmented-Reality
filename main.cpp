@@ -1,3 +1,5 @@
+#include "GameObject.h"
+
 #include <iostream>
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -17,6 +19,18 @@ using tigl::Vertex;
 
 const int width = 700;
 const int height = 700;
+
+//Default window size, will be overridden by fullscreen values
+int windowWidth = 700;
+int windowHeight = 700;
+
+//temp rotate var
+float angleX = 0.f;
+float angleY = 0.f;
+float angleZ = 0.f;
+glm::mat4 trans;
+
+std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
 GLFWwindow* window;
 ComputerController controller = ComputerController(GameObject(), false);
@@ -85,8 +99,32 @@ int main()
     return 0;
 }
 
-void update()
+void OpenGLInit()
 {
+	//Init
+	tigl::init();
+
+	//Viewport
+	tigl::shader->setProjectionMatrix(glm::perspective(
+		glm::radians(90.f),
+		(float) windowWidth / (float) windowHeight,
+		0.1f,
+		100.f
+	));
+
+	//Camera position
+	tigl::shader->setViewMatrix(glm::lookAt(
+		glm::vec3(0, 2, 5),
+		glm::vec3(0, 1.5, 0),
+		glm::vec3(0, 1, 0)
+	));
+
+	//Shader settings
+	tigl::shader->enableAlphaTest(true);
+
+	//GL settings
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
 }
 
 //float angle = 1.0f;
