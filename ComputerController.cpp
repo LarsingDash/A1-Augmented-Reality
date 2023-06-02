@@ -13,6 +13,7 @@ void ComputerController::setIsDrawing(bool newIsDrawing) {
 }
 
 void ComputerController::handleDraw() {
+	std::cout << "IsDrawing: " << isDrawing << std::endl;
 	if (isDrawing) {
 		drawCurrentObject();
 	}
@@ -23,5 +24,5 @@ void ComputerController::setCurrentObject(GameObject currentObject) {
 }
 
 void ComputerController::drawCurrentObject() {
-	ComputerController::currentObject.drawCube();
+	ComputerController::currentObject.Draw(glm::mat4(1.0f));
 }

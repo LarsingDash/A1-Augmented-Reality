@@ -33,9 +33,9 @@ glm::mat4 trans;
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
 GLFWwindow* window;
-ComputerController controller = ComputerController(GameObject(), false);
+ComputerController controller = ComputerController(GameObject("C:/Users/karsv/OneDrive - Avans Hogeschool/GitHub/ARVR/A1-Augmented-Reality/models/car/honda_jazz.obj"), false);
 
-void update();
+//void update();
 void draw();
 
 int main()
@@ -83,7 +83,7 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         // Program cycle
-        update();
+        //update();
         draw();
         guiManager.update();
 
@@ -115,8 +115,8 @@ void OpenGLInit()
 	//Camera position
 	tigl::shader->setViewMatrix(glm::lookAt(
 		glm::vec3(0, 2, 5),
-		glm::vec3(0, 1.5, 0),
-		glm::vec3(0, 1, 0)
+		glm::vec3(0, 0, 0),
+		glm::vec3(0, 2, 5)
 	));
 
 	//Shader settings
@@ -132,8 +132,12 @@ glm::vec3 cubeColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 void draw()
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glm::mat4 translation = glm::mat4(1.0f);
+    translation = glm::translate(translation, glm::vec3(0.0f, -25.0f, -140.0f));
+    tigl::shader->setViewMatrix(translation);
 
     controller.handleDraw();
 }

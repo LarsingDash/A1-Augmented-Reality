@@ -9,6 +9,10 @@
 #include "Material.h"
 #include "tigl.h"
 
+GameObject::GameObject() {
+
+}
+
 //Loads an object model 
 GameObject::GameObject(const std::string& fileName)
 {

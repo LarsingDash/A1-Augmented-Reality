@@ -37,6 +37,7 @@ class GameObject
 		void LoadMaterialFile(const std::string& fileName, const std::string& dirName);
 
 	public:
+		GameObject();
 		GameObject(const std::string& fileName);
 		~GameObject(void);
 
