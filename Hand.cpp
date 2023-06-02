@@ -11,11 +11,11 @@ void moveCursor(int x, int y) {
     int newY = (y * SCREEN_HEIGHT) / 342;  // Mapping the y-coordinate to the screen height
 
     SetCursorPos(newX, newY);
+    
 }
 
 int hand() {
-    cv::VideoCapture cap(1);
-
+    cv::VideoCapture cap(0);
     cap.set(cv::CAP_PROP_FRAME_WIDTH, 607); // valueX = your wanted width
     cap.set(cv::CAP_PROP_FRAME_HEIGHT, 342); // valueY = your wanted heigth
 
@@ -24,10 +24,15 @@ int hand() {
         return -1;
     }
 
-    cv::CascadeClassifier handCascade;
-    handCascade.load("rpalm.xml");  // Path to the hand cascade XML file
+    cv::CascadeClassifier handcascade_palm;
+    cv::CascadeClassifier handcascade_fist;
+    handcascade_fist.load("fist.xml");  // Path to the hand cascade XML file
+    handcascade_palm.load("rpalm.xml");  // Path to the hand cascade XML file
 
-    if (handCascade.empty()) {
+    if (handcascade_palm.empty()) {
+        std::cerr << "Failed to load hand cascade file." << std::endl;
+        return -1;
+    }  if (handcascade_fist.empty()) {
         std::cerr << "Failed to load hand cascade file." << std::endl;
         return -1;
     }
@@ -35,7 +40,6 @@ int hand() {
     cv::Mat frame;
     while (true) {
         cap >> frame;
-
         if (frame.empty()) {
             std::cerr << "Failed to capture frame." << std::endl;
             break;
@@ -46,7 +50,9 @@ int hand() {
         cv::equalizeHist(frameGray, frameGray);
 
         std::vector<cv::Rect> hands;
-        handCascade.detectMultiScale(frameGray, hands, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+        std::vector<cv::Rect> fist;
+        handcascade_palm.detectMultiScale(frameGray, hands, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+        handcascade_fist.detectMultiScale(frameGray, fist, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
         for (const auto& hand : hands) {
             cv::Point center(hand.x + hand.width / 2, hand.y + hand.height / 2);
@@ -54,7 +60,17 @@ int hand() {
 
             // Determine hand status based on hand area
             std::string handStatus = (hand.width * hand.height < 6000) ? "Closed" : "Open";
-            cv::putText(frame, handStatus, cv::Point(hand.x, hand.y - 10), cv::FONT_HERSHEY_SIMPLEX, 0.9, cv::Scalar(255, 0, 255), 2);
+            cv::putText(frame, "Open", cv::Point(hand.x, hand.y - 10), cv::FONT_HERSHEY_SIMPLEX, 0.9, cv::Scalar(255, 0, 255), 2);
+
+            // Move the cursor based on hand position
+            moveCursor(center.x, center.y);
+        }for (const auto& hand : fist) {
+            cv::Point center(hand.x + hand.width / 2, hand.y + hand.height / 2);
+            cv::circle(frame, center, hand.width / 2, cv::Scalar(255, 0, 255), 2);
+
+            // Determine hand status based on hand area
+            std::string handStatus = (hand.width * hand.height < 6000) ? "Closed" : "Open";
+            cv::putText(frame, "Closed", cv::Point(hand.x, hand.y - 10), cv::FONT_HERSHEY_SIMPLEX, 0.9, cv::Scalar(255, 0, 255), 2);
 
             // Move the cursor based on hand position
             moveCursor(center.x, center.y);
