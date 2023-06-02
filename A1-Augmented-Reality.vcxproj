@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComputerController.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GUIManager.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="tigl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComputerController.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GUIManager.h" />
     <ClInclude Include="imgui\imconfig.h" />

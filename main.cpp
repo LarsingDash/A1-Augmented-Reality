@@ -7,7 +7,7 @@
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "GUIManager.h"
-#include "GameObject.h"
+#include "ComputerController.h"
 
 using tigl::Vertex;
 
@@ -19,7 +19,7 @@ const int width = 700;
 const int height = 700;
 
 GLFWwindow* window;
-GameObject cube = GameObject();
+ComputerController controller = ComputerController(GameObject(), false);
 
 void update();
 void draw();
@@ -62,7 +62,7 @@ int main()
     tigl::shader->enableAlphaTest(true);
     glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
 
-    GUIManager guiManager(window, cube);
+    GUIManager guiManager(window, controller);
     guiManager.init();
 
     // MAIN LOOP
@@ -97,5 +97,5 @@ void draw()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    cube.drawCube();
+    controller.handleDraw();
 }

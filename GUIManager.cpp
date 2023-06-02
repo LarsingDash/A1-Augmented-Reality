@@ -6,12 +6,12 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "PcPart.h"
-#include "GameObject.h"
+#include "ComputerController.h"
 
 //GameObject currentObject;
 
-GUIManager::GUIManager(GLFWwindow* window, GameObject currentObject)
-    : window(window), currentObject(currentObject)
+GUIManager::GUIManager(GLFWwindow* window, ComputerController controller)
+    : window(window), controller(controller)
 {
 }
 
@@ -25,6 +25,7 @@ void GUIManager::init()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    controller.setCurrentObject(GameObject());
     
 }
 void GUIManager::update()
@@ -264,12 +265,13 @@ void GUIManager::drawPCBuilderScreen()
 
     if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
-        currentObject.changeColor(glm::vec4(1.0, 0.0f, 0.0f, 1.0f));
+        //currentObject.changeColor(glm::vec4(1.0, 0.0f, 0.0f, 1.0f));
+        controller.setIsDrawing(true);
     }
 
     if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
-        currentObject.changeColor(glm::vec4(0.0, 1.0f, 0.0f, 1.0f));
+        //currentObject.changeColor(glm::vec4(0.0, 1.0f, 0.0f, 1.0f));
 
     }
 

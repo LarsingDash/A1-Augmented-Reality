@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameObject.h"
+#include "ComputerController.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "tigl.h"
@@ -9,7 +9,7 @@
 
 class GUIManager {
 public:
-    GUIManager(GLFWwindow* window, GameObject currentObject);
+    GUIManager(GLFWwindow* window, ComputerController controller);
 
     void init();
     void update();
@@ -17,7 +17,7 @@ public:
 
 private:
     GLFWwindow* window;
-    GameObject currentObject;
+    ComputerController controller;
     bool showMenuScreen = true;
     bool showTutorialScreen = false;
     bool showPcBuilderScreen = false;
