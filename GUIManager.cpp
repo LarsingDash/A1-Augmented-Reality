@@ -6,12 +6,13 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "PcPart.h"
+#include "GameObject.h"
 
+//GameObject currentObject;
 
-GUIManager::GUIManager(GLFWwindow* window)
-    : window(window)
+GUIManager::GUIManager(GLFWwindow* window, GameObject currentObject)
+    : window(window), currentObject(currentObject)
 {
-
 }
 
 void GUIManager::init()
@@ -29,8 +30,8 @@ void GUIManager::init()
 void GUIManager::update()
 {
     // Clear achtergrond
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    /*glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);*/
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -117,7 +118,7 @@ void GUIManager::drawTutorialScreen()
 
 void GUIManager::drawPCBuilderScreen()
 {
-    ImGui::Begin("PC Builder", nullptr, ImGuiWindowFlags_NoTitleBar);
+    //ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
 
     float buttonPosX = (ImGui::GetWindowSize().x - 150.0f) * 0.5f;
     float buttonPosY = (ImGui::GetWindowSize().y - 30.0f) * 0.5f;
@@ -214,7 +215,10 @@ void GUIManager::drawPCBuilderScreen()
         break;
     }
 
-    ImGui::BeginChild("LeftWindow", ImVec2(ImGui::GetWindowWidth() * 0.25f, ImGui::GetWindowHeight()), true);
+    //ImGui::End();
+
+    //ImGui::BeginChild("LeftWindow", ImVec2(ImGui::GetWindowWidth() * 0.25f, ImGui::GetWindowHeight()), true); 
+    ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
 
     if (ImGui::CollapsingHeader("CPU's"))
     {
@@ -251,17 +255,22 @@ void GUIManager::drawPCBuilderScreen()
         ImGui::RadioButton("Crucial Ballistix RGB 16GB DDR4 3200MHz", &selectedRAM, 2);
     }
 
-    ImGui::EndChild();
+    //ImGui::EndChild();
+    ImGui::End();
 
     ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 400.0f, 0.0f));
-    ImGui::BeginChild("DebugWindow", ImVec2(400.0f, 250.0f), true);
+    //ImGui::BeginChild("DebugWindow", ImVec2(400.0f, 250.0f), true);
+    ImGui::Begin("Navigation Buttons", nullptr, ImGuiWindowFlags_NoTitleBar);
 
     if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
+        currentObject.changeColor(glm::vec4(1.0, 0.0f, 0.0f, 1.0f));
     }
 
     if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
+        currentObject.changeColor(glm::vec4(0.0, 1.0f, 0.0f, 1.0f));
+
     }
 
     if (ImGui::Button("Show PC part list", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
@@ -284,13 +293,24 @@ void GUIManager::drawPCBuilderScreen()
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "%s", ramText.c_str());
     }
 
-    ImGui::SetCursorPos(ImVec2(buttonPosX, buttonPosY));
+    ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - 75, ImGui::GetWindowHeight() - 70));
 
     if (ImGui::Button("PC Builder", ImVec2(150, 30)))
     {
     }
+    
+    ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - 75, ImGui::GetWindowHeight() - 35));
+    if (ImGui::Button("Back to Menu", ImVec2(150, 30)))
+    {
+        showMenuScreen = true;
+        showTutorialScreen = false;
+        showPcBuilderScreen = false;
+    }
 
-    ImGui::EndChild();
+    //ImGui::EndChild();
+    ImGui::End();
+
+    /*ImGui::Begin("PC Builder", nullptr, ImGuiWindowFlags_NoTitleBar);
 
     ImGui::SetCursorPos(ImVec2(buttonPosX, buttonPosY));
 
@@ -306,5 +326,5 @@ void GUIManager::drawPCBuilderScreen()
         showPcBuilderScreen = false;
     }
 
-    ImGui::End();
+    ImGui::End();*/
 }
