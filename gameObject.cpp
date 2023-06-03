@@ -10,24 +10,26 @@
 #include "tigl.h"
 
 //Loads an object model 
-GameObject::GameObject(const std::string& fileName)
+GameObject::GameObject(const std::string& dir, const std::string& fileName)
 {
+	std::string fullDir = dir + "/objects/" + fileName;
+
 	//Clean fileName
-	std::cout << "Loading " << fileName << std::endl;
-	std::string dirName = fileName;
+	std::cout << "Loading " << fullDir << std::endl;
+	std::string dirName = fullDir;
 	if (dirName.rfind('/') != std::string::npos)
 		dirName = dirName.substr(0, dirName.rfind('/'));
 	if (dirName.rfind('\\') != std::string::npos)
 		dirName = dirName.substr(0, dirName.rfind('\\'));
-	if (fileName == dirName)
+	if (fullDir == dirName)
 		dirName = "";
 
 	//Open obj file
-	std::ifstream pFile(fileName.c_str());
+	std::ifstream pFile(fullDir.c_str());
 
 	if (!pFile.is_open())
 	{
-		std::cout << "Could not open file " << fileName << std::endl;
+		std::cout << "Could not open file " << fullDir << std::endl;
 		return;
 	}
 
@@ -116,7 +118,10 @@ GameObject::GameObject(const std::string& fileName)
 		//Load material file
 		else if (params[0] == "mtllib")
 		{
-			LoadMaterialFile(dirName + "/" + params[1], dirName);
+			std::string mtlPath = fullDir;
+			Replace(mtlPath, ".obj", ".mtl");
+
+			LoadMaterialFile(mtlPath);
 		}
 
 		//Switch to a new group
@@ -187,14 +192,14 @@ void GameObject::Draw(glm::mat4 translation) const
 }
 
 //Load a material file with the specified name and path
-void GameObject::LoadMaterialFile(const std::string& fileName, const std::string& dirName)
+void GameObject::LoadMaterialFile(const std::string& mtlPath)
 {
 	//Open the file
-	std::cout << "Loading " << fileName << std::endl;
-	std::ifstream pFile(fileName.c_str());
+	std::cout << "Loading " << mtlPath << std::endl;
+	std::ifstream pFile(mtlPath);
 	if (!pFile.is_open())
 	{
-		std::cout << "Could not open file " << fileName << std::endl;
+		std::cout << "Could not open file " << mtlPath << std::endl;
 		return;
 	}
 
@@ -236,7 +241,7 @@ void GameObject::LoadMaterialFile(const std::string& fileName, const std::string
 				tex = tex.substr(tex.rfind("\\") + 1);
 
 			//Save the texture path to the mtl
-			currentMaterial->SetTexture(dirName + "/" + tex);
+			// currentMaterial->SetTexture(dirName + "/" + tex);
 			// currentMaterial->SetTexture(tex);
 		}
 		else if (params[0] == "kd")

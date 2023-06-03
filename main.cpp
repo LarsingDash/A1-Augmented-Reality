@@ -10,7 +10,6 @@
 
 using tigl::Vertex;
 
-
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "glew32s.lib")
 #pragma comment(lib, "opengl32.lib")
@@ -19,6 +18,9 @@ void OpenGLInit();
 
 void Update();
 void Draw();
+
+void GetObjectDir();
+static std::string Remove(std::string& str, const std::string& toReplace);
 
 //Default window size, will be overridden by fullscreen values
 int windowWidth = 700;
@@ -31,14 +33,14 @@ float angleZ = 0.f;
 glm::mat4 trans;
 
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
+std::string objectDir;
 
 GLFWwindow* window;
 
 int main()
 {
-	char buffer[MAX_PATH];
-	GetModuleFileNameA(NULL, buffer, MAX_PATH);
-	std::cout << buffer << std::endl;
+	//Get object directory path
+	GetObjectDir();
 
 	//Test initiate glfw
 	if (!glfwInit())
@@ -70,7 +72,7 @@ int main()
 
 	//Create test object
 	// gameObjects.push_back(GameObject("game_objects/cube/cube.obj"));
-	gameObjects.push_back(GameObject("C:\\Users\\larsv\\Desktop\\components\\cube\\cube.obj"));
+	gameObjects.push_back(GameObject(objectDir, "cube/cube.obj"));
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
@@ -98,7 +100,7 @@ void OpenGLInit()
 	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(
 		glm::radians(90.f),
-		(float) windowWidth / (float) windowHeight,
+		(float)windowWidth / (float)windowHeight,
 		0.1f,
 		100.f
 	));
@@ -131,7 +133,7 @@ void Update()
 	{
 		angleY += 5.f;
 	}
-	
+
 	if (glfwGetKey(window, GLFW_KEY_Z))
 	{
 		angleZ += 5.f;
@@ -152,4 +154,62 @@ void Draw()
 	{
 		gameObject.Draw(trans);
 	}
+}
+
+void GetObjectDir()
+{
+	char buffer[MAX_PATH];
+	GetModuleFileNameA(NULL, buffer, MAX_PATH);
+
+	//Convert buffer to string
+	std::string path;
+	bool isInProjectDir = false;
+	constexpr int size = sizeof(buffer) / sizeof(char);
+
+	//Convert buffer to string (keep going till "exe" is found)
+	for (const char letter : buffer)
+	{
+		//Add
+		path += letter;
+
+		//Check for "exe"
+		if (path.length() >= 3)
+		{
+			std::string end = path.substr(path.length() - 3, path.length() - 0);
+			if (end == "exe")
+				break;
+		}
+
+		//Check for projectDir
+		if (!isInProjectDir && path.length() >= 20)
+		{
+			const std::string projectDir = path.substr(path.length() - 20, path.length() - 0);
+			isInProjectDir = projectDir == "A1-Augmented-Reality";
+
+			if (isInProjectDir)
+				break;
+		}
+	}
+
+	if (!isInProjectDir)
+		path = Remove(path, "A1AugmentedReality.exe");
+
+	objectDir = path;
+	std::cout << "Path: " << objectDir << std::endl;
+	std::cout << "IsInProjectDir: " << isInProjectDir << std::endl;
+}
+
+//Replaces a substring in a string
+static std::string Remove(std::string& str, const std::string& toReplace)
+{
+	size_t index = 0;
+	while (true)
+	{
+		index = str.find(toReplace, index);
+		if (index == std::string::npos)
+			break;
+		str.replace(index, toReplace.length(), "");
+		++index;
+	}
+	return str;
 }

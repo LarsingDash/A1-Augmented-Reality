@@ -34,10 +34,10 @@ class GameObject
 		std::vector<Material*> materials;
 
 		//Material loader
-		void LoadMaterialFile(const std::string& fileName, const std::string& dirName);
+		void LoadMaterialFile(const std::string& mtlPath);
 
 	public:
-		GameObject(const std::string& fileName);
+		GameObject(const std::string& dir, const std::string& fileName);
 		~GameObject(void);
 
 		void Draw(glm::mat4 translation) const;
