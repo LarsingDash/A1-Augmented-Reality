@@ -4,14 +4,57 @@
 // Constants for cursor control
 const int SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 const int SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+int lastX;
+int lastY;
 
 // Function to move the cursor
 void moveCursor(int x, int y) {
     int newX = SCREEN_WIDTH - ((x * SCREEN_WIDTH) / 607);  // Reverse and map the x-coordinate to the screen width
     int newY = (y * SCREEN_HEIGHT) / 342;  // Mapping the y-coordinate to the screen height
 
+    if (lastY > newY)
+    {
+        newY /= 2;
+    } else if(lastY < newY)
+    {
+        newY *= 2;
+    }
+
+    if (lastX > newX)
+    {
+        newX /= 2;
+    }
+    else if (lastX < newX)
+    {
+        newX *= 2;
+    }
+
+	if(newX > SCREEN_WIDTH)
+	{
+		newX = SCREEN_WIDTH;
+	}
+
+	if(newX < 0)
+	{
+		newX = 0;
+	}
+
+	if (newY > SCREEN_HEIGHT)
+	{
+		newY = SCREEN_HEIGHT;
+	}
+
+	if (newY < 0)
+	{
+		newY = 0;
+	}
+
+    lastX = x;
+    lastY = y;
+
     SetCursorPos(newX, newY);
 }
+
 
 int hand() {
     cv::VideoCapture cap(1);
