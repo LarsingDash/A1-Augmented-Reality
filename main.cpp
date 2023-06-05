@@ -27,10 +27,10 @@ int windowHeight = 700;
 float angle_x = 0.f;
 float angle_y = 0.f;
 float angle_z = 0.f;
-glm::mat4 trans = glm::mat4(1.0f);
-float rotate_x = 1.f;
-float rotate_y = 0.f;
-float rotate_z = 0.f;
+glm::mat4 rotate = glm::mat4(1.0f);
+glm::vec3 rotations = glm::vec3(0, 0, 0);
+glm::mat4 translate = glm::mat4(1.0f);
+glm::vec3 cube_position(0, 0, 0);
 
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
@@ -88,6 +88,7 @@ int main()
 
 void OpenGLInit()
 {
+	
 	//Init
 	tigl::init();
 
@@ -114,50 +115,67 @@ void OpenGLInit()
 	//GL settings
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
+	
 }
 
 void Update()
 {
-
+	
 }
-
+void check_keys()
+{
+	if (glfwGetKey(window, GLFW_KEY_X))
+		angle_x += 0.2f;
+	if (glfwGetKey(window, GLFW_KEY_Y))
+		angle_y += 0.2f;
+	if (glfwGetKey(window, GLFW_KEY_Z))
+		angle_z += 0.2f;
+	if (glfwGetKey(window, GLFW_KEY_LEFT))
+		cube_position.x += 0.1;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT))
+		cube_position.x -= 0.1;
+	if (glfwGetKey(window, GLFW_KEY_UP))
+		cube_position.y += 0.1;
+	if (glfwGetKey(window, GLFW_KEY_DOWN))
+		cube_position.y -= 0.1;
+	if (glfwGetKey(window, GLFW_KEY_F))
+		cube_position.z += 0.1;
+	if (glfwGetKey(window, GLFW_KEY_B))
+		cube_position.z -= 0.1;
+}
 void Draw()
 {
-
+	tigl::shader->setModelMatrix(glm::mat4(1.0f));
 	//Clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glm::mat4 trans = glm::mat4(1.0f); // Initialize the transformation matrix
-
-	if (glfwGetKey(window, GLFW_KEY_X))
-	{
-		angle_x += 0.2f;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_Y))
-	{
-		angle_y += 0.2f;
-	}
+	rotate = glm::mat4(1.0f); // Initialize the transformation matrix
 	
-	if (glfwGetKey(window, GLFW_KEY_Z))
-	{
-		angle_z += 0.2f;
-	}
+	check_keys();
+
 	if (!glfwGetKey(window, GLFW_KEY_X) && !glfwGetKey(window, GLFW_KEY_Y) && !glfwGetKey(window, GLFW_KEY_Z))
 	{
 		angle_x = 0;
 		angle_y = 0;
 		angle_z = 0;
 	}
+	
 
-	trans = glm::rotate(trans, glm::radians(angle_z), glm::vec3(0.f, 0.f, 1.f));
-	trans = glm::rotate(trans, glm::radians(angle_y), glm::vec3(0.f, 1.f, 0.f));
-	trans = glm::rotate(trans, glm::radians(angle_x), glm::vec3(1.f, 0.f, 0.f));
+
+
+	tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.f), glm::vec3(cube_position)));
+	rotate = glm::rotate(rotate, glm::radians(angle_z), glm::vec3(0.f, 0.f, 1.f));
+	rotate = glm::rotate(rotate, glm::radians(angle_y), glm::vec3(0.f, 1.f, 0.f));
+	rotate = glm::rotate(rotate, glm::radians(angle_x), glm::vec3(1.f, 0.f, 0.f));
+	
+	
+	
 
 	for (const GameObject& gameObject : gameObjects)
 	{
-		gameObject.Draw(trans);
+		gameObject.Draw(rotate);
 	}
-	
+
+	//trans = glm::translate(trans, glm::vec3(-translate_x, -translate_y, -translate_z));
 	//glm::vec3 empty_vec = glm::vec3(1.f, 1.f, 1.f);	//Draw all GameObjects each frame
 	
 	

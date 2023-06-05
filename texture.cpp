@@ -11,7 +11,7 @@ unsigned char* data;
 
 Texture::Texture(const std::string& fileName)
 {
-    data = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 0);
+    data = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 4);
 }
 
 void Texture::bind()
@@ -26,7 +26,7 @@ void Texture::bind()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         // std::cout << "Succeeded loading" << std::endl;
     }
