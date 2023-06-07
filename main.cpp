@@ -64,7 +64,7 @@ int main()
         glm::radians(90.f),
         (float)width / height,
         0.1f,
-        100.f
+        1000.f
     ));
 
     tigl::shader->setViewMatrix(glm::lookAt(

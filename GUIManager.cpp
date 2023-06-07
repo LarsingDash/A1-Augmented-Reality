@@ -5,7 +5,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "PcPart.h"
+#include "PcPart.hpp"
 #include "ComputerController.h"
 
 //GameObject currentObject;
