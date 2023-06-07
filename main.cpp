@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "hand.h"
+#include "GameObject.h"
 
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -15,33 +17,79 @@ using tigl::Vertex;
 #pragma comment(lib, "glew32s.lib")
 #pragma comment(lib, "opengl32.lib")
 
-void update();
-void draw();
+void OpenGLInit();
 
-const int width = 700;
-const int height = 700;
+void Update();
+void Draw();
+
+int width = 700;
+int height = 700;
+
+std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
 GLFWwindow* window;
 
 int main()
 {
-	if (!glfwInit())
-		throw "Could not initialize glwf";
-	window = glfwCreateWindow(1400, 800, "Hello World", NULL, NULL);
-	if (!window)
+	bool isHand = true;
+	if (isHand)
 	{
-		glfwTerminate();
-		throw "Could not initialize glwf";
+		hand();
 	}
-	glfwMakeContextCurrent(window);
-
-	tigl::init();
-
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+	else
 	{
-		if (key == GLFW_KEY_ESCAPE)
-			glfwSetWindowShouldClose(window, true);
-	});
+		if (!glfwInit())
+			throw "Could not initialize glwf";
+
+		//Get primary monitor size so that the fullscreen application can have the correct resolution
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &width, &height);
+
+		window = glfwCreateWindow(width, height, "A1 Augmented Reality", monitor, nullptr);
+
+		//Check if the window was successfully made
+		if (!window)
+		{
+			glfwTerminate();
+			throw "Could not initialize glwf";
+		}
+		glfwMakeContextCurrent(window);
+
+		//Escape key callback to quit application
+		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+			{
+				if (key == GLFW_KEY_ESCAPE)
+					glfwSetWindowShouldClose(window, true);
+			});
+
+		//Init
+		OpenGLInit();
+
+		//Test object
+		gameObjects.push_back(GameObject("C:/Users/larsv/Desktop/gpu/rtx4090.obj"));
+
+		//MAIN LOOP
+		while (!glfwWindowShouldClose(window))
+		{
+			//program cycle
+			Update();
+			Draw();
+
+			//glfw cycle
+			glfwSwapBuffers(window);
+			glfwPollEvents();
+		}
+
+		//Termination
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		return 0;
+	}
+}
+
+void OpenGLInit()
+{
+	tigl::init();
 
 	//First time shaders
 	tigl::shader->setProjectionMatrix(glm::perspective(
@@ -51,13 +99,20 @@ int main()
 		100.f
 	));
 
+
+
 	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0, 0, 5),
+		glm::vec3(0, 10, 10),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	));
+
 	tigl::shader->enableColor(true);
 	tigl::shader->enableAlphaTest(true);
+	tigl::shader->enableTexture(true);
+	tigl::shader->enableLighting(true);
+
+	glEnable(GL_DEPTH_TEST);
 	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
 
 	//init imgui
@@ -86,45 +141,18 @@ int main()
 	return 0;
 }
 
-void update()
+void Update()
 {
 }
 
-void draw()
+void Draw()
 {
+	//Clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//	std::vector<Vertex> vert1 = std::vector<Vertex>{
-	//			Vertex::PC(glm::vec3(1, 1, 0.0f), glm::vec4(0.5, 0.5, 0.5, 0.5)),
-	//			Vertex::PC(glm::vec3(1, -1, 0.0f), glm::vec4(0.5, 0.5, 0.5, 0.5)),
-	//			Vertex::PC(glm::vec3(-1, -1, 0.0f), glm::vec4(0.5, 0.5, 0.5, 0.5)),
-	//			Vertex::PC(glm::vec3(-1, 1, 0.0f), glm::vec4(0.5, 0.5, 0.5, 0.5)),
-	//	};
-	//	tigl::VBO* rect1 = tigl::createVbo(vert1);
-	//
-	//	std::vector<Vertex> vert2 = std::vector<Vertex>{
-	//			Vertex::PC(glm::vec3(1.5, 1.5, 1), glm::vec4(0, 0.5, 0, 0.5)),
-	//			Vertex::PC(glm::vec3(1.5, -0.5, 1), glm::vec4(0, 0.5, 0, 0.5)),
-	//			Vertex::PC(glm::vec3(-0.5, -0.5, 1), glm::vec4(0, 0.5, 0, 0.5)),
-	//			Vertex::PC(glm::vec3(-0.5, 1.5, 1), glm::vec4(0, 0.5, 0, 0.5)),
-	//	};
-	//	tigl::VBO* rect2 = tigl::createVbo(vert2);
-
-	//	tigl::drawVertices(GL_QUADS, rect1);
-	//	tigl::drawVertices(GL_QUADS, rect2);
-
-	tigl::begin(GL_TRIANGLES);
-	tigl::addVertex(Vertex::PC(glm::vec3(-2, -1, -4), glm::vec4(1, 0, 0, 1)));
-	tigl::addVertex(Vertex::PC(glm::vec3(2, -1, -4), glm::vec4(0, 1, 0, 1)));
-	tigl::addVertex(Vertex::PC(glm::vec3(0, 1, -4), glm::vec4(0, 0, 1, 1)));
-
-	tigl::addVertex(Vertex::PC(glm::vec3(-10, -1, -10), glm::vec4(1, 1, 1, 1)));
-	tigl::addVertex(Vertex::PC(glm::vec3(-10, -1, 10), glm::vec4(1, 1, 1, 1)));
-	tigl::addVertex(Vertex::PC(glm::vec3(10, -1, 10), glm::vec4(1, 1, 1, 1)));
-
-	tigl::addVertex(Vertex::PC(glm::vec3(-10, -1, -10), glm::vec4(1, 1, 1, 1)));
-	tigl::addVertex(Vertex::PC(glm::vec3(10, -1, -10), glm::vec4(1, 1, 1, 1)));
-	tigl::addVertex(Vertex::PC(glm::vec3(10, -1, 10), glm::vec4(1, 1, 1, 1)));
-
-	tigl::end();
+	//Draw all GameObjects each frame
+	for (const GameObject& gameObject : gameObjects)
+	{
+		gameObject.Draw();
+	}
 }
