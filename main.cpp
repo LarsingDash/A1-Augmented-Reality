@@ -33,7 +33,7 @@ glm::mat4 trans;
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
 GLFWwindow* window;
-ComputerController controller = ComputerController(GameObject("C:/Users/karsv/OneDrive - Avans Hogeschool/GitHub/ARVR/A1-Augmented-Reality/models/car/honda_jazz.obj"), false);
+ComputerController controller = ComputerController(GameObject("models/car/honda_jazz.obj"), false);
 
 //void update();
 void draw();

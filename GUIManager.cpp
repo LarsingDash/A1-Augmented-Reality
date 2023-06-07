@@ -25,7 +25,7 @@ void GUIManager::init()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    controller.setCurrentObject(GameObject("C:/Users/karsv/OneDrive - Avans Hogeschool/GitHub/ARVR/A1-Augmented-Reality/models/car/honda_jazz.obj"));
+    controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
     
 }
 void GUIManager::update()
