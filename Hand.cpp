@@ -73,11 +73,12 @@ int hand() {
         handcascade_palm.detectMultiScale(frameGray, hands, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
         handcascade_fist.detectMultiScale(frameGray, fist, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
-        //Rectangles for areas
+        // Rectangles for areas
         cv::Rect leftArea(camWidth / 10, camHeight / 2.5, 100, 100);
         cv::Rect rightArea(camWidth / 2, camHeight / 2.5, 100, 100);
         cv::Rect upArea(camWidth / 3.33, camHeight / 10, 100, 100);
         cv::Rect downArea(camWidth / 3.33, camHeight / 1.4, 100, 100);
+        cv::Rect clickArea(camWidth - 100, camHeight / 2.5, 100, 100);
 
         handInArea = false;
 
@@ -105,6 +106,7 @@ int hand() {
                 handInArea = true;
                 currentArea = downArea;
             }
+            
         }
 
         for (const auto& hand : fist) {
@@ -131,6 +133,17 @@ int hand() {
                 handInArea = true;
                 currentArea = downArea;
             }
+            else if (clickArea.contains(center)) {
+                moveCursor(0, 0);
+                handInArea = true;
+                currentArea = clickArea;
+
+                // Perform left mouse click
+                INPUT input;
+                input.type = INPUT_MOUSE;
+                input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+                SendInput(1, &input, sizeof(INPUT));
+            }
         }
 
         if (!handInArea) {
@@ -148,20 +161,23 @@ int hand() {
         cv::putText(frame, "Right", cv::Point(frame.cols - 100, frame.rows / 2), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == rightArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
 
         cv::rectangle(frame, upArea, (currentArea == upArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
-        cv::putText(frame, "Up", cv::Point(frame.cols / 2 - 30, 30), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == upArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+        cv::putText(frame, "Up", cv::Point(frame.cols / 3, 50), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == upArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
 
         cv::rectangle(frame, downArea, (currentArea == downArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
-        cv::putText(frame, "Down", cv::Point(frame.cols / 2 - 45, frame.rows - 10), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == downArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+        cv::putText(frame, "Down", cv::Point(frame.cols / 3, frame.rows - 20), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == downArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
 
-        cv::imshow("Hand Recognition", frame);
+        cv::rectangle(frame, clickArea, (currentArea == clickArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+        cv::putText(frame, "Click", cv::Point(frame.cols / 2, frame.rows / 2), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == clickArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+
+        cv::imshow("Hand Gesture Recognition", frame);
 
         if (cv::waitKey(1) == 27) {
-            break;  // Exit if ESC is pressed
+            break;
         }
     }
 
-    cap.release();
     cv::destroyAllWindows();
+    cap.release();
 
     return 0;
 }
