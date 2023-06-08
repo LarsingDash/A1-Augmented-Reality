@@ -4,17 +4,17 @@
 #include "PcPart.hpp"
 #include <string>
 
-enum class SocketType {
+enum class CpuSocketType {
 	INTEL,
 	AMD
 };
 
 class CPU : public PcPart {
 private:
-	SocketType socketType;
+	CpuSocketType socketType;
 
 public:
-	CPU(const std::string& name, SocketType socketType);
+	CPU(const std::string& name, CpuSocketType socketType);
 	~CPU();
 	std::string getName() const override;
 	void display() const override;

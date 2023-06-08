@@ -4,7 +4,7 @@
 #include <vector>
 #include "PcPart.hpp"
 
-enum class SocketType {
+enum class CpuSocketType {
 	INTEL,
 	AMD
 };
@@ -12,10 +12,10 @@ enum class SocketType {
 class Motherboard : public PcPart {
 private:
 	std::vector<PcPart*> childComponents;
-	SocketType socketType;
+	CpuSocketType socketType;
 
 public:
-	Motherboard(const std::string& name, SocketType socketType);
+	Motherboard(const std::string& name, CpuSocketType socketType);
 	~Motherboard();
 
 	void addComponent(PcPart* component);

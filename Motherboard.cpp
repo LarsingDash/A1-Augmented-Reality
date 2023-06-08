@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Motherboard::Motherboard(const std::string& name, SocketType socketType)
+Motherboard::Motherboard(const std::string& name, CpuSocketType socketType)
     : PcPart(name), socketType(socketType) {}
 
 Motherboard::~Motherboard() {
@@ -24,7 +24,7 @@ void Motherboard::removeComponent(PcPart* component) {
 
 void Motherboard::display() const {
     std::cout << "Motherboard: " << name << "\n";
-    std::cout << "Socket Type: " << (socketType == SocketType::INTEL ? "Intel" : "AMD") << "\n";
+    std::cout << "Socket Type: " << (socketType == CpuSocketType::INTEL ? "Intel" : "AMD") << "\n";
     std::cout << "Position: (" << position.x << ", " << position.y << ", " << position.z << ")\n";
     for (PcPart* component : childComponents) {
         component->display();
