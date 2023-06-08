@@ -148,6 +148,10 @@ int partType;
 
 void GUIManager::drawPCBuilderScreen()
 {
+
+	//Top left window
+	ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
+
 	ImGui::Text("RAM");
 	drawPartList(ramList, RAM_TYPE);
 
@@ -158,8 +162,24 @@ void GUIManager::drawPCBuilderScreen()
 	drawPartList(gpuList, GPU_TYPE);
 
 	drawAddPartButton();
-	
-	drawDeletePartButton();
+
+	ImGui::End();
+
+	//Top right window
+	ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 400.0f, 0.0f));
+	ImGui::Begin("Navigation Buttons", nullptr, ImGuiWindowFlags_NoTitleBar);
+
+	if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+	{
+		controller.setIsDrawing(true);
+	}
+
+	if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+	{
+
+	}
+
+
 
 	ImGui::Text("Chosen Pc parts");
 
@@ -167,6 +187,10 @@ void GUIManager::drawPCBuilderScreen()
 	{
 		ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20));
 	}
+	drawDeletePartButton();
+
+	ImGui::End();
+
 }
 
 void GUIManager::drawAddPartButton()
