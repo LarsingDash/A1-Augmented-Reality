@@ -7,8 +7,10 @@
 #include "imgui_impl_opengl3.h"
 #include "PcPart.hpp"
 #include "ComputerController.h"
+#include "CPU.hpp"
 
 //GameObject currentObject;
+std::vector<CPU> cpuList;
 
 GUIManager::GUIManager(GLFWwindow* window, ComputerController controller)
 	: window(window), controller(controller)
@@ -24,7 +26,9 @@ void GUIManager::init()
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
-
+	cpuList.push_back(CPU("Intel core I5", SocketType::INTEL));
+	cpuList.push_back(CPU("AMD Ryzen 3", SocketType::AMD));
+	cpuList.push_back(CPU("Intel core I3", SocketType::INTEL));
 	controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
 }
 
@@ -131,27 +135,27 @@ static const char* list2[9] =
 {
 	"Select a part", "Select a part", "Select a part","Select a part", "Select a part", "Select a part","Select a part", "Select a part", "Select a part"
 };
+
+// Add CPU objects to the array
+
 void GUIManager::drawPCBuilderScreen()
 {
+	
 	if (ImGui::TreeNode("Drag and drop to copy/swap items"))
 	{
 		
-	
-		for (int n = 0; n < IM_ARRAYSIZE(list1); n++)
+		for (int n = 0; n < cpuList.size(); n++)
 		{
+			std::cout << "CPU LIST SIZE" << cpuList.size() << std::endl;
 			ImGui::PushID(n);
 
-			ImGui::Button(list1[n], ImVec2(70, 20));
+			ImGui::Button(cpuList[n].getName().c_str(), ImVec2(70, 20));
 
-			// Our buttons are both drag sources and drag targets here!
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 			{
-				// Set payload to carry the index of our item (could be anything)
 				ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 
-				// Display preview (could be anything, e.g. when dragging an image we could decide to display
-				// the filename and a small preview of the image, etc.)
-				if (mode == Mode_Copy) { ImGui::Text("Copy %s", list1[n]); }
+				if (mode == Mode_Copy) { ImGui::Text("Copy %s", cpuList[n].getName().c_str()); }
 				ImGui::EndDragDropSource();
 			}
 			if (ImGui::BeginDragDropTarget())
@@ -162,7 +166,7 @@ void GUIManager::drawPCBuilderScreen()
 					int payload_n = *(const int*)payload->Data;
 					if (mode == Mode_Copy)
 					{
-						list1[n] = list1[payload_n];
+						cpuList[n] = cpuList[payload_n];
 					}
 				}
 				ImGui::EndDragDropTarget();

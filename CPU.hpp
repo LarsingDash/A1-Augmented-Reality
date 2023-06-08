@@ -16,7 +16,7 @@ private:
 public:
 	CPU(const std::string& name, SocketType socketType);
 	~CPU();
-
+	std::string getName() const;
 	void display() const override;
 };
 
