@@ -41,7 +41,7 @@ void GameObject::Draw(const glm::vec3& position, const glm::mat4& rotation) cons
 			//Draw each vertex on the face
 			for (const auto indexedVertex : face)
 			{
-				addVertex(tigl::Vertex::PTN(glm::vec4(vertices[indexedVertex.pos] + position, 1) * rotation,
+				addVertex(tigl::Vertex::PTN(static_cast<glm::vec3> (glm::vec4(vertices[indexedVertex.pos], 1) * rotation) + position,
 					textureCoords[indexedVertex.texture],
 					normals[indexedVertex.normal]
 				));
