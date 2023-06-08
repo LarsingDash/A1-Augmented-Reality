@@ -9,9 +9,11 @@
 #include "ComputerController.h"
 #include "CPU.hpp"
 #include "GPU.hpp"
+#include "RAM.hpp"
 
-//GameObject currentObject;
 std::vector<CPU> cpuList;
+std::vector<GPU> gpuList;
+std::vector<RAM> ramList;
 std::vector<PcPart*> pcParts;
 
 GUIManager::GUIManager(GLFWwindow* window, ComputerController controller)
@@ -28,28 +30,35 @@ void GUIManager::init()
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
-	cpuList.push_back(CPU("Intel core I5", SocketType::INTEL));
-	cpuList.push_back(CPU("AMD Ryzen 3", SocketType::AMD));
-	cpuList.push_back(CPU("Intel core I3", SocketType::INTEL));
-	CPU* cpu1 = new CPU("Intel Core i5", SocketType::INTEL);
-	pcParts.push_back(cpu1);
 
-	CPU* cpu2 = new CPU("AMD Ryzen 7", SocketType::AMD);
-	pcParts.push_back(cpu2);
+	// Create CPU objects and add them to the list
+	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD));
+	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD));
+	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL));
+	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL));
 
 	// Create GPU objects and add them to the list
-	GPU* gpu1 = new GPU("NVIDIA GeForce RTX 3080");
-	pcParts.push_back(gpu1);
+	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080"));
+	gpuList.push_back(GPU("AMD Radeon RX 6800 XT"));
+	gpuList.push_back(GPU("Geforce RTX 3060"));
+	gpuList.push_back(GPU("AMD Radeon RX 5700 "));
 
-	GPU* gpu2 = new GPU("AMD Radeon RX 6800 XT");
-	pcParts.push_back(gpu2);
+	// Create RAM objects and add them to the list
+	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4));
+	ramList.push_back(RAM("G.SKILL Ripjaws V", RamSocketType::DDR4));
+	ramList.push_back(RAM("ValueRam 2 x 8", RamSocketType::DDR4));
+	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4));
+
+	// Add CPU, GPU, and RAM objects to the pcParts list
+	pcParts.push_back(&cpuList[0]);
+
 
 	controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
 }
 
 void GUIManager::update()
 {
-	// Clear achtergrond
+	// Clear background
 	/*glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);*/
 
@@ -117,11 +126,9 @@ void GUIManager::drawMenuScreen()
 	ImGui::End();
 }
 
-
 void GUIManager::drawTutorialScreen()
 {
 	ImGui::Begin("Tutorial");
-
 
 	ImGui::Text("Welcome to the tutorial screen!");
 	ImGui::ShowDemoWindow();
@@ -132,78 +139,131 @@ void GUIManager::drawTutorialScreen()
 		showTutorialScreen = false;
 	}
 
-
 	ImGui::End();
 }
+
 enum Mode
 {
 	Mode_Copy,
 	Mode_Move,
 	Mode_Swap
 };
+
 int mode = Mode_Copy;
-
-
-// Add CPU objects to the array
 
 void GUIManager::drawPCBuilderScreen()
 {
-	
-	if (ImGui::TreeNode("Drag and drop to copy/swap items"))
+	ImGui::Text("CPU's");
+
+	for (int n = 0; n < cpuList.size(); n++)
 	{
-		
-		for (int n = 0; n < cpuList.size(); n++)
+		ImGui::PushID(n);
+
+		ImGui::Button(cpuList[n].getName().c_str(), ImVec2(250, 20));
+
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
-			ImGui::PushID(n);
+			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 
-			ImGui::Button(cpuList[n].getName().c_str(), ImVec2(70, 20));
-
-			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-			{
-				ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-
-				if (mode == Mode_Copy) { ImGui::Text("Copy %s", cpuList[n].getName().c_str()); }
-				ImGui::EndDragDropSource();
-			}
-		
-			ImGui::PopID();
+			if (mode == Mode_Copy) { ImGui::Text("Copy %s", cpuList[n].getName().c_str()); }
+			ImGui::EndDragDropSource();
 		}
-		for (int m = 0; m < cpuList.size(); m++)
+		
+		ImGui::PopID();
+	}
+	ImGui::Text("GPU's");
+
+	for (int n = 0; n < gpuList.size(); n++)
+	{
+		ImGui::PushID(n);
+
+		ImGui::Button(gpuList[n].getName().c_str(), ImVec2(250, 20));
+
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
-			ImGui::PushID(m);
+			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 
-			ImGui::Button(cpuList[m].getName().c_str(), ImVec2(150, 20));
+			if (mode == Mode_Copy) { ImGui::Text("Copy %s", gpuList[n].getName().c_str()); }
+			ImGui::EndDragDropSource();
+		}
+		
+		ImGui::PopID();
+	}
+	
+	ImGui::Text("RAM");
 
-			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	for (int n = 0; n < ramList.size(); n++)
+	{
+		ImGui::PushID(n);
+
+		ImGui::Button(ramList[n].getName().c_str(), ImVec2(250, 20));
+
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+		{
+			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
+
+			if (mode == Mode_Copy) { ImGui::Text("Copy %s", ramList[n].getName().c_str()); }
+			ImGui::EndDragDropSource();
+		}
+		
+		ImGui::PopID();
+	}
+
+
+	ImGui::Text("Chosen Pc parts");
+	for (int n = 0; n < pcParts.size(); n++)
+	{
+		ImGui::PushID(n);
+
+		ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20));
+
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+		{
+			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
+
+			if (mode == Mode_Copy) { ImGui::Text("Copy %s", pcParts[n]->getName().c_str()); }
+			ImGui::EndDragDropSource();
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
 			{
-				ImGui::SetDragDropPayload("DND_DEMO_CELL", &m, sizeof(int));
+				IM_ASSERT(payload->DataSize == sizeof(int));
+				int payload_n = *(const int*)payload->Data;
 
-				if (mode == Mode_Copy) { ImGui::Text("Copy %s", cpuList[m].getName().c_str()); }
-				ImGui::EndDragDropSource();
-			}
-
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
+				if (mode == Mode_Copy)
 				{
-					IM_ASSERT(payload->DataSize == sizeof(int));
-					int payload_m = *(const int*)payload->Data;
-
-					if (mode == Mode_Copy)
+					if (payload_n >= 0 && payload_n < pcParts.size())
 					{
-						if (payload_m >= 0 && payload_m < cpuList.size())
+						std::cout << pcParts[payload_n]->getName() << std::endl;
+						// Copy the pcPart
+						PcPart* copiedPart = nullptr;
+						if (CPU* cpu = dynamic_cast<CPU*>(pcParts[payload_n]))
 						{
-							cpuList[m] = cpuList[payload_m];
+							copiedPart = new CPU(*cpu);
+						}
+						else if (GPU* gpu = dynamic_cast<GPU*>(pcParts[payload_n]))
+						{
+							copiedPart = new GPU(*gpu);
+						}
+						else if (RAM* ram = dynamic_cast<RAM*>(pcParts[payload_n]))
+						{
+							copiedPart = new RAM(*ram);
+						}
+
+						if (copiedPart != nullptr)
+						{
+							std::cout << pcParts[payload_n]->getName() << std::endl;
+
+							pcParts.push_back(copiedPart);
 						}
 					}
 				}
-				ImGui::EndDragDropTarget();
 			}
-
-			ImGui::PopID();
+			ImGui::EndDragDropTarget();
 		}
 
-		ImGui::TreePop();
+		ImGui::PopID();
 	}
-
 }
