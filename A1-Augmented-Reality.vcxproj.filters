@@ -19,6 +19,12 @@
     <Filter Include="Header Files\imgui">
       <UniqueIdentifier>{dcaa21bd-6994-4234-9301-6503d52aacea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\PcParts">
+      <UniqueIdentifier>{b2d421f3-cbdb-42e7-a7c8-869dcaabd41f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PcParts">
+      <UniqueIdentifier>{abbce031-b2ca-41cf-ab7f-ae34bb5bea40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,9 +54,6 @@
     <ClCompile Include="GUIManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PcPart.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -71,6 +74,30 @@
     </ClCompile>
     <ClCompile Include="stb_image.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PcPart.cpp">
+      <Filter>Source Files\PcParts</Filter>
+    </ClCompile>
+    <ClCompile Include="PcCase.cpp">
+      <Filter>Source Files\PcParts</Filter>
+    </ClCompile>
+    <ClCompile Include="PSU.cpp">
+      <Filter>Source Files\PcParts</Filter>
+    </ClCompile>
+    <ClCompile Include="Motherboard.cpp">
+      <Filter>Source Files\PcParts</Filter>
+    </ClCompile>
+    <ClCompile Include="RAM.cpp">
+      <Filter>Source Files\PcParts</Filter>
+    </ClCompile>
+    <ClCompile Include="Storage.cpp">
+      <Filter>Source Files\PcParts</Filter>
+    </ClCompile>
+    <ClCompile Include="GPU.cpp">
+      <Filter>Source Files\PcParts</Filter>
+    </ClCompile>
+    <ClCompile Include="CPU.cpp">
+      <Filter>Source Files\PcParts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,9 +134,6 @@
     <ClInclude Include="GUIManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PcPart.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -127,6 +151,30 @@
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPU.hpp">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="GPU.hpp">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="Motherboard.hpp">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="PcCase.hpp">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="PSU.h">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="RAM.hpp">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage.hpp">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="PcPart.hpp">
+      <Filter>Header Files\PcParts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

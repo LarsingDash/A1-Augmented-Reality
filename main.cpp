@@ -94,7 +94,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		//Program cycle
-		HandUpdate();
+		// HandUpdate();
 		Update();
 		guiManager.Draw(cubePosition, rotate);
 

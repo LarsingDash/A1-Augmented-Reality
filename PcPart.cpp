@@ -1,20 +1,13 @@
-#include "PcPart.h"
+#include "PcPart.hpp"
 
-PcPart::PcPart(const std::string& partName, bool required)
-    : name(partName), isRequired(required) {}
+PcPart::PcPart(const std::string& name) : name(name), position(glm::vec3(0.0f)) {}
 
-std::string PcPart::getName() const {
-    return name;
+PcPart::~PcPart() {}
+
+void PcPart::setPosition(const glm::vec3& pos) {
+	position = pos;
 }
 
-void PcPart::setName(const std::string& partName) {
-    name = partName;
-}
-
-bool PcPart::getIsRequired() const {
-    return isRequired;
-}
-
-void PcPart::setIsRequired(bool required) {
-    isRequired = required;
+glm::vec3 PcPart::getPosition() const {
+	return position;
 }
