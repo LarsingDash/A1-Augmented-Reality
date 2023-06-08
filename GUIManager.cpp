@@ -99,18 +99,50 @@ void GUIManager::drawMenuScreen()
 
 void GUIManager::drawTutorialScreen()
 {
-    ImGui::Begin("Tutorial");
+    ImGui::Begin("Navigation Buttons", nullptr, ImGuiWindowFlags_NoTitleBar);
 
+    if (ImGui::Button("Handgestures", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+    {
+        showHandgesturesScreen = true;
+    }
 
-    ImGui::Text("Welcome to the tutorial screen!");
-    ImGui::ShowDemoWindow();
+    if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+    {
+        
+    }
 
-    if (ImGui::Button("Back to Menu"))
+    if (ImGui::Button("Show PC part list", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+    {
+        showPcPartList = !showPcPartList;
+    }
+
+    ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - 75, ImGui::GetWindowHeight() - 70));
+
+    if (ImGui::Button("PC Builder", ImVec2(150, 30)))
+    {
+    }
+
+    ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - 75, ImGui::GetWindowHeight() - 35));
+    if (ImGui::Button("Back to Menu", ImVec2(150, 30)))
     {
         showMenuScreen = true;
         showTutorialScreen = false;
+        showPcBuilderScreen = false;
     }
 
+    //ImGui::EndChild();
+    ImGui::End();
+
+    ImGui::Begin("Tutorial", nullptr, ImGuiWindowFlags_NoTitleBar);
+
+    ImGui::SetWindowFontScale(1.8);
+
+    ImGui::Text("Welcome to the tutorial screen!");
+
+    ImGui::SetWindowFontScale(1);
+    if (showTutorialScreen) {
+
+    }
 
     ImGui::End();
 }

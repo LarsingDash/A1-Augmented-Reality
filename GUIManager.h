@@ -20,6 +20,7 @@ private:
     ComputerController controller;
     bool showMenuScreen = true;
     bool showTutorialScreen = false;
+    bool showHandgesturesScreen = false;
     bool showPcBuilderScreen = false;
     bool showPcPartList = false;
 
