@@ -4,15 +4,13 @@
 class ComputerController
 {
 public:
-	ComputerController(GameObject currentObject, bool isDrawing);
-	void handleDraw();
-	void setCurrentObject(GameObject newObject);
-	void drawCurrentObject();
+	ComputerController(bool isDrawing);
+	void handleDraw(const glm::vec3& position, const glm::mat4& rotation);
+
 	void setIsDrawing(bool isDrawing);
+	std::vector<GameObject> objects;
 
 private:
-	GameObject currentObject;
-	std::vector<GameObject> objects;
-	//bool isDrawing;
+	bool isDrawing = false;
 };
 

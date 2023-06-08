@@ -9,29 +9,71 @@
 #include "Material.h"
 #include "tigl.h"
 
-GameObject::GameObject() {
-
+//Constructors
+GameObject::GameObject(const glm::vec3 trans)
+{
+	transform = trans;
 }
 
-//Loads an object model 
-GameObject::GameObject(const std::string& fileName)
+GameObject::GameObject(const std::string& dir, const std::string& fileName)
 {
+	LoadObjectFile(dir, fileName);
+}
+
+//Destructor
+GameObject::~GameObject(void) = default;
+
+//Draw the object
+void GameObject::Draw(const glm::vec3& position, const glm::mat4& rotation) const
+{
+	//All vertices are grouped by their unique mtl
+	for (const auto group : groups)
+	{
+		//Start drawing
+		tigl::begin(GL_TRIANGLES);
+
+		//Select the groups mtl
+		materials[group->materialIndex]->SelectMaterial();
+
+		//A group can contain multiple faces, go through each
+		for (const auto& face : group->faces)
+		{
+			//Draw each vertex on the face
+			for (const auto indexedVertex : face)
+			{
+				addVertex(tigl::Vertex::PTN(static_cast<glm::vec3> (glm::vec4(vertices[indexedVertex.pos], 1) * rotation) + position,
+					textureCoords[indexedVertex.texture],
+					normals[indexedVertex.normal]
+				));
+			}
+		}
+
+		//Stop drawing
+		tigl::end();
+	}
+}
+
+//Load an object file with the specified directory and filename
+void GameObject::LoadObjectFile(const std::string& dir, const std::string& fileName)
+{
+	std::string fullDir = dir + "/objects/" + fileName + "/" + fileName + ".obj";
+
 	//Clean fileName
-	std::cout << "Loading " << fileName << std::endl;
-	std::string dirName = fileName;
+	std::cout << "Loading " << fullDir << std::endl;
+	std::string dirName = fullDir;
 	if (dirName.rfind('/') != std::string::npos)
 		dirName = dirName.substr(0, dirName.rfind('/'));
 	if (dirName.rfind('\\') != std::string::npos)
 		dirName = dirName.substr(0, dirName.rfind('\\'));
-	if (fileName == dirName)
+	if (fullDir == dirName)
 		dirName = "";
 
 	//Open obj file
-	std::ifstream pFile(fileName.c_str());
+	std::ifstream pFile(fullDir.c_str());
 
 	if (!pFile.is_open())
 	{
-		std::cout << "Could not open file " << fileName << std::endl;
+		std::cout << "Could not open file " << fullDir << std::endl;
 		return;
 	}
 
@@ -55,11 +97,11 @@ GameObject::GameObject(const std::string& fileName)
 		//Vetrex
 		if (params[0] == "v")
 			vertices.push_back(glm::vec3((float)atof(params[1].c_str()), (float)atof(params[2].c_str()),
-			                             (float)atof(params[3].c_str())));
+				(float)atof(params[3].c_str())));
 		//Vertex normal
 		else if (params[0] == "vn")
 			normals.push_back(glm::vec3((float)atof(params[1].c_str()), (float)atof(params[2].c_str()),
-			                            (float)atof(params[3].c_str())));
+				(float)atof(params[3].c_str())));
 
 		//Vertex texture coordinate
 		else if (params[0] == "vt")
@@ -72,7 +114,7 @@ GameObject::GameObject(const std::string& fileName)
 			for (size_t ii = 4; ii <= params.size(); ii++)
 			{
 				std::vector<IndexedVertex> face;
-			
+
 				for (size_t i = ii - 3; i < ii; i++)
 				{
 					IndexedVertex vertex = IndexedVertex();
@@ -120,7 +162,10 @@ GameObject::GameObject(const std::string& fileName)
 		//Load material file
 		else if (params[0] == "mtllib")
 		{
-			LoadMaterialFile(dirName + "/" + params[1], dirName);
+			std::string mtlPath = fullDir;
+			Replace(mtlPath, ".obj", ".mtl");
+
+			LoadMaterialFile(mtlPath);
 		}
 
 		//Switch to a new group
@@ -157,48 +202,15 @@ GameObject::GameObject(const std::string& fileName)
 	groups.push_back(currentGroup);
 }
 
-//Destructor
-GameObject::~GameObject(void) = default;
-
-//Draw the object
-void GameObject::Draw(glm::mat4 translation) const
-{
-	//All vertices are grouped by their unique mtl
-	for (const auto group : groups)
-	{
-		//Start drawing
-		tigl::begin(GL_TRIANGLES);
-
-		//Select the groups mtl
-		materials[group->materialIndex]->SelectMaterial();
-
-		//A group can contain multiple faces, go through each
-		for (const auto& face : group->faces)
-		{
-			//Draw each vertex on the face
-			for (const auto indexedVertex : face)
-			{
-				addVertex(tigl::Vertex::PT(glm::vec4(vertices[indexedVertex.pos], 1.f) * translation,
-				                           textureCoords[indexedVertex.texture]
-				                           // normals[indexedVertex.normal]
-				));
-			}
-		}
-
-		//Stop drawing
-		tigl::end();
-	}
-}
-
 //Load a material file with the specified name and path
-void GameObject::LoadMaterialFile(const std::string& fileName, const std::string& dirName)
+void GameObject::LoadMaterialFile(const std::string& mtlPath)
 {
 	//Open the file
-	std::cout << "Loading " << fileName << std::endl;
-	std::ifstream pFile(fileName.c_str());
+	std::cout << "Loading " << mtlPath << std::endl;
+	std::ifstream pFile(mtlPath);
 	if (!pFile.is_open())
 	{
-		std::cout << "Could not open file " << fileName << std::endl;
+		std::cout << "Could not open file " << mtlPath << std::endl;
 		return;
 	}
 
@@ -240,8 +252,7 @@ void GameObject::LoadMaterialFile(const std::string& fileName, const std::string
 				tex = tex.substr(tex.rfind("\\") + 1);
 
 			//Save the texture path to the mtl
-			currentMaterial->SetTexture(dirName + "/" + tex);
-			// currentMaterial->SetTexture(tex);
+			currentMaterial->SetTexture(mtlPath.substr(0, mtlPath.rfind('/')) + "/" + tex);
 		}
 		else if (params[0] == "kd")
 		{
@@ -279,7 +290,7 @@ void GameObject::LoadMaterialFile(const std::string& fileName, const std::string
 }
 
 //Replaces a substring in a string
-static std::string Replace(std::string& str, const std::string& toReplace, const std::string& replacement)
+std::string GameObject::Replace(std::string& str, const std::string& toReplace, const std::string& replacement)
 {
 	size_t index = 0;
 	while (true)
@@ -294,7 +305,7 @@ static std::string Replace(std::string& str, const std::string& toReplace, const
 }
 
 //Splits a string into substrings, based on a separator
-static std::vector<std::string> Split(std::string str, const std::string& separator)
+std::vector<std::string> GameObject::Split(std::string str, const std::string& separator)
 {
 	std::vector<std::string> ret;
 	size_t index;
@@ -311,14 +322,14 @@ static std::vector<std::string> Split(std::string str, const std::string& separa
 }
 
 //Turns a string to lowercase
-static inline std::string ToLower(std::string data)
+inline std::string GameObject::ToLower(std::string data)
 {
 	std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 	return data;
 }
 
 //Cleans up a line for processing
-static inline std::string CleanLine(std::string line)
+inline std::string GameObject::CleanLine(std::string line)
 {
 	line = Replace(line, "\t", " ");
 	while (line.find("  ") != std::string::npos)

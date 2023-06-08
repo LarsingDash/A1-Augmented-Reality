@@ -1,9 +1,6 @@
 # Prerequisites
 *.d
 
-#game objects
-game_objects/
-
 # Compiled Object files
 *.slo
 *.lo
@@ -436,4 +433,8 @@ FodyWeavers.xsd
 #libs
 !/lib/**
 
+#game objects
+!/objects/**
+
+#OpenCV
 /OpenCVProps.props

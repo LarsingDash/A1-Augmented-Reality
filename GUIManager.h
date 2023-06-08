@@ -9,15 +9,14 @@
 
 class GUIManager {
 public:
-    GUIManager(GLFWwindow* window, ComputerController controller);
+    GUIManager(GLFWwindow* window, const ComputerController& controller);
 
     void init();
-    void update();
-    void draw();
+    void Draw(const glm::vec3& position, const glm::mat4& rotation);
+    ComputerController controller;
 
 private:
     GLFWwindow* window;
-    ComputerController controller;
     bool showMenuScreen = true;
     bool showTutorialScreen = false;
     bool showPcBuilderScreen = false;
