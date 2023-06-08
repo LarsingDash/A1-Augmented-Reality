@@ -1,9 +1,9 @@
 #include "GameObject.h"
 
 #include <iostream>
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "tigl.h"
@@ -12,6 +12,7 @@
 #include "ComputerController.h"
 
 #include "hand.h"
+
 using tigl::Vertex;
 
 #pragma comment(lib, "glfw3.lib")
@@ -36,7 +37,7 @@ std::vector<GameObject> gameObjects = std::vector<GameObject>();
 GLFWwindow* window;
 ComputerController controller = ComputerController(GameObject("models/car/honda_jazz.obj"), false);
 
-//void update();
+void OpenGLInit();
 void draw();
 
 int main()
@@ -50,9 +51,8 @@ int main()
         throw "Could not initialize glfw";
     }
     glfwMakeContextCurrent(window);
-    glewInit();
 
-    tigl::init();
+    OpenGLInit();
 
     glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
         {
@@ -84,9 +84,10 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         // Program cycle
-        //update();
+        HandUpdate();
         draw();
         guiManager.update();
+
 
         // glfw cycle
         glfwSwapBuffers(window);
@@ -94,6 +95,7 @@ int main()
     }
 
     // Termination
+    HandTeardown();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
@@ -104,6 +106,9 @@ void OpenGLInit()
 {
 	//Init
 	tigl::init();
+    glewInit();
+
+    HandInit();
 
 	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(

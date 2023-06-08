@@ -13,7 +13,6 @@ void ComputerController::setIsDrawing(bool newIsDrawing) {
 }
 
 void ComputerController::handleDraw() {
-	std::cout << "IsDrawing: " << isDrawing << std::endl;
 	if (isDrawing) {
 		drawCurrentObject();
 	}
