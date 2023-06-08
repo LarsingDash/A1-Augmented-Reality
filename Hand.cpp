@@ -5,42 +5,34 @@
 // Constants for cursor control
 const int SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 const int SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+const int camHeight = 342;
+const int camWidth = 607;
 int lastX;
 int lastY;
 
-// Function to move the cursor
-void moveCursor(int x, int y) {
-    int newX = SCREEN_WIDTH - ((x * SCREEN_WIDTH) / 607);  // Map the x-coordinate to the screen width
-    int newY = (y * SCREEN_HEIGHT) / 342;  // Map the y-coordinate to the screen height
+// Cursor movement speed
+const int CURSOR_SPEED = 10;
 
+// Function to move the cursor in a specific direction
+void moveCursor(int dx, int dy) {
+    int newX = lastX + dx;
+    int newY = lastY + dy;
+
+    // Clamp the cursor position within the screen boundaries
     newX = std::max(0, std::min(newX, SCREEN_WIDTH));
     newY = std::max(0, std::min(newY, SCREEN_HEIGHT));
 
+    // Update the cursor position and set it
     lastX = newX;
     lastY = newY;
 
     SetCursorPos(newX, newY);
 }
 
-// Function to simulate a mouse button press
-void mouseButtonDown() {
-    INPUT input;
-    input.type = INPUT_MOUSE;
-    input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-    SendInput(1, &input, sizeof(INPUT));
-}
-
-void mouseButtonUp() {
-    INPUT input;
-    input.type = INPUT_MOUSE;
-    input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
-    SendInput(1, &input, sizeof(INPUT));
-}
-
 int hand() {
     cv::VideoCapture cap(1);
-    cap.set(cv::CAP_PROP_FRAME_WIDTH, 607); // valueX = your wanted width
-    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 342); // valueY = your wanted height
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, camWidth); // valueX = your wanted width
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, camHeight); // valueY = your wanted height
 
     if (!cap.isOpened()) {
         std::cerr << "Failed to open camera." << std::endl;
@@ -62,6 +54,9 @@ int hand() {
     }
 
     cv::Mat frame;
+    bool handInArea = false;
+    cv::Rect currentArea;
+
     while (true) {
         cap >> frame;
         if (frame.empty()) {
@@ -78,30 +73,85 @@ int hand() {
         handcascade_palm.detectMultiScale(frameGray, hands, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
         handcascade_fist.detectMultiScale(frameGray, fist, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
+        //Rectangles for areas
+        cv::Rect leftArea(camWidth / 10, camHeight / 2.5, 100, 100);
+        cv::Rect rightArea(camWidth / 2, camHeight / 2.5, 100, 100);
+        cv::Rect upArea(camWidth / 3.33, camHeight / 10, 100, 100);
+        cv::Rect downArea(camWidth / 3.33, camHeight / 1.4, 100, 100);
+
+        handInArea = false;
+
         for (const auto& hand : hands) {
             cv::Point center(hand.x + hand.width / 2, hand.y + hand.height / 2);
             cv::circle(frame, center, hand.width / 2, cv::Scalar(255, 0, 255), 2);
 
-            // Determine hand status based on hand area
-            std::string handStatus = (hand.width * hand.height < 6000) ? "Closed" : "Open";
-            cv::putText(frame, "Open", cv::Point(hand.x, hand.y - 10), cv::FONT_HERSHEY_SIMPLEX, 0.9, cv::Scalar(255, 0, 255), 2);
-
-            // Move the cursor based on hand position
-            moveCursor(hand.x + hand.width / 2, hand.y + hand.height / 2);
-            // mouseButtonUp();
+            if (leftArea.contains(center)) {
+                moveCursor(-CURSOR_SPEED, 0);
+                handInArea = true;
+                currentArea = leftArea;
+            }
+            else if (rightArea.contains(center)) {
+                moveCursor(CURSOR_SPEED, 0);
+                handInArea = true;
+                currentArea = rightArea;
+            }
+            else if (upArea.contains(center)) {
+                moveCursor(0, -CURSOR_SPEED);
+                handInArea = true;
+                currentArea = upArea;
+            }
+            else if (downArea.contains(center)) {
+                moveCursor(0, CURSOR_SPEED);
+                handInArea = true;
+                currentArea = downArea;
+            }
         }
+
         for (const auto& hand : fist) {
             cv::Point center(hand.x + hand.width / 2, hand.y + hand.height / 2);
             cv::circle(frame, center, hand.width / 2, cv::Scalar(255, 0, 255), 2);
 
-            // Determine hand status based on hand area
-            std::string handStatus = (hand.width * hand.height < 6000) ? "Closed" : "Open";
-            cv::putText(frame, "Closed", cv::Point(hand.x, hand.y - 10), cv::FONT_HERSHEY_SIMPLEX, 0.9, cv::Scalar(255, 0, 255), 2);
-
-            // Move the cursor based on hand position
-            moveCursor(hand.x + hand.width / 2, hand.y + hand.height / 2);
-            // mouseButtonDown();
+            if (leftArea.contains(center)) {
+                moveCursor(-CURSOR_SPEED, 0);
+                handInArea = true;
+                currentArea = leftArea;
+            }
+            else if (rightArea.contains(center)) {
+                moveCursor(CURSOR_SPEED, 0);
+                handInArea = true;
+                currentArea = rightArea;
+            }
+            else if (upArea.contains(center)) {
+                moveCursor(0, -CURSOR_SPEED);
+                handInArea = true;
+                currentArea = upArea;
+            }
+            else if (downArea.contains(center)) {
+                moveCursor(0, CURSOR_SPEED);
+                handInArea = true;
+                currentArea = downArea;
+            }
         }
+
+        if (!handInArea) {
+            // If hand is not in any area, stop the cursor
+            currentArea = cv::Rect(0, 0, 0, 0);
+        }
+
+        // Draw areas
+        cv::Scalar areaColor = cv::Scalar(0, 0, 255); // Red color
+        int thickness = 2;
+        cv::rectangle(frame, leftArea, (currentArea == leftArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+        cv::putText(frame, "Left", cv::Point(10, frame.rows / 2), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == leftArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+
+        cv::rectangle(frame, rightArea, (currentArea == rightArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+        cv::putText(frame, "Right", cv::Point(frame.cols - 100, frame.rows / 2), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == rightArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+
+        cv::rectangle(frame, upArea, (currentArea == upArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+        cv::putText(frame, "Up", cv::Point(frame.cols / 2 - 30, 30), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == upArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+
+        cv::rectangle(frame, downArea, (currentArea == downArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
+        cv::putText(frame, "Down", cv::Point(frame.cols / 2 - 45, frame.rows - 10), cv::FONT_HERSHEY_SIMPLEX, 1.0, (currentArea == downArea) ? cv::Scalar(0, 255, 0) : areaColor, thickness);
 
         cv::imshow("Hand Recognition", frame);
 
