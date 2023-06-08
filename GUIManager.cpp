@@ -154,7 +154,6 @@ void GUIManager::drawPCBuilderScreen()
 		
 		for (int n = 0; n < cpuList.size(); n++)
 		{
-			std::cout << "CPU LIST SIZE" << cpuList.size() << std::endl;
 			ImGui::PushID(n);
 
 			ImGui::Button(cpuList[n].getName().c_str(), ImVec2(70, 20));
@@ -166,19 +165,7 @@ void GUIManager::drawPCBuilderScreen()
 				if (mode == Mode_Copy) { ImGui::Text("Copy %s", cpuList[n].getName().c_str()); }
 				ImGui::EndDragDropSource();
 			}
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
-				{
-					IM_ASSERT(payload->DataSize == sizeof(int));
-					int payload_n = *(const int*)payload->Data;
-					if (mode == Mode_Copy)
-					{
-						cpuList[n] = cpuList[payload_n];
-					}
-				}
-				ImGui::EndDragDropTarget();
-			}
+		
 			ImGui::PopID();
 		}
 		for (int m = 0; m < cpuList.size(); m++)
