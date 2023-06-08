@@ -162,7 +162,7 @@ GameObject::GameObject(const std::string& dir, const std::string& fileName)
 GameObject::~GameObject(void) = default;
 
 //Draw the object
-void GameObject::Draw(glm::mat4 translation) const
+void GameObject::Draw(glm::mat4 rotation) const
 {
 	//All vertices are grouped by their unique mtl
 	for (const auto group : groups)
@@ -179,7 +179,7 @@ void GameObject::Draw(glm::mat4 translation) const
 			//Draw each vertex on the face
 			for (const auto indexedVertex : face)
 			{
-				addVertex(tigl::Vertex::PT(glm::vec4(vertices[indexedVertex.pos], 1.f) * translation,
+				addVertex(tigl::Vertex::PT(glm::vec4(vertices[indexedVertex.pos], 1.f) * rotation,
 				                           textureCoords[indexedVertex.texture]
 				                           // normals[indexedVertex.normal]
 				));
