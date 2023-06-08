@@ -50,7 +50,6 @@ void GUIManager::init()
 	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4));
 
 	// Add CPU, GPU, and RAM objects to the pcParts list
-	pcParts.push_back(&cpuList[0]);
 
 
 	controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
@@ -148,110 +147,141 @@ enum Mode
 	Mode_Move,
 	Mode_Swap
 };
+
 enum PartType
 {
-	Null_Part,
+	
 	CPU,
 	GPU,
 	RAM
 };
 
 int mode = Mode_Copy;
-int partType = Null_Part;
+int partType;
 
 
 void GUIManager::drawPCBuilderScreen()
 {
-	ImGui::Text("CPU's");
-
-	for (int n = 0; n < cpuList.size(); n++)
-	{
-		ImGui::PushID(n);
-
-		if (ImGui::Button(cpuList[n].getName().c_str(), ImVec2(250, 20)));
-
-		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-		{
-			partType = CPU;
-			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-			ImGui::Text("Copy %s", cpuList[n].getName().c_str());
-			ImGui::EndDragDropSource();
-		}
-
-		ImGui::PopID();
-	}
-
-	ImGui::Text("GPU's");
-
-	for (int n = 0; n < gpuList.size(); n++)
-	{
-		ImGui::PushID(n);
-
-		if (ImGui::Button(gpuList[n].getName().c_str(), ImVec2(250, 20)));
-
-		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-		{
-			partType = GPU;
-			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-			ImGui::Text("Copy %s", gpuList[n].getName().c_str());
-			ImGui::EndDragDropSource();
-		}
-
-		ImGui::PopID();
-	}
-
 	ImGui::Text("RAM");
+	drawPartList(ramList, PartType::RAM);
 
-	for (int n = 0; n < ramList.size(); n++)
-	{
-		ImGui::PushID(n);
-		if (ImGui::Button(ramList[n].getName().c_str(), ImVec2(250, 20)));
+	ImGui::Text("CPU");
+	drawPartList(cpuList, PartType::CPU);
 
+	ImGui::Text("GPU");
+	drawPartList(gpuList, PartType::GPU);
+	// for (int n = 0; n < ramList.size(); n++)
+	// {
+	// 	ImGui::PushID(n);
+	// 	if (ImGui::Button(ramList[n].getName().c_str(), ImVec2(250, 20)));
+	//
+	// 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	// 	{
+	// 		partType = RAM;
+	// 		ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
+	// 		ImGui::Text("Copy %s", ramList[n].getName().c_str());
+	// 		ImGui::EndDragDropSource();
+	// 	}
+	//
+	// 	ImGui::PopID();
+	// }
 
-		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-		{
-			partType = RAM;
-			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-			ImGui::Text("Copy %s", ramList[n].getName().c_str());
-			ImGui::EndDragDropSource();
-		}
-
-		ImGui::PopID();
-	}
-
-
+	createAddPartButton();
+	
+	createDeletePartButton();
 
 	ImGui::Text("Chosen Pc parts");
+
 	for (int n = 0; n < pcParts.size(); n++)
 	{
-		ImGui::PushID(n);
-
 		ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20));
+	}
+}
 
-		
-		if (ImGui::BeginDragDropTarget())
+void GUIManager::createAddPartButton()
+{
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.8f, 0.2f, 1.0f)); // Set button color to green
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.9f, 0.3f, 1.0f)); // Set button hover color to a lighter green
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.7f, 0.1f, 1.0f)); // Set button active color to a darker green
+
+	ImGui::Button("Add PC Part", ImVec2(250, 20));
+
+	ImGui::PopStyleColor(3); // Pop the three style colors
+
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
-			{
-				IM_ASSERT(payload->DataSize == sizeof(int));
-				int payload_n = *(const int*)payload->Data;
-		
-				std::cout << "Part type received: "<< partType << std::endl;
-				if (partType == CPU)
-				{
-					pcParts.push_back(&cpuList[payload_n]);
-				}
-				else if (partType == GPU)
-				{
-					pcParts.push_back(&gpuList[payload_n]);
-				}
-				else if (partType == RAM)
-				{
+			IM_ASSERT(payload->DataSize == sizeof(int));
+			int payload_n = *(const int*)payload->Data;
 
-					pcParts.push_back(&ramList[payload_n]);
-				}
+			std::cout << "Part type received: " << partType << std::endl;
+			if (partType == CPU)
+			{
+				pcParts.push_back(&cpuList[payload_n]);
 			}
-			ImGui::EndDragDropTarget();
+			else if (partType == GPU)
+			{
+				pcParts.push_back(&gpuList[payload_n]);
+			}
+			else if (partType == RAM)
+			{
+				pcParts.push_back(&ramList[payload_n]);
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
+void GUIManager::createDeletePartButton()
+{
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f)); // Set button color to red
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f)); // Set button hover color to a lighter red
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f)); // Set button active color to a darker red
+
+	ImGui::Button("Delete Part", ImVec2(250, 20));
+
+	ImGui::PopStyleColor(3);
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
+		{
+			IM_ASSERT(payload->DataSize == sizeof(int));
+			int payload_n = *(const int*)payload->Data;
+
+			std::cout << "Part type received: " << partType << std::endl;
+			if (partType == CPU)
+			{
+				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &cpuList[payload_n]), pcParts.end());
+			}
+			else if (partType == GPU)
+			{
+				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &gpuList[payload_n]), pcParts.end());
+			}
+			else if (partType == RAM)
+			{
+				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &ramList[payload_n]), pcParts.end());
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
+
+template <typename T>
+void GUIManager::drawPartList(const std::vector<T>& partsList, int partType)
+{
+	for (int n = 0; n < partsList.size(); n++)
+	{
+		ImGui::PushID(n);
+		if (ImGui::Button(partsList[n].getName().c_str(), ImVec2(250, 20)));
+
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+		{
+			partType = partType;
+			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
+			ImGui::Text("Copy %s", partsList[n].getName().c_str());
+			ImGui::EndDragDropSource();
 		}
 
 		ImGui::PopID();
