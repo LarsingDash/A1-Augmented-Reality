@@ -16,7 +16,7 @@ public:
   // Getter and setter for position
   void setPosition(const glm::vec3& pos);
   glm::vec3 getPosition() const;
-
+  virtual std::string getName() const = 0;
   virtual void display() const = 0;
 };
 

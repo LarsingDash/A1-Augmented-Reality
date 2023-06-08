@@ -5,7 +5,7 @@
 CPU::CPU(const std::string& name, SocketType socketType) : PcPart(name), socketType(socketType) {}
 
 CPU::~CPU() {}
-std::string CPU::getName() const {
+std::string CPU::getName() const{
 	return name;
 }
 void CPU::display() const {

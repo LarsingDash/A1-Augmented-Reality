@@ -8,9 +8,11 @@
 #include "PcPart.hpp"
 #include "ComputerController.h"
 #include "CPU.hpp"
+#include "GPU.hpp"
 
 //GameObject currentObject;
 std::vector<CPU> cpuList;
+std::vector<PcPart*> pcParts;
 
 GUIManager::GUIManager(GLFWwindow* window, ComputerController controller)
 	: window(window), controller(controller)
@@ -29,6 +31,19 @@ void GUIManager::init()
 	cpuList.push_back(CPU("Intel core I5", SocketType::INTEL));
 	cpuList.push_back(CPU("AMD Ryzen 3", SocketType::AMD));
 	cpuList.push_back(CPU("Intel core I3", SocketType::INTEL));
+	CPU* cpu1 = new CPU("Intel Core i5", SocketType::INTEL);
+	pcParts.push_back(cpu1);
+
+	CPU* cpu2 = new CPU("AMD Ryzen 7", SocketType::AMD);
+	pcParts.push_back(cpu2);
+
+	// Create GPU objects and add them to the list
+	GPU* gpu1 = new GPU("NVIDIA GeForce RTX 3080");
+	pcParts.push_back(gpu1);
+
+	GPU* gpu2 = new GPU("AMD Radeon RX 6800 XT");
+	pcParts.push_back(gpu2);
+
 	controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
 }
 
@@ -127,14 +142,7 @@ enum Mode
 	Mode_Swap
 };
 int mode = Mode_Copy;
-static const char* list1[9] =
-{
-	"CPU1", "CPU2", "CPU3","CPU4", "CPU5", "CPU6","CPU7", "CPU8", "CPU9"
-};
-static const char* list2[9] =
-{
-	"Select a part", "Select a part", "Select a part","Select a part", "Select a part", "Select a part","Select a part", "Select a part", "Select a part"
-};
+
 
 // Add CPU objects to the array
 
@@ -173,35 +181,41 @@ void GUIManager::drawPCBuilderScreen()
 			}
 			ImGui::PopID();
 		}
-		for (int m = 0; m < IM_ARRAYSIZE(list1); m++)
+		for (int m = 0; m < cpuList.size(); m++)
 		{
 			ImGui::PushID(m);
 
-			ImGui::Button(list2[m], ImVec2(150, 20));
+			ImGui::Button(cpuList[m].getName().c_str(), ImVec2(150, 20));
 
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 			{
 				ImGui::SetDragDropPayload("DND_DEMO_CELL", &m, sizeof(int));
 
-				
-				if (mode == Mode_Copy) { ImGui::Text("Copy %s", list2[m]); }
+				if (mode == Mode_Copy) { ImGui::Text("Copy %s", cpuList[m].getName().c_str()); }
 				ImGui::EndDragDropSource();
 			}
+
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
 				{
 					IM_ASSERT(payload->DataSize == sizeof(int));
 					int payload_m = *(const int*)payload->Data;
+
 					if (mode == Mode_Copy)
 					{
-						list2[m] = list1[payload_m];
+						if (payload_m >= 0 && payload_m < cpuList.size())
+						{
+							cpuList[m] = cpuList[payload_m];
+						}
 					}
 				}
 				ImGui::EndDragDropTarget();
 			}
+
 			ImGui::PopID();
 		}
+
 		ImGui::TreePop();
 	}
 
