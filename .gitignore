@@ -435,3 +435,6 @@ FodyWeavers.xsd
 
 #game objects
 !/objects/**
+
+#OpenCV
+/OpenCVProps.props

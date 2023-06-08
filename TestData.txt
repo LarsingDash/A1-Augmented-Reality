@@ -1,0 +1,50 @@
+    //Test list with computer parts:
+    // CPU
+    PcPart cpu1("CPU", true);
+    cpu1.setName("AMD Ryzen 5 5600X");
+
+    PcPart cpu2("CPU", true);
+    cpu2.setName("Intel Core i7-10700K");
+
+    PcPart cpu3("CPU", true);
+    cpu3.setName("AMD Ryzen 7 5800X");
+
+    // GPU
+    PcPart gpu1("GPU", true);
+    gpu1.setName("NVIDIA GeForce RTX 3080");
+
+    PcPart gpu2("GPU", true);
+    gpu2.setName("AMD Radeon RX 6800 XT");
+
+    PcPart gpu3("GPU", true);
+    gpu3.setName("NVIDIA GeForce RTX 3070");
+
+    // Power Supply
+    PcPart powerSupply1("Power Supply", true);
+    powerSupply1.setName("Corsair RM750");
+
+    PcPart powerSupply2("Power Supply", true);
+    powerSupply2.setName("EVGA SuperNOVA 850 G3");
+
+    PcPart powerSupply3("Power Supply", true);
+    powerSupply3.setName("Seasonic Focus GX-750");
+
+    // Motherboard
+    PcPart motherboard1("Motherboard", true);
+    motherboard1.setName("ASUS ROG Strix B550-F Gaming");
+
+    PcPart motherboard2("Motherboard", true);
+    motherboard2.setName("GIGABYTE X570 AORUS Elite");
+
+    PcPart motherboard3("Motherboard", true);
+    motherboard3.setName("MSI MPG Z490 Gaming Edge WiFi");
+
+    // RAM
+    PcPart ram1("RAM", true);
+    ram1.setName("G.SKILL Trident Z RGB 16GB (2 x 8GB) DDR4 3600MHz");
+
+    PcPart ram2("RAM", true);
+    ram2.setName("Corsair Vengeance RGB Pro 32GB (2 x 16GB) DDR4 3200MHz");
+
+    PcPart ram3("RAM", true);
+    ram3.setName("Crucial Ballistix RGB 16GB (2 x 8GB) DDR4 3200MHz");
