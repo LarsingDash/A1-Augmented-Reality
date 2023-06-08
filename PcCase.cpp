@@ -9,7 +9,9 @@ PcCase::~PcCase() {
         delete component;
     }
 }
-
+std::string PcCase::getName() const {
+    return name;
+}
 void PcCase::addComponent(PcPart* component) {
     childComponents.push_back(component);
 }

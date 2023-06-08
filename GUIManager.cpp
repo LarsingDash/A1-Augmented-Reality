@@ -9,14 +9,17 @@
 #include "ComputerController.h"
 #include "CPU.hpp"
 #include "GPU.hpp"
+#include "PcCase.hpp"
+#include "PSU.hpp"
 #include "RAM.hpp"
+#include "Storage.hpp"
 
 std::vector<CPU> cpuList;
 std::vector<GPU> gpuList;
 std::vector<RAM> ramList;
-std::vector<RAM> psuList;
-std::vector<RAM> pcCaseList;
-std::vector<RAM> storageList;
+std::vector<PSU> psuList;
+std::vector<PcCase> pcCaseList;
+std::vector<Storage> storageList;
 std::vector<PcPart*> pcParts;
 
 GUIManager::GUIManager(GLFWwindow* window, const ComputerController& controller)
@@ -35,28 +38,35 @@ void GUIManager::init()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	// Create CPU objects and add them to the list
 	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD));
 	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD));
 	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL));
 	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL));
 
-	// Create GPU objects and add them to the list
 	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080"));
 	gpuList.push_back(GPU("AMD Radeon RX 6800 XT"));
 	gpuList.push_back(GPU("Geforce RTX 3060"));
 	gpuList.push_back(GPU("AMD Radeon RX 5700 "));
 
-	// Create RAM objects and add them to the list
 	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4));
 	ramList.push_back(RAM("G.SKILL Ripjaws V", RamSocketType::DDR4));
 	ramList.push_back(RAM("ValueRam 2 x 8", RamSocketType::DDR4));
 	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4));
 
-	// Add CPU, GPU, and RAM objects to the pcParts list
+	psuList.push_back(PSU("Power Supply Unit 1"));
+	psuList.push_back(PSU("Power Supply Unit 2"));
+	psuList.push_back(PSU("Power Supply Unit 3"));
+	psuList.push_back(PSU("Power Supply Unit 4"));
 
+	pcCaseList.push_back(PcCase("PC Case 1"));
+	pcCaseList.push_back(PcCase("PC Case 2"));
+	pcCaseList.push_back(PcCase("PC Case 3"));
+	pcCaseList.push_back(PcCase("PC Case 4"));
 
-	
+	storageList.push_back(Storage("Storage 1"));
+	storageList.push_back(Storage("Storage 2"));
+	storageList.push_back(Storage("Storage 3"));
+	storageList.push_back(Storage("Storage 4"));
 }
 
 void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
@@ -120,6 +130,8 @@ void GUIManager::drawMenuScreen()
     {
         showMenuScreen = false;
         showTutorialScreen = true;
+		showPcBuilderScreen = false;
+		controller.setIsDrawing(false);
     }
 
     ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
@@ -159,15 +171,23 @@ void GUIManager::drawPCBuilderScreen()
 	//Top left window
 	ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
 
-	ImGui::Text("RAM");
+	ImGui::Text("Memory (RAM)");
 	drawPartList(ramList, RAM_TYPE);
 
-	ImGui::Text("CPU");
+	ImGui::Text("Processor (CPU)");
 	drawPartList(cpuList, CPU_TYPE);
 
-	ImGui::Text("GPU");
+	ImGui::Text("Graphics Card (GPU)");
 	drawPartList(gpuList, GPU_TYPE);
 
+	ImGui::Text("Pc case");
+	drawPartList(pcCaseList, PC_CASE_TYPE);
+
+	ImGui::Text("Power Supply (PSU)");
+	drawPartList(psuList, PSU_TYPE);
+
+	ImGui::Text("Storage");
+	drawPartList(storageList, STORAGE_TYPE);
 	drawAddPartButton();
 
 	ImGui::End();
@@ -192,8 +212,24 @@ void GUIManager::drawPCBuilderScreen()
 
 	for (int n = 0; n < pcParts.size(); n++)
 	{
-		ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20));
+		ImGui::PushID(n);
+		if (ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20)));
+
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+		{
+			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
+			ImGui::Text("Copy %s", pcParts[n]->getName().c_str());
+			ImGui::EndDragDropSource();
+		}
+
+		ImGui::PopID();
 	}
+
+	// for (int n = 0; n < pcParts.size(); n++)
+	// {
+	// 	ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20));
+	//
+	// }
 	drawDeletePartButton();
 
 	ImGui::End();
@@ -237,6 +273,24 @@ void GUIManager::drawAddPartButton()
 
 				pcParts.push_back(&ramList[payload_n]);
 			}
+			else if (partType == PC_CASE_TYPE)
+			{
+				std::cout << "PC case type received: " << partType << std::endl;
+
+				pcParts.push_back(&pcCaseList[payload_n]);
+			}
+			else if (partType == PSU_TYPE)
+			{
+				std::cout << "PSU type received: " << partType << std::endl;
+
+				pcParts.push_back(&psuList[payload_n]);
+			}
+			else if (partType == STORAGE_TYPE)
+			{
+				std::cout << "Storage type received: " << partType << std::endl;
+
+				pcParts.push_back(&storageList[payload_n]);
+			}
 		}
 		ImGui::EndDragDropTarget();
 	}
@@ -247,7 +301,10 @@ void GUIManager::drawDeletePartButton()
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f)); // Set button hover color to a lighter red
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f)); // Set button active color to a darker red
 
-	ImGui::Button("Delete Part", ImVec2(250, 20));
+	if (ImGui::Button("Delete Part", ImVec2(250, 20)))
+	{
+		// Perform deletion here if needed
+	}
 
 	ImGui::PopStyleColor(3);
 
@@ -258,26 +315,10 @@ void GUIManager::drawDeletePartButton()
 			IM_ASSERT(payload->DataSize == sizeof(int));
 			int payload_n = *(const int*)payload->Data;
 
-			std::cout << "Part type received: " << partType << std::endl;
-			if (partType == CPU_TYPE)
-			{
-				std::cout << "CPU type received: " << partType << std::endl;
-
-				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &cpuList[payload_n]), pcParts.end());
-			}
-			else if (partType == GPU_TYPE)
-			{
-				std::cout << "GPU type received: " << partType << std::endl;
-
-				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &gpuList[payload_n]), pcParts.end());
-			}
-			else if (partType == RAM_TYPE)
-			{
-				std::cout << "RAM type received: " << partType << std::endl;
-
-				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &ramList[payload_n]), pcParts.end());
-			}
+			// Delete the dragged part from the pcParts vector
+			pcParts.erase(pcParts.begin() + payload_n);
 		}
+
 		ImGui::EndDragDropTarget();
 	}
 }

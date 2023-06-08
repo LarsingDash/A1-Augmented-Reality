@@ -1,13 +1,13 @@
-#ifndef STORAGE_HPP
-#define STORAGE_HPP
+#ifndef PSU_HPP
+#define PSU_HPP
 
 #include "PcPart.hpp"
 #include <string>
 
-class Storage : public PcPart {
+class PSU : public PcPart {
 public:
-	Storage(const std::string& name);
-	~Storage();
+	PSU(const std::string& name);
+	~PSU();
 	std::string getName() const override;
 
 	void display() const override;

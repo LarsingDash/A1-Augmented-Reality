@@ -14,7 +14,7 @@ public:
 
 	void addComponent(PcPart* component);
 	void removeComponent(PcPart* component);
-
+	std::string getName() const override;
 	void display() const override;
 };
 

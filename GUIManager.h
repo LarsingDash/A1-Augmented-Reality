@@ -16,10 +16,12 @@ enum Mode
 
 enum PartType
 {
-
     CPU_TYPE,
     GPU_TYPE,
-    RAM_TYPE
+    RAM_TYPE,
+    PC_CASE_TYPE,
+    PSU_TYPE,
+    STORAGE_TYPE
 };
 class GUIManager {
 public:

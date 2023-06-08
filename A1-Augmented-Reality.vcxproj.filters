@@ -164,7 +164,7 @@
     <ClInclude Include="PcCase.hpp">
       <Filter>Header Files\PcParts</Filter>
     </ClInclude>
-    <ClInclude Include="PSU.h">
+    <ClInclude Include="PSU.hpp">
       <Filter>Header Files\PcParts</Filter>
     </ClInclude>
     <ClInclude Include="RAM.hpp">
