@@ -27,9 +27,6 @@ void Init();
 void Update();
 void UpdateKeys();
 
-//Draw
-void Draw();
-
 //Other
 void GetObjectDir();
 
@@ -50,7 +47,7 @@ std::vector<GameObject> gameObjects = std::vector<GameObject>();
 std::string objectDir;
 
 GLFWwindow* window;
-ComputerController controller = ComputerController(GameObject("models/car/honda_jazz.obj"), false);
+ComputerController controller = ComputerController(false);
 
 //Main
 int main()
@@ -58,53 +55,60 @@ int main()
 	//Get object directory path
 	GetObjectDir();
 
-    OpenGLInit();
+	//Test initiate glfw
+	if (!glfwInit())
+		throw "Could not initialize glwf";
 
-    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-        {
-            if (key == GLFW_KEY_ESCAPE)
-                glfwSetWindowShouldClose(window, true);
-        });
+	//Get primary monitor size so that the fullscreen application can have the correct resolution
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &windowWidth, &windowHeight);
 
-    // First time shaders
-    tigl::shader->setProjectionMatrix(glm::perspective(
-        glm::radians(90.f),
-        (float)width / height,
-        0.1f,
-        100.f
-    ));
+	window = glfwCreateWindow(windowWidth, windowHeight, "A1 Augmented Reality", monitor, nullptr);
 
-    tigl::shader->setViewMatrix(glm::lookAt(
-        glm::vec3(0, 0, 5),
-        glm::vec3(0, 0, 0),
-        glm::vec3(0, 1, 0)
-    ));
-    tigl::shader->enableColor(true);
-    tigl::shader->enableAlphaTest(true);
-    glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
+	//Check if the window was successfully made
+	if (!window)
+	{
+		glfwTerminate();
+		throw "Could not initialize glwf";
+	}
+	glfwMakeContextCurrent(window);
 
-    GUIManager guiManager(window, controller);
-    guiManager.init();
+	//Escape key callback to quit application
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		if (key == GLFW_KEY_ESCAPE)
+			glfwSetWindowShouldClose(window, true);
+	});
+
+	GUIManager guiManager = GUIManager(window, controller);
+	guiManager.init();
 
 	//Init
 	Init();
 
 	//Create test object
-	// gameObjects.push_back(GameObject("game_objects/cube/cube.obj"));
-	gameObjects.push_back(GameObject(objectDir, "TestCube"));
-	gameObjects.push_back(GameObject(objectDir, "OtherCube"));
+	guiManager.controller.objects.emplace_back(objectDir, "TestCube");
+	guiManager.controller.objects.emplace_back(objectDir, "OtherCube");
 
-        // glfw cycle
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
+	//MAIN LOOP
+	while (!glfwWindowShouldClose(window))
+	{
+		//Program cycle
+		HandUpdate();
+		Update();
+		guiManager.Draw(cubePosition, rotate);
 
-    // Termination
-    HandTeardown();
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-    return 0;
+		//glfw cycle
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	// Termination
+	HandTeardown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+	return 0;
 }
 
 //Init
@@ -112,9 +116,9 @@ void Init()
 {
 	//Init
 	tigl::init();
-    glewInit();
+	glewInit();
 
-    HandInit();
+	HandInit();
 
 	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(
@@ -138,7 +142,7 @@ void Init()
 
 	//Camera Light
 	tigl::shader->setLightDirectional(0, false);
-	tigl::shader->setLightPosition(0, glm::vec3(0,0,5));
+	tigl::shader->setLightPosition(0, glm::vec3(0, 0, 5));
 	tigl::shader->setLightAmbient(0, glm::vec3(0.25f, 0.25f, 0.25f));
 	tigl::shader->setLightDiffuse(0, glm::vec3(0.9f, 0.9f, 0.9f));
 
@@ -183,18 +187,6 @@ void UpdateKeys()
 		angleX = 0;
 		angleY = 0;
 		angleZ = 0;
-	}
-}
-
-//Draw
-void Draw()
-{
-	//Clear
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	for (const auto& gameObject : gameObjects)
-	{
-		gameObject.Draw(cubePosition, rotate);
 	}
 }
 
