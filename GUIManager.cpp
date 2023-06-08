@@ -125,6 +125,7 @@ void GUIManager::drawMenuScreen()
 	ImGui::End();
 }
 
+
 void GUIManager::drawTutorialScreen()
 {
 	ImGui::Begin("Tutorial");
@@ -141,20 +142,6 @@ void GUIManager::drawTutorialScreen()
 	ImGui::End();
 }
 
-enum Mode
-{
-	Mode_Copy,
-	Mode_Move,
-	Mode_Swap
-};
-
-enum PartType
-{
-	
-	CPU,
-	GPU,
-	RAM
-};
 
 int mode = Mode_Copy;
 int partType;
@@ -163,32 +150,17 @@ int partType;
 void GUIManager::drawPCBuilderScreen()
 {
 	ImGui::Text("RAM");
-	drawPartList(ramList, PartType::RAM);
+	drawPartList(ramList, RAM_TYPE);
 
 	ImGui::Text("CPU");
-	drawPartList(cpuList, PartType::CPU);
+	drawPartList(cpuList, CPU_TYPE);
 
 	ImGui::Text("GPU");
-	drawPartList(gpuList, PartType::GPU);
-	// for (int n = 0; n < ramList.size(); n++)
-	// {
-	// 	ImGui::PushID(n);
-	// 	if (ImGui::Button(ramList[n].getName().c_str(), ImVec2(250, 20)));
-	//
-	// 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-	// 	{
-	// 		partType = RAM;
-	// 		ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-	// 		ImGui::Text("Copy %s", ramList[n].getName().c_str());
-	// 		ImGui::EndDragDropSource();
-	// 	}
-	//
-	// 	ImGui::PopID();
-	// }
+	drawPartList(gpuList, GPU_TYPE);
 
-	createAddPartButton();
+	drawAddPartButton();
 	
-	createDeletePartButton();
+	drawDeletePartButton();
 
 	ImGui::Text("Chosen Pc parts");
 
@@ -198,7 +170,7 @@ void GUIManager::drawPCBuilderScreen()
 	}
 }
 
-void GUIManager::createAddPartButton()
+void GUIManager::drawAddPartButton()
 {
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.8f, 0.2f, 1.0f)); // Set button color to green
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.9f, 0.3f, 1.0f)); // Set button hover color to a lighter green
@@ -217,15 +189,15 @@ void GUIManager::createAddPartButton()
 			int payload_n = *(const int*)payload->Data;
 
 			std::cout << "Part type received: " << partType << std::endl;
-			if (partType == CPU)
+			if (partType == CPU_TYPE)
 			{
 				pcParts.push_back(&cpuList[payload_n]);
 			}
-			else if (partType == GPU)
+			else if (partType == GPU_TYPE)
 			{
 				pcParts.push_back(&gpuList[payload_n]);
 			}
-			else if (partType == RAM)
+			else if (partType == RAM_TYPE)
 			{
 				pcParts.push_back(&ramList[payload_n]);
 			}
@@ -233,7 +205,7 @@ void GUIManager::createAddPartButton()
 		ImGui::EndDragDropTarget();
 	}
 }
-void GUIManager::createDeletePartButton()
+void GUIManager::drawDeletePartButton()
 {
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f)); // Set button color to red
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f)); // Set button hover color to a lighter red
@@ -251,15 +223,15 @@ void GUIManager::createDeletePartButton()
 			int payload_n = *(const int*)payload->Data;
 
 			std::cout << "Part type received: " << partType << std::endl;
-			if (partType == CPU)
+			if (partType == CPU_TYPE)
 			{
 				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &cpuList[payload_n]), pcParts.end());
 			}
-			else if (partType == GPU)
+			else if (partType == GPU_TYPE)
 			{
 				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &gpuList[payload_n]), pcParts.end());
 			}
-			else if (partType == RAM)
+			else if (partType == RAM_TYPE)
 			{
 				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &ramList[payload_n]), pcParts.end());
 			}
