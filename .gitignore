@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+#game objects
+game_objects/
+
 # Compiled Object files
 *.slo
 *.lo

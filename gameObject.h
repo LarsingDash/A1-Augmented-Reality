@@ -1,12 +1,9 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 
 #include <string>
 #include <vector>
-
-#include "tigl.h"
 
 class Material;
 
@@ -25,7 +22,7 @@ class GameObject
 		struct ObjectGroup
 		{
 			std::string name;
-			int materialIndex;
+			int materialIndex = -1;
 			std::vector<std::vector<IndexedVertex>> faces;
 		};
 
@@ -40,10 +37,11 @@ class GameObject
 		void LoadMaterialFile(const std::string& fileName, const std::string& dirName);
 
 	public:
+		GameObject();
 		GameObject(const std::string& fileName);
 		~GameObject(void);
 
-		void Draw() const;
+		void Draw(glm::mat4 translation) const;
 };
 
 //String extension methods
