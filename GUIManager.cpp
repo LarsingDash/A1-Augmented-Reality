@@ -148,8 +148,17 @@ enum Mode
 	Mode_Move,
 	Mode_Swap
 };
+enum PartType
+{
+	Null_Part,
+	CPU,
+	GPU,
+	RAM
+};
 
 int mode = Mode_Copy;
+int partType = Null_Part;
+
 
 void GUIManager::drawPCBuilderScreen()
 {
@@ -159,55 +168,57 @@ void GUIManager::drawPCBuilderScreen()
 	{
 		ImGui::PushID(n);
 
-		ImGui::Button(cpuList[n].getName().c_str(), ImVec2(250, 20));
+		if (ImGui::Button(cpuList[n].getName().c_str(), ImVec2(250, 20)));
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
+			partType = CPU;
 			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-
-			if (mode == Mode_Copy) { ImGui::Text("Copy %s", cpuList[n].getName().c_str()); }
+			ImGui::Text("Copy %s", cpuList[n].getName().c_str());
 			ImGui::EndDragDropSource();
 		}
-		
+
 		ImGui::PopID();
 	}
+
 	ImGui::Text("GPU's");
 
 	for (int n = 0; n < gpuList.size(); n++)
 	{
 		ImGui::PushID(n);
 
-		ImGui::Button(gpuList[n].getName().c_str(), ImVec2(250, 20));
+		if (ImGui::Button(gpuList[n].getName().c_str(), ImVec2(250, 20)));
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
+			partType = GPU;
 			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-
-			if (mode == Mode_Copy) { ImGui::Text("Copy %s", gpuList[n].getName().c_str()); }
+			ImGui::Text("Copy %s", gpuList[n].getName().c_str());
 			ImGui::EndDragDropSource();
 		}
-		
+
 		ImGui::PopID();
 	}
-	
+
 	ImGui::Text("RAM");
 
 	for (int n = 0; n < ramList.size(); n++)
 	{
 		ImGui::PushID(n);
+		if (ImGui::Button(ramList[n].getName().c_str(), ImVec2(250, 20)));
 
-		ImGui::Button(ramList[n].getName().c_str(), ImVec2(250, 20));
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
+			partType = RAM;
 			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-
-			if (mode == Mode_Copy) { ImGui::Text("Copy %s", ramList[n].getName().c_str()); }
+			ImGui::Text("Copy %s", ramList[n].getName().c_str());
 			ImGui::EndDragDropSource();
 		}
-		
+
 		ImGui::PopID();
 	}
+
 
 
 	ImGui::Text("Chosen Pc parts");
@@ -217,48 +228,27 @@ void GUIManager::drawPCBuilderScreen()
 
 		ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20));
 
-		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-		{
-			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-
-			if (mode == Mode_Copy) { ImGui::Text("Copy %s", pcParts[n]->getName().c_str()); }
-			ImGui::EndDragDropSource();
-		}
-
+		
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
 			{
 				IM_ASSERT(payload->DataSize == sizeof(int));
 				int payload_n = *(const int*)payload->Data;
-
-				if (mode == Mode_Copy)
+		
+				std::cout << "Part type received: "<< partType << std::endl;
+				if (partType == CPU)
 				{
-					if (payload_n >= 0 && payload_n < pcParts.size())
-					{
-						std::cout << pcParts[payload_n]->getName() << std::endl;
-						// Copy the pcPart
-						PcPart* copiedPart = nullptr;
-						if (CPU* cpu = dynamic_cast<CPU*>(pcParts[payload_n]))
-						{
-							copiedPart = new CPU(*cpu);
-						}
-						else if (GPU* gpu = dynamic_cast<GPU*>(pcParts[payload_n]))
-						{
-							copiedPart = new GPU(*gpu);
-						}
-						else if (RAM* ram = dynamic_cast<RAM*>(pcParts[payload_n]))
-						{
-							copiedPart = new RAM(*ram);
-						}
+					pcParts.push_back(&cpuList[payload_n]);
+				}
+				else if (partType == GPU)
+				{
+					pcParts.push_back(&gpuList[payload_n]);
+				}
+				else if (partType == RAM)
+				{
 
-						if (copiedPart != nullptr)
-						{
-							std::cout << pcParts[payload_n]->getName() << std::endl;
-
-							pcParts.push_back(copiedPart);
-						}
-					}
+					pcParts.push_back(&ramList[payload_n]);
 				}
 			}
 			ImGui::EndDragDropTarget();
