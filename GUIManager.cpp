@@ -14,11 +14,15 @@
 std::vector<CPU> cpuList;
 std::vector<GPU> gpuList;
 std::vector<RAM> ramList;
+std::vector<RAM> psuList;
+std::vector<RAM> pcCaseList;
+std::vector<RAM> storageList;
 std::vector<PcPart*> pcParts;
 
 GUIManager::GUIManager(GLFWwindow* window, const ComputerController& controller)
     : window(window), controller(controller)
 {
+	
 }
 
 void GUIManager::init()
@@ -85,18 +89,23 @@ void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
 
 void GUIManager::drawMenuScreen()
 {
-	ImGui::SetNextWindowSize(ImVec2(1350, 750));
+    // Get the size of the GLFW window
+    int windowWidth, windowHeight;
+    glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
-	ImGui::Begin("Main Menu", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
 
-	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("PC builder application").x) * 0.5f);
-	ImGui::SetCursorPosY((ImGui::GetWindowSize().y - ImGui::CalcTextSize("PC builder application").y) * 0.5f);
+    ImGui::Begin("Main Menu", nullptr);
 
-	ImGui::Text("PC builder application");
+    // Center the text vertically and horizontally
+    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("PC builder application").x) * 0.5f);
+    ImGui::SetCursorPosY((ImGui::GetWindowSize().y - ImGui::CalcTextSize("PC builder application").y) * 0.5f);
 
-	ImGui::Spacing();
+    ImGui::Text("PC builder application");
 
-	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
+    ImGui::Spacing();
+
+    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
     if (ImGui::Button("PC Builder", ImVec2(150, 30)))
     {
@@ -105,25 +114,23 @@ void GUIManager::drawMenuScreen()
         showPcBuilderScreen = true;
         controller.setIsDrawing(true);
     }
-	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
+    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
-	if (ImGui::Button("Tutorial", ImVec2(150, 30)))
-	{
-		showMenuScreen = false;
-		showTutorialScreen = true;
-	}
+    if (ImGui::Button("Tutorial", ImVec2(150, 30)))
+    {
+        showMenuScreen = false;
+        showTutorialScreen = true;
+    }
 
+    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
 
-	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
+    if (ImGui::Button("Exit", ImVec2(100, 30)))
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
 
-	if (ImGui::Button("Exit", ImVec2(100, 30)))
-	{
-		glfwSetWindowShouldClose(window, true);
-	}
-
-	ImGui::End();
+    ImGui::End();
 }
-
 
 void GUIManager::drawTutorialScreen()
 {
