@@ -214,14 +214,20 @@ void GUIManager::drawAddPartButton()
 			std::cout << "Part type received: " << partType << std::endl;
 			if (partType == CPU_TYPE)
 			{
+				std::cout << "CPU type received: " << partType << std::endl;
+
 				pcParts.push_back(&cpuList[payload_n]);
 			}
 			else if (partType == GPU_TYPE)
 			{
+				std::cout << "GPU type received: " << partType << std::endl;
+
 				pcParts.push_back(&gpuList[payload_n]);
 			}
 			else if (partType == RAM_TYPE)
 			{
+				std::cout << "RAM type received: " << partType << std::endl;
+
 				pcParts.push_back(&ramList[payload_n]);
 			}
 		}
@@ -248,14 +254,20 @@ void GUIManager::drawDeletePartButton()
 			std::cout << "Part type received: " << partType << std::endl;
 			if (partType == CPU_TYPE)
 			{
+				std::cout << "CPU type received: " << partType << std::endl;
+
 				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &cpuList[payload_n]), pcParts.end());
 			}
 			else if (partType == GPU_TYPE)
 			{
+				std::cout << "GPU type received: " << partType << std::endl;
+
 				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &gpuList[payload_n]), pcParts.end());
 			}
 			else if (partType == RAM_TYPE)
 			{
+				std::cout << "RAM type received: " << partType << std::endl;
+
 				pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), &ramList[payload_n]), pcParts.end());
 			}
 		}
@@ -264,7 +276,7 @@ void GUIManager::drawDeletePartButton()
 }
 
 template <typename T>
-void GUIManager::drawPartList(const std::vector<T>& partsList, int partType)
+void GUIManager::drawPartList(const std::vector<T>& partsList, int part)
 {
 	for (int n = 0; n < partsList.size(); n++)
 	{
@@ -273,7 +285,7 @@ void GUIManager::drawPartList(const std::vector<T>& partsList, int partType)
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
-			partType = partType;
+			partType = part;
 			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 			ImGui::Text("Copy %s", partsList[n].getName().c_str());
 			ImGui::EndDragDropSource();
