@@ -14,32 +14,39 @@ using tigl::Vertex;
 #pragma comment(lib, "glew32s.lib")
 #pragma comment(lib, "opengl32.lib")
 
-void OpenGLInit();
+//Methods
+//Init
+void Init();
 
+//Update
 void Update();
+void UpdateKeys();
+
+//Draw
 void Draw();
 
+//Other
 void GetObjectDir();
-static std::string Remove(std::string& str, const std::string& toReplace);
 
 //Default window size, will be overridden by fullscreen values
 int windowWidth = 700;
 int windowHeight = 700;
 
 //temp rotate var
-float angle_x = 0.f;
-float angle_y = 0.f;
-float angle_z = 0.f;
+float angleX = 0.f;
+float angleY = 0.f;
+float angleZ = 0.f;
 glm::mat4 rotate = glm::mat4(1.0f);
 glm::vec3 rotations = glm::vec3(0, 0, 0);
 glm::mat4 translate = glm::mat4(1.0f);
-glm::vec3 cube_position(0, 0, 0);
+glm::vec3 cubePosition(0, 0, 0);
 
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 std::string objectDir;
 
 GLFWwindow* window;
 
+//Main
 int main()
 {
 	//Get object directory path
@@ -71,11 +78,11 @@ int main()
 	});
 
 	//Init
-	OpenGLInit();
+	Init();
 
 	//Create test object
 	// gameObjects.push_back(GameObject("game_objects/cube/cube.obj"));
-	gameObjects.push_back(GameObject(objectDir, "cube/cube.obj"));
+	gameObjects.push_back(GameObject(objectDir, "TestCube"));
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
@@ -95,106 +102,113 @@ int main()
 	return 0;
 }
 
-void OpenGLInit()
+//Init
+void Init()
 {
-	
 	//Init
 	tigl::init();
 
 	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(
-		glm::radians(90.f),
-		(float)windowWidth / (float)windowHeight,
+		glm::radians(75.f),
+		static_cast<float>(windowWidth) / static_cast<float>(windowHeight),
 		0.1f,
 		100.f
 	));
 
 	//Camera position
 	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0, 2, 5),
-		glm::vec3(0, 1.5, 0),
+		glm::vec3(0, 0, 5),
+		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	));
 
-	//Shader settings
-	tigl::shader->enableAlphaTest(true);
+	//Light
+	tigl::shader->enableLighting(true);
+	tigl::shader->setLightCount(1);
+	tigl::shader->setShinyness(25);
+
+	//Camera Light
+	tigl::shader->setLightDirectional(0, false);
+	tigl::shader->setLightPosition(0, glm::vec3(0,0,5));
+	tigl::shader->setLightAmbient(0, glm::vec3(0.25f, 0.25f, 0.25f));
+	tigl::shader->setLightDiffuse(0, glm::vec3(0.9f, 0.9f, 0.9f));
 
 	//GL settings
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
-	
+	glClearColor(0, 196.f / 255.f, 255.f / 255.f, 1);
 }
 
+//Updates
 void Update()
 {
-	
+	UpdateKeys();
+
+	tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.f), glm::vec3(cubePosition)));
+	rotate = glm::rotate(rotate, glm::radians(angleZ), glm::vec3(0.f, 0.f, 1.f));
+	rotate = glm::rotate(rotate, glm::radians(angleY), glm::vec3(0.f, 1.f, 0.f));
+	rotate = glm::rotate(rotate, glm::radians(angleX), glm::vec3(1.f, 0.f, 0.f));
 }
-void check_keys()
+
+void UpdateKeys()
 {
 	if (glfwGetKey(window, GLFW_KEY_X))
-		angle_x += 0.2f;
+		angleX += 0.2f;
 	if (glfwGetKey(window, GLFW_KEY_Y))
-		angle_y += 0.2f;
+		angleY += 0.2f;
 	if (glfwGetKey(window, GLFW_KEY_Z))
-		angle_z += 0.2f;
+		angleZ += 0.2f;
 	if (glfwGetKey(window, GLFW_KEY_LEFT))
-		cube_position.x += 0.1;
+		cubePosition.x -= 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_RIGHT))
-		cube_position.x -= 0.1;
+		cubePosition.x += 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_UP))
-		cube_position.y += 0.1;
+		cubePosition.y += 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_DOWN))
-		cube_position.y -= 0.1;
+		cubePosition.y -= 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_F))
-		cube_position.z += 0.1;
+		cubePosition.z += 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_B))
-		cube_position.z -= 0.1;
-	
+		cubePosition.z -= 0.1f;
+
 	if (!glfwGetKey(window, GLFW_KEY_X) && !glfwGetKey(window, GLFW_KEY_Y) && !glfwGetKey(window, GLFW_KEY_Z))
 	{
-		angle_x = 0;
-		angle_y = 0;
-		angle_z = 0;
+		angleX = 0;
+		angleY = 0;
+		angleZ = 0;
 	}
 }
-void reset_rotations() 
-{
-	rotate = glm::mat4(1.0f); 
-}
-void Draw()
-{
-	tigl::shader->setModelMatrix(glm::mat4(1.0f));
-	//Clear
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	reset_rotations();
-	check_keys();
 
-	tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.f), glm::vec3(cube_position)));
-	rotate = glm::rotate(rotate, glm::radians(angle_z), glm::vec3(0.f, 0.f, 1.f));
-	rotate = glm::rotate(rotate, glm::radians(angle_y), glm::vec3(0.f, 1.f, 0.f));
-	rotate = glm::rotate(rotate, glm::radians(angle_x), glm::vec3(1.f, 0.f, 0.f));
-
+//Draw
 void Draw()
 {
 	//Clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//Draw
-	for (const GameObject& gameObject : gameObjects)
+	for (const auto& gameObject : gameObjects)
 	{
 		gameObject.Draw(rotate);
 	}
 }
 
+//Other
 void GetObjectDir()
 {
+	const std::string target = "A1-Augmented-Reality";
+	const std::string exe = ".exe";
+	std::vector<std::string> dirs = std::vector<std::string>();
+	dirs.emplace_back("x64\\Release");
+	dirs.emplace_back("x64\\Debug");
+	dirs.emplace_back("32\\Release");
+	dirs.emplace_back("x64\\Debug");
+
+	bool isInProjDir = false;
+
 	char buffer[MAX_PATH];
-	GetModuleFileNameA(NULL, buffer, MAX_PATH);
+	GetModuleFileNameA(nullptr, buffer, MAX_PATH);
 
 	//Convert buffer to string
 	std::string path;
-	bool isInProjectDir = false;
 	constexpr int size = sizeof(buffer) / sizeof(char);
 
 	//Convert buffer to string (keep going till "exe" is found)
@@ -203,44 +217,35 @@ void GetObjectDir()
 		//Add
 		path += letter;
 
-		//Check for "exe"
-		if (path.length() >= 3)
+		for (const auto& dir : dirs)
 		{
-			std::string end = path.substr(path.length() - 3, path.length() - 0);
-			if (end == "exe")
-				break;
+			if (path.length() > dir.size())
+			{
+				std::string end = path.substr(path.length() - dir.size(), path.length());
+				if (end == dir)
+				{
+					isInProjDir = true;
+					path = path.substr(0, path.length() - end.length());
+					break;
+				}
+			}
 		}
+		if (isInProjDir) break;
 
-		//Check for projectDir
-		if (!isInProjectDir && path.length() >= 20)
+		//Find "exe"
+		if (path.length() >= exe.size())
 		{
-			const std::string projectDir = path.substr(path.length() - 20, path.length() - 0);
-			isInProjectDir = projectDir == "A1-Augmented-Reality";
-
-			if (isInProjectDir)
+			std::string end = path.substr(path.length() - exe.size(), path.length());
+			if (end == exe)
+			{
+				isInProjDir = false;
+				path = path.substr(0, path.length() - target.length() - exe.length());
 				break;
+			}
 		}
 	}
-
-	if (!isInProjectDir)
-		path = Remove(path, "A1AugmentedReality.exe");
 
 	objectDir = path;
 	std::cout << "Path: " << objectDir << std::endl;
-	std::cout << "IsInProjectDir: " << isInProjectDir << std::endl;
-}
-
-//Replaces a substring in a string
-static std::string Remove(std::string& str, const std::string& toReplace)
-{
-	size_t index = 0;
-	while (true)
-	{
-		index = str.find(toReplace, index);
-		if (index == std::string::npos)
-			break;
-		str.replace(index, toReplace.length(), "");
-		++index;
-	}
-	return str;
+	std::cout << "Dir: " << (isInProjDir ? "Yes" : "No") << std::endl;
 }

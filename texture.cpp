@@ -39,14 +39,11 @@ Texture::~Texture()
 
 void Texture::bind()
 {
+
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        // std::cout << "Succeeded loading" << std::endl;
-    }
-    else {
-        std::cout << "Failed loading" << std::endl;
-    }
+void Texture::unbind()
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
