@@ -16,7 +16,6 @@ void Motherboard::addComponent(PcPart* component) {
 }
 
 void Motherboard::removeComponent(PcPart* component) {
-    // Remove the component from the vector
     auto it = std::find(childComponents.begin(), childComponents.end(), component);
     if (it != childComponents.end()) {
         childComponents.erase(it);

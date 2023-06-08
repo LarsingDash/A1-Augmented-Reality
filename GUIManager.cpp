@@ -11,322 +11,194 @@
 //GameObject currentObject;
 
 GUIManager::GUIManager(GLFWwindow* window, ComputerController controller)
-    : window(window), controller(controller)
+	: window(window), controller(controller)
 {
 }
 
 void GUIManager::init()
 {
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    (void)io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
 
-    controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
-    
+	controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
 }
+
 void GUIManager::update()
 {
-    // Clear achtergrond
-    /*glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);*/
+	// Clear achtergrond
+	/*glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);*/
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
 
-    if (showMenuScreen) {
-        drawMenuScreen();
-    }
-    else if (showTutorialScreen) {
-        drawTutorialScreen();
-    }
-    else if (showPcBuilderScreen) {
-        drawPCBuilderScreen();
-    }
+	if (showMenuScreen)
+	{
+		drawMenuScreen();
+	}
+	else if (showTutorialScreen)
+	{
+		drawTutorialScreen();
+	}
+	else if (showPcBuilderScreen)
+	{
+		drawPCBuilderScreen();
+	}
 
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void GUIManager::draw()
 {
-    
 }
 
 void GUIManager::drawMenuScreen()
 {
-    ImGui::SetNextWindowSize(ImVec2(1350, 750));
+	ImGui::SetNextWindowSize(ImVec2(1350, 750));
 
-    ImGui::Begin("Main Menu", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Main Menu", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("PC builder application").x) * 0.5f);
-    ImGui::SetCursorPosY((ImGui::GetWindowSize().y - ImGui::CalcTextSize("PC builder application").y) * 0.5f);
-    
-    ImGui::Text("PC builder application");
+	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("PC builder application").x) * 0.5f);
+	ImGui::SetCursorPosY((ImGui::GetWindowSize().y - ImGui::CalcTextSize("PC builder application").y) * 0.5f);
 
-    ImGui::Spacing();
+	ImGui::Text("PC builder application");
 
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
+	ImGui::Spacing();
 
-    if (ImGui::Button("Tutorial", ImVec2(150, 30)))
-    {
-        showMenuScreen = false;
-        showTutorialScreen = true;
-    }
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
+	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
-    if (ImGui::Button("PC Builder", ImVec2(150, 30)))
-    {
-        showMenuScreen = false;
-        showTutorialScreen = false;
-        showPcBuilderScreen = true;
-    }
+	if (ImGui::Button("Tutorial", ImVec2(150, 30)))
+	{
+		showMenuScreen = false;
+		showTutorialScreen = true;
+	}
+	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
+	if (ImGui::Button("PC Builder", ImVec2(150, 30)))
+	{
+		showMenuScreen = false;
+		showTutorialScreen = false;
+		showPcBuilderScreen = true;
+	}
 
-    if (ImGui::Button("Exit", ImVec2(100, 30)))
-    {
-        glfwSetWindowShouldClose(window, true);
-    }
+	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
 
-    ImGui::End();
+	if (ImGui::Button("Exit", ImVec2(100, 30)))
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
+
+	ImGui::End();
 }
 
 
 void GUIManager::drawTutorialScreen()
 {
-    ImGui::Begin("Tutorial");
+	ImGui::Begin("Tutorial");
 
 
-    ImGui::Text("Welcome to the tutorial screen!");
-    ImGui::ShowDemoWindow();
+	ImGui::Text("Welcome to the tutorial screen!");
+	ImGui::ShowDemoWindow();
 
-    if (ImGui::Button("Back to Menu"))
-    {
-        showMenuScreen = true;
-        showTutorialScreen = false;
-    }
+	if (ImGui::Button("Back to Menu"))
+	{
+		showMenuScreen = true;
+		showTutorialScreen = false;
+	}
 
 
-    ImGui::End();
+	ImGui::End();
 }
-
-
-
+enum Mode
+{
+	Mode_Copy,
+	Mode_Move,
+	Mode_Swap
+};
+int mode = Mode_Copy;
+static const char* list1[9] =
+{
+	"CPU1", "CPU2", "CPU3","CPU4", "CPU5", "CPU6","CPU7", "CPU8", "CPU9"
+};
+static const char* list2[9] =
+{
+	"Select a part", "Select a part", "Select a part","Select a part", "Select a part", "Select a part","Select a part", "Select a part", "Select a part"
+};
 void GUIManager::drawPCBuilderScreen()
 {
-    //ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
+	if (ImGui::TreeNode("Drag and drop to copy/swap items"))
+	{
+		
+	
+		for (int n = 0; n < IM_ARRAYSIZE(list1); n++)
+		{
+			ImGui::PushID(n);
 
-    float buttonPosX = (ImGui::GetWindowSize().x - 150.0f) * 0.5f;
-    float buttonPosY = (ImGui::GetWindowSize().y - 30.0f) * 0.5f;
+			ImGui::Button(list1[n], ImVec2(70, 20));
 
-    static int selectedCPU = -1;
-    static int selectedGPU = -1;
-    static int selectedPowerSupply = -1;
-    static int selectedMotherboard = -1;
-    static int selectedRAM = -1;
+			// Our buttons are both drag sources and drag targets here!
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+			{
+				// Set payload to carry the index of our item (could be anything)
+				ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 
-    std::string cpuText;
-    std::string gpuText;
-    std::string powerSupplyText;
-    std::string motherboardText;
-    std::string ramText;
+				// Display preview (could be anything, e.g. when dragging an image we could decide to display
+				// the filename and a small preview of the image, etc.)
+				if (mode == Mode_Copy) { ImGui::Text("Copy %s", list1[n]); }
+				ImGui::EndDragDropSource();
+			}
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
+				{
+					IM_ASSERT(payload->DataSize == sizeof(int));
+					int payload_n = *(const int*)payload->Data;
+					if (mode == Mode_Copy)
+					{
+						list1[n] = list1[payload_n];
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
+			ImGui::PopID();
+		}
+		for (int m = 0; m < IM_ARRAYSIZE(list1); m++)
+		{
+			ImGui::PushID(m);
 
-    switch (selectedCPU)
-    {
-    case 0:
-        cpuText = "AMD Ryzen 5 5600X";
-        break;
-    case 1:
-        cpuText = "Intel Core i7-10700K";
-        break;
-    case 2:
-        cpuText = "AMD Ryzen 7 5800X";
-        break;
-    default:
-        cpuText = "";
-        break;
-    }
+			ImGui::Button(list2[m], ImVec2(150, 20));
 
-    switch (selectedGPU)
-    {
-    case 0:
-        gpuText = "NVIDIA GeForce RTX 3080";
-        break;
-    case 1:
-        gpuText = "AMD Radeon RX 6800 XT";
-        break;
-    case 2:
-        gpuText = "NVIDIA GeForce RTX 3070";
-        break;
-    default:
-        gpuText = "";
-        break;
-    }
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+			{
+				ImGui::SetDragDropPayload("DND_DEMO_CELL", &m, sizeof(int));
 
-    switch (selectedPowerSupply)
-    {
-    case 0:
-        powerSupplyText = "Corsair RM750";
-        break;
-    case 1:
-        powerSupplyText = "EVGA SuperNOVA 850 G3";
-        break;
-    case 2:
-        powerSupplyText = "Seasonic Focus GX-750";
-        break;
-    default:
-        powerSupplyText = "";
-        break;
-    }
+				
+				if (mode == Mode_Copy) { ImGui::Text("Copy %s", list2[m]); }
+				ImGui::EndDragDropSource();
+			}
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
+				{
+					IM_ASSERT(payload->DataSize == sizeof(int));
+					int payload_m = *(const int*)payload->Data;
+					if (mode == Mode_Copy)
+					{
+						list2[m] = list1[payload_m];
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
+			ImGui::PopID();
+		}
+		ImGui::TreePop();
+	}
 
-    switch (selectedMotherboard)
-    {
-    case 0:
-        motherboardText = "ASUS ROG Strix B550-F Gaming";
-        break;
-    case 1:
-        motherboardText = "GIGABYTE X570 AORUS Elite";
-        break;
-    case 2:
-        motherboardText = "MSI MPG Z490 Gaming Edge WiFi";
-        break;
-    default:
-        motherboardText = "";
-        break;
-    }
-
-    switch (selectedRAM)
-    {
-    case 0:
-        ramText = "G.SKILL Trident Z RGB 16GB DDR4 3600MHz";
-        break;
-    case 1:
-        ramText = "Corsair Vengeance RGB Pro 32GB (2 x 16GB) DDR4 3200MHz";
-        break;
-    case 2:
-        ramText = "Crucial Ballistix RGB 16GB DDR4 3200MHz";
-        break;
-    default:
-        ramText = "";
-        break;
-    }
-
-    //ImGui::End();
-
-    //ImGui::BeginChild("LeftWindow", ImVec2(ImGui::GetWindowWidth() * 0.25f, ImGui::GetWindowHeight()), true); 
-    ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
-
-    if (ImGui::CollapsingHeader("CPU's"))
-    {
-        ImGui::RadioButton("AMD Ryzen 5 5600X", &selectedCPU, 0);
-        ImGui::RadioButton("Intel Core i7-10700K", &selectedCPU, 1);
-        ImGui::RadioButton("AMD Ryzen 7 5800X", &selectedCPU, 2);
-    }
-
-    if (ImGui::CollapsingHeader("GPU's"))
-    {
-        ImGui::RadioButton("NVIDIA GeForce RTX 3080", &selectedGPU, 0);
-        ImGui::RadioButton("AMD Radeon RX 6800 XT", &selectedGPU, 1);
-        ImGui::RadioButton("NVIDIA GeForce RTX 3070", &selectedGPU, 2);
-    }
-
-    if (ImGui::CollapsingHeader("Power Supplies"))
-    {
-        ImGui::RadioButton("Corsair RM750", &selectedPowerSupply, 0);
-        ImGui::RadioButton("EVGA SuperNOVA 850 G3", &selectedPowerSupply, 1);
-        ImGui::RadioButton("Seasonic Focus GX-750", &selectedPowerSupply, 2);
-    }
-
-    if (ImGui::CollapsingHeader("Motherboards"))
-    {
-        ImGui::RadioButton("ASUS ROG Strix B550-F Gaming", &selectedMotherboard, 0);
-        ImGui::RadioButton("GIGABYTE X570 AORUS Elite", &selectedMotherboard, 1);
-        ImGui::RadioButton("MSI MPG Z490 Gaming Edge WiFi", &selectedMotherboard, 2);
-    }
-
-    if (ImGui::CollapsingHeader("RAM"))
-    {
-        ImGui::RadioButton("G.SKILL Trident Z RGB 16GB DDR4 3600MHz", &selectedRAM, 0);
-        ImGui::RadioButton("Corsair Vengeance RGB Pro 32GB (2 x 16GB) DDR4 3200MHz", &selectedRAM, 1);
-        ImGui::RadioButton("Crucial Ballistix RGB 16GB DDR4 3200MHz", &selectedRAM, 2);
-    }
-
-    //ImGui::EndChild();
-    ImGui::End();
-
-    ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 400.0f, 0.0f));
-    //ImGui::BeginChild("DebugWindow", ImVec2(400.0f, 250.0f), true);
-    ImGui::Begin("Navigation Buttons", nullptr, ImGuiWindowFlags_NoTitleBar);
-
-    if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
-    {
-        //currentObject.changeColor(glm::vec4(1.0, 0.0f, 0.0f, 1.0f));
-        controller.setIsDrawing(true);
-    }
-
-    if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
-    {
-        //currentObject.changeColor(glm::vec4(0.0, 1.0f, 0.0f, 1.0f));
-
-    }
-
-    if (ImGui::Button("Show PC part list", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
-    {
-        showPcPartList = !showPcPartList; 
-    }
-
-    if (showPcPartList)
-    {
-        ImGui::Text("Pc parts list:");
-        ImGui::Text("CPU: "); ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", cpuText.c_str());
-        ImGui::Text("GPU: "); ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "%s", gpuText.c_str());
-        ImGui::Text("PSU: "); ImGui::SameLine();
-        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "%s", powerSupplyText.c_str());
-        ImGui::Text("MBU: "); ImGui::SameLine();
-        ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "%s", motherboardText.c_str());
-        ImGui::Text("RAM: "); ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "%s", ramText.c_str());
-    }
-
-    ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - 75, ImGui::GetWindowHeight() - 70));
-
-    if (ImGui::Button("PC Builder", ImVec2(150, 30)))
-    {
-    }
-    
-    ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - 75, ImGui::GetWindowHeight() - 35));
-    if (ImGui::Button("Back to Menu", ImVec2(150, 30)))
-    {
-        showMenuScreen = true;
-        showTutorialScreen = false;
-        showPcBuilderScreen = false;
-    }
-
-    //ImGui::EndChild();
-    ImGui::End();
-
-    /*ImGui::Begin("PC Builder", nullptr, ImGuiWindowFlags_NoTitleBar);
-
-    ImGui::SetCursorPos(ImVec2(buttonPosX, buttonPosY));
-
-    if (ImGui::Button("PC Builder", ImVec2(150, 30)))
-    {
-    }
-
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
-    if (ImGui::Button("Back to Menu", ImVec2(100, 30)))
-    {
-        showMenuScreen = true;
-        showTutorialScreen = false;
-        showPcBuilderScreen = false;
-    }
-
-    ImGui::End();*/
 }
