@@ -1,130 +1,144 @@
-#include <iostream>
+#include "GameObject.h"
 
+#include <iostream>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "GUIManager.h"
+#include "ComputerController.h"
+
 #include "hand.h"
-#include "GameObject.h"
-
 using tigl::Vertex;
-
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "glew32s.lib")
 #pragma comment(lib, "opengl32.lib")
 
-void OpenGLInit();
+const int width = 700;
+const int height = 700;
 
-void Update();
-void Draw();
+//Default window size, will be overridden by fullscreen values
+int windowWidth = 700;
+int windowHeight = 700;
 
-int width = 700;
-int height = 700;
+//temp rotate var
+float angleX = 0.f;
+float angleY = 0.f;
+float angleZ = 0.f;
+glm::mat4 trans;
 
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 
 GLFWwindow* window;
+ComputerController controller = ComputerController(GameObject("models/car/honda_jazz.obj"), false);
+
+//void update();
+void draw();
 
 int main()
 {
-	bool isHand = true;
-	if (isHand)
-	{
-		hand();
-	}
-	else
-	{
-		if (!glfwInit())
-			throw "Could not initialize glwf";
+    if (!glfwInit())
+        throw "Could not initialize glfw";
+    window = glfwCreateWindow(1400, 800, "Hello World", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        throw "Could not initialize glfw";
+    }
+    glfwMakeContextCurrent(window);
+    glewInit();
 
-		//Get primary monitor size so that the fullscreen application can have the correct resolution
-		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-		glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &width, &height);
+    tigl::init();
 
-		window = glfwCreateWindow(width, height, "A1 Augmented Reality", monitor, nullptr);
+    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
+            if (key == GLFW_KEY_ESCAPE)
+                glfwSetWindowShouldClose(window, true);
+        });
 
-		//Check if the window was successfully made
-		if (!window)
-		{
-			glfwTerminate();
-			throw "Could not initialize glwf";
-		}
-		glfwMakeContextCurrent(window);
+    // First time shaders
+    tigl::shader->setProjectionMatrix(glm::perspective(
+        glm::radians(90.f),
+        (float)width / height,
+        0.1f,
+        100.f
+    ));
 
-		//Escape key callback to quit application
-		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-			{
-				if (key == GLFW_KEY_ESCAPE)
-					glfwSetWindowShouldClose(window, true);
-			});
+    tigl::shader->setViewMatrix(glm::lookAt(
+        glm::vec3(0, 0, 5),
+        glm::vec3(0, 0, 0),
+        glm::vec3(0, 1, 0)
+    ));
+    tigl::shader->enableColor(true);
+    tigl::shader->enableAlphaTest(true);
+    glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
 
-		//Init
-		OpenGLInit();
+    GUIManager guiManager(window, controller);
+    guiManager.init();
 
-		//Test object
-		gameObjects.push_back(GameObject("C:/Users/larsv/Desktop/gpu/rtx4090.obj"));
+    // MAIN LOOP
+    while (!glfwWindowShouldClose(window))
+    {
+        // Program cycle
+        //update();
+        draw();
+        guiManager.update();
 
-		//MAIN LOOP
-		while (!glfwWindowShouldClose(window))
-		{
-			//program cycle
-			Update();
-			Draw();
+        // glfw cycle
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
 
-			//glfw cycle
-			glfwSwapBuffers(window);
-			glfwPollEvents();
-		}
-
-		//Termination
-		glfwDestroyWindow(window);
-		glfwTerminate();
-		return 0;
-	}
+    // Termination
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    return 0;
 }
 
 void OpenGLInit()
 {
+	//Init
 	tigl::init();
 
-	//First time shaders
+	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(
 		glm::radians(90.f),
-		(float)width / height,
+		(float) windowWidth / (float) windowHeight,
 		0.1f,
 		100.f
 	));
 
-
-
+	//Camera position
 	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0, 10, 10),
+		glm::vec3(0, 2, 5),
 		glm::vec3(0, 0, 0),
-		glm::vec3(0, 1, 0)
+		glm::vec3(0, 2, 5)
 	));
 
-	tigl::shader->enableColor(true);
+	//Shader settings
 	tigl::shader->enableAlphaTest(true);
-	tigl::shader->enableTexture(true);
-	tigl::shader->enableLighting(true);
 
+	//GL settings
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0, (float)196 / 255, (float)255 / 255, 1);
 }
 
-void Update()
-{
-}
+//float angle = 1.0f;
+glm::vec3 cubeColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
-void Draw()
+void draw()
 {
-	//Clear
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-	//Draw all GameObjects each frame
-	for (const GameObject& gameObject : gameObjects)
-	{
-		gameObject.Draw();
-	}
+    glm::mat4 translation = glm::mat4(1.0f);
+    translation = glm::translate(translation, glm::vec3(0.0f, -25.0f, -140.0f));
+    tigl::shader->setViewMatrix(translation);
+
+    controller.handleDraw();
 }
