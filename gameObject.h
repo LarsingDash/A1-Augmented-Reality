@@ -45,7 +45,7 @@ public:
 	GameObject(const std::string& dir, const std::string& fileName);
 	~GameObject(void);
 
-	void Draw(const glm::mat4& rotation) const;
+	void Draw(const glm::vec3& position, const glm::mat4& rotation) const;
 
 	//Object loader
 	void LoadObjectFile(const std::string& dir, const std::string& fileName);

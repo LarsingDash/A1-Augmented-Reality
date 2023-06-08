@@ -83,6 +83,7 @@ int main()
 	//Create test object
 	// gameObjects.push_back(GameObject("game_objects/cube/cube.obj"));
 	gameObjects.push_back(GameObject(objectDir, "TestCube"));
+	gameObjects.push_back(GameObject(objectDir, "OtherCube"));
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
@@ -144,7 +145,7 @@ void Update()
 {
 	UpdateKeys();
 
-	tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.f), glm::vec3(cubePosition)));
+	// tigl::shader->setModelMatrix(glm::translate(glm::mat4(1.f), glm::vec3(cubePosition)));
 	rotate = glm::rotate(rotate, glm::radians(angleZ), glm::vec3(0.f, 0.f, 1.f));
 	rotate = glm::rotate(rotate, glm::radians(angleY), glm::vec3(0.f, 1.f, 0.f));
 	rotate = glm::rotate(rotate, glm::radians(angleX), glm::vec3(1.f, 0.f, 0.f));
@@ -187,7 +188,7 @@ void Draw()
 
 	for (const auto& gameObject : gameObjects)
 	{
-		gameObject.Draw(rotate);
+		gameObject.Draw(cubePosition, rotate);
 	}
 }
 
