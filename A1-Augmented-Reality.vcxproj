@@ -185,7 +185,6 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="hand.h" />
-    <ClInclude Include="Material.h" />
     <ClInclude Include="tigl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
