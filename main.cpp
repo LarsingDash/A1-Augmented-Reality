@@ -118,7 +118,7 @@ void Init()
 	tigl::init();
 	glewInit();
 
-	HandInit();
+	HandInit(windowWidth, windowHeight);
 
 	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(

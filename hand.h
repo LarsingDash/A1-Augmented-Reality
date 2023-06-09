@@ -7,7 +7,7 @@
 
 void moveCursor(int x, int y);
 
-int HandInit();
+int HandInit(int windowWidth, int windowHeight);
 void HandUpdate();
 void HandTeardown();
  
@@ -19,5 +19,13 @@ static cv::CascadeClassifier handcascade_fist;
  
 static bool handInArea = false;
 static cv::Rect currentArea;
+
+static int screenWidth;
+static int screenHeight;
+
+static int cursorX;
+static int cursorY;
+
+constexpr float CURSOR_SPEED = 0.25f;
 
 #endif
