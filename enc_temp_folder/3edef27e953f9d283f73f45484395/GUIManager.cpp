@@ -8,11 +8,6 @@
 #include "PcPart.h"
 #include "ComputerController.h"
 
-//#define STB_IMAGE_IMPLEMENTATION
-//#include "stb_image.h"
-
-#include "ImageLoader.h"
-
 //GameObject currentObject;
 
 GUIManager::GUIManager(GLFWwindow* window, ComputerController controller)
@@ -31,7 +26,6 @@ void GUIManager::init()
     ImGui_ImplOpenGL3_Init("#version 330");
 
     controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
-    loader = ImageLoader();
     
 }
 void GUIManager::update()
@@ -106,18 +100,15 @@ void GUIManager::drawMenuScreen()
 void GUIManager::drawTutorialScreen()
 {
     ImGui::Begin("Navigation Buttons", nullptr, ImGuiWindowFlags_NoTitleBar);
-    ImGui::ShowDemoWindow();
 
     if (ImGui::Button("Handgestures", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
-        showPcPartScreen = false;
         showHandgesturesScreen = true;
     }
 
-    if (ImGui::Button("PC Parts", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+    if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
-        showHandgesturesScreen = false;
-        showPcPartScreen = true;
+        
     }
 
     if (ImGui::Button("Show PC part list", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
@@ -138,7 +129,7 @@ void GUIManager::drawTutorialScreen()
         showTutorialScreen = false;
         showPcBuilderScreen = false;
     }
-    
+
     //ImGui::EndChild();
     ImGui::End();
 
@@ -148,37 +139,9 @@ void GUIManager::drawTutorialScreen()
 
     ImGui::Text("Welcome to the tutorial screen!");
 
-    int openHandWidth = 0;
-    int openHandHeight = 0;
-    GLuint openHandImage = 0;
-    bool loadedHand = loader.LoadTextureFromFile("C:/Users/karsv/Downloads/OpenHandFotoTransparant.png", &openHandImage, &openHandWidth, &openHandHeight);
-    IM_ASSERT(loadedHand);
-    
-    int fistWidth = 0;
-    int fistHeight = 0;
-    GLuint fistImage = 0;
-    bool loadedFist = loader.LoadTextureFromFile("C:/Users/karsv/Downloads/VuistFotoTransparant.png", &fistImage, &fistWidth, &fistHeight);
-    IM_ASSERT(loadedFist);
-    
-
     ImGui::SetWindowFontScale(1);
-    if (showHandgesturesScreen) {
-        ImGui::SetCursorPos(ImVec2(10, 50));
-        ImGui::Image((void*)(intptr_t)openHandImage, ImVec2(openHandWidth, openHandHeight));
+    if (showTutorialScreen) {
 
-        ImGui::SetCursorPos(ImVec2(10, 289));
-        ImGui::Text("Beweeg je open hand voor \nje webcam om deze te gebruiken \nals muis");
-
-        ImGui::SetCursorPos(ImVec2(250, 50));
-        ImGui::Image((void*)(intptr_t)fistImage, ImVec2(fistWidth, fistHeight));
-
-        ImGui::SetCursorPos(ImVec2(250, 289));
-        ImGui::Text("Maak een vuist van je open hand \nvoor de camera om een elemenet \nte selecteren");
-    
-    }
-    
-    if (showPcPartScreen) {
-        ImGui::Text("Pcpart explanation");
     }
 
     ImGui::End();

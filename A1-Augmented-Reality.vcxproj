@@ -159,6 +159,7 @@
     <ClCompile Include="ComputerController.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GUIManager.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="ComputerController.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GUIManager.h" />
+    <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_glfw.h" />
@@ -187,11 +189,14 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="PcPart.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="tigl.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="D:\AA Web Downloads\ChromeDownloads5\opengl_logo.png" />
+    <Image Include="FestivalPlannerFoto.png" />
+    <Image Include="TestImage.jpgd.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="TestData.txt" />

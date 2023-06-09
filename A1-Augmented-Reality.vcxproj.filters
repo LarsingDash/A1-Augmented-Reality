@@ -66,6 +66,9 @@
     <ClCompile Include="texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ImageLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h">
@@ -116,9 +119,21 @@
     <ClInclude Include="texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="D:\AA Web Downloads\ChromeDownloads5\opengl_logo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="TestImage.jpgd.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="FestivalPlannerFoto.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
