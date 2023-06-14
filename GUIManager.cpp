@@ -40,40 +40,40 @@ void GUIManager::init()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD, ""));
-	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD, ""));
-	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL, ""));
-	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL, ""));
+	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD, "path1"));
+	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD, "path2"));
+	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL, "path3"));
+	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL, "path4"));
 
-	mbuList.push_back(Motherboard("mbu1", MbuSocketType::AMD, ""));
-	mbuList.push_back(Motherboard("mbu2", MbuSocketType::AMD, ""));
-	mbuList.push_back(Motherboard("mbu3", MbuSocketType::INTEL, ""));
-	mbuList.push_back(Motherboard("mbu4", MbuSocketType::INTEL, ""));
+	mbuList.push_back(Motherboard("mbu1", MbuSocketType::AMD, "path5"));
+	mbuList.push_back(Motherboard("mbu2", MbuSocketType::AMD, "path6"));
+	mbuList.push_back(Motherboard("mbu3", MbuSocketType::INTEL, "path7"));
+	mbuList.push_back(Motherboard("mbu4", MbuSocketType::INTEL, "path8"));
 
-	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080", ""));
-	gpuList.push_back(GPU("AMD Radeon RX 6800 XT", ""));
-	gpuList.push_back(GPU("Geforce RTX 3060", ""));
-	gpuList.push_back(GPU("AMD Radeon RX 5700 ", ""));
+	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080", "path9"));
+	gpuList.push_back(GPU("AMD Radeon RX 6800 XT", "path10"));
+	gpuList.push_back(GPU("Geforce RTX 3060", "path11"));
+	gpuList.push_back(GPU("AMD Radeon RX 5700 ", "path12"));
 
-	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4, ""));
-	ramList.push_back(RAM("G.SKILL Ripjaws V", RamSocketType::DDR4, ""));
-	ramList.push_back(RAM("ValueRam 2 x 8", RamSocketType::DDR4, ""));
-	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4, ""));
+	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4, "path13"));
+	ramList.push_back(RAM("G.SKILL Ripjaws V", RamSocketType::DDR4, "path14"));
+	ramList.push_back(RAM("ValueRam 2 x 8", RamSocketType::DDR4, "path15"));
+	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4, "path16"));
 
-	psuList.push_back(PSU("Power Supply Unit 1", ""));
-	psuList.push_back(PSU("Power Supply Unit 2", ""));
-	psuList.push_back(PSU("Power Supply Unit 3", ""));
-	psuList.push_back(PSU("Power Supply Unit 4", ""));
+	psuList.push_back(PSU("Power Supply Unit 1", "path17"));
+	psuList.push_back(PSU("Power Supply Unit 2", "path18"));
+	psuList.push_back(PSU("Power Supply Unit 3", "path19"));
+	psuList.push_back(PSU("Power Supply Unit 4", "path20"));
 
-	pcCaseList.push_back(PcCase("PC Case 1", ""));
-	pcCaseList.push_back(PcCase("PC Case 2", ""));
-	pcCaseList.push_back(PcCase("PC Case 3", ""));
-	pcCaseList.push_back(PcCase("PC Case 4", ""));
+	pcCaseList.push_back(PcCase("PC Case 1", "path21"));
+	pcCaseList.push_back(PcCase("PC Case 2", "path22"));
+	pcCaseList.push_back(PcCase("PC Case 3", "path23"));
+	pcCaseList.push_back(PcCase("PC Case 4", "path24"));
 
-	storageList.push_back(Storage("Storage 1", ""));
-	storageList.push_back(Storage("Storage 2", ""));
-	storageList.push_back(Storage("Storage 3", ""));
-	storageList.push_back(Storage("Storage 4", ""));
+	storageList.push_back(Storage("Storage 1", "path25"));
+	storageList.push_back(Storage("Storage 2", "path26"));
+	storageList.push_back(Storage("Storage 3", "path27"));
+	storageList.push_back(Storage("Storage 4", "path28"));
 }
 
 void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
@@ -218,6 +218,7 @@ void GUIManager::drawPCBuilderScreen()
 
 	}
 
+	drawAddPartButton();
 
 	ImGui::End();
 
@@ -235,6 +236,15 @@ void GUIManager::drawPCBuilderScreen()
 
 	}
 
+	if (ImGui::Button("Test", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+	{
+		std::cout << "Object Paths to draw: ";
+		for (const PcPart* part : pcParts)
+		{
+			std::cout << part->getObjectPath() << " ";
+		}
+		std::cout << std::endl;
+	}
 
 
 	ImGui::Text("Chosen Pc parts");
@@ -289,6 +299,8 @@ void GUIManager::drawAddPartButton()
 				std::cout << "CPU type received: " << partType << std::endl;
 
 				pcParts.push_back(&cpuList[payload_n]);
+				
+				
 			}
 			else if (partType == GPU_TYPE)
 			{
@@ -322,6 +334,7 @@ void GUIManager::drawAddPartButton()
 			}
 		}
 		ImGui::EndDragDropTarget();
+	
 	}
 }
 void GUIManager::drawDeletePartButton()

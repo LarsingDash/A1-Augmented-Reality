@@ -6,11 +6,16 @@
 
 class GPU : public PcPart {
 public:
-	std::string getName() const override;
-	GPU(const std::string& name, const std::string& objectPath);
-	~GPU();
+    GPU(const std::string& name, const std::string& objectPath);
+    ~GPU();
 
-	void display() const override;
+    std::string getName() const override;
+    std::string getObjectPath() const override;
+    void display() const override;
+
+private:
+    std::string objectPath;
+
 };
 
-#endif  
+#endif  // GPU_HPP

@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-Motherboard::Motherboard(const std::string& name, MbuSocketType cpuSocket, const std::string& objectPath) : PcPart(name) {}
+Motherboard::Motherboard(const std::string& name, MbuSocketType socketType, const std::string& objectPath)
+    : PcPart(name), socketType(socketType), objectPath(objectPath) {}
 
 Motherboard::~Motherboard() {
     for (PcPart* component : childComponents) {
@@ -32,4 +33,8 @@ void Motherboard::display() const {
 
 std::string Motherboard::getName() const {
     return name;
+}
+
+std::string Motherboard::getObjectPath() const {
+    return objectPath;
 }

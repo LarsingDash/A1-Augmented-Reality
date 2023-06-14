@@ -6,11 +6,16 @@
 
 class Storage : public PcPart {
 public:
-	Storage(const std::string& name, const std::string& objectPath);
-	~Storage();
-	std::string getName() const override;
+    Storage(const std::string& name, const std::string& objectPath);
+    ~Storage();
 
-	void display() const override;
+    std::string getName() const override;
+    std::string getObjectPath() const override;
+    void display() const override;
+
+private:
+    std::string objectPath;
+
 };
 
-#endif  
+#endif  // STORAGE_HPP

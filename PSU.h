@@ -10,7 +10,12 @@ public:
     ~PSU();
 
     std::string getName() const override;
+    std::string getObjectPath() const override;
     void display() const override;
+
+private:
+    std::string objectPath;
+
 };
 
 #endif // PSU_HPP
