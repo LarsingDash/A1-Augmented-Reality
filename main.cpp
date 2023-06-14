@@ -82,7 +82,7 @@ int main()
 	//Create test object
 	guiManager.controller.objects.emplace_back(objectDir, "Case");
 	guiManager.controller.objects.emplace_back(objectDir, "CPU");
-	guiManager.controller.objects.emplace_back(objectDir, "FAN");
+	guiManager.controller.objects.emplace_back(objectDir, "Fan");
 	guiManager.controller.objects.emplace_back(objectDir, "GPU");
 	guiManager.controller.objects.emplace_back(objectDir, "HDD");
 	guiManager.controller.objects.emplace_back(objectDir, "MB");
