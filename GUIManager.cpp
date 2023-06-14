@@ -8,6 +8,7 @@
 #include "PcPart.hpp"
 #include "ComputerController.h"
 #include "CPU.hpp"
+#include "Fan.hpp"
 #include "GPU.hpp"
 #include "PcCase.hpp"
 #include "PSU.h"
@@ -22,12 +23,12 @@ std::vector<RAM> ramList;
 std::vector<PSU> psuList;
 std::vector<PcCase> pcCaseList;
 std::vector<Storage> storageList;
+std::vector<Fan> fanList;
 std::vector<PcPart*> pcParts;
 
 GUIManager::GUIManager(GLFWwindow* window, const ComputerController& controller, std::string objectDirectory)
-    : window(window), controller(controller), directory(objectDirectory)
+	: window(window), controller(controller), directory(objectDirectory)
 {
-	
 }
 
 void GUIManager::init()
@@ -43,43 +44,41 @@ void GUIManager::init()
 	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD, "CPU"));
 	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD, "path2"));
 	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL, "path3"));
-	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL, "path4"));
+
+
+	fanList.push_back(Fan("FAN1", "FAN"));
+	fanList.push_back(Fan("FAN2", "path2"));
+	fanList.push_back(Fan("FAN3", "path3"));
 
 	mbuList.push_back(Motherboard("mbu1", MbuSocketType::AMD, "MB"));
 	mbuList.push_back(Motherboard("mbu2", MbuSocketType::AMD, "path6"));
 	mbuList.push_back(Motherboard("mbu3", MbuSocketType::INTEL, "path7"));
-	mbuList.push_back(Motherboard("mbu4", MbuSocketType::INTEL, "path8"));
 
 	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080", "GPU"));
 	gpuList.push_back(GPU("AMD Radeon RX 6800 XT", "path10"));
 	gpuList.push_back(GPU("Geforce RTX 3060", "path11"));
-	gpuList.push_back(GPU("AMD Radeon RX 5700 ", "path12"));
 
 	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4, "RAM"));
 	ramList.push_back(RAM("G.SKILL Ripjaws V", RamSocketType::DDR4, "path14"));
 	ramList.push_back(RAM("ValueRam 2 x 8", RamSocketType::DDR4, "path15"));
-	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4, "path16"));
 
 	psuList.push_back(PSU("Power Supply Unit 1", "PSU"));
 	psuList.push_back(PSU("Power Supply Unit 2", "path18"));
 	psuList.push_back(PSU("Power Supply Unit 3", "path19"));
-	psuList.push_back(PSU("Power Supply Unit 4", "path20"));
 
 	pcCaseList.push_back(PcCase("PC Case 1", "Case"));
 	pcCaseList.push_back(PcCase("PC Case 2", "path22"));
 	pcCaseList.push_back(PcCase("PC Case 3", "path23"));
-	pcCaseList.push_back(PcCase("PC Case 4", "path24"));
 
 	storageList.push_back(Storage("Storage 1", "SSD"));
 	storageList.push_back(Storage("Storage 2", "path26"));
 	storageList.push_back(Storage("Storage 3", "path27"));
-	storageList.push_back(Storage("Storage 4", "path28"));
 }
 
 void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
 {
-    // Clear background
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Clear background
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -98,57 +97,57 @@ void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
 		drawPCBuilderScreen();
 	}
 
-    controller.handleDraw(position, rotation);
+	controller.handleDraw(position, rotation);
 
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void GUIManager::drawMenuScreen()
 {
-    // Get the size of the GLFW window
-    int windowWidth, windowHeight;
-    glfwGetWindowSize(window, &windowWidth, &windowHeight);
+	// Get the size of the GLFW window
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
-    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
+	ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
 
-    ImGui::Begin("Main Menu", nullptr);
+	ImGui::Begin("Main Menu", nullptr);
 
-    // Center the text vertically and horizontally
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("PC builder application").x) * 0.5f);
-    ImGui::SetCursorPosY((ImGui::GetWindowSize().y - ImGui::CalcTextSize("PC builder application").y) * 0.5f);
+	// Center the text vertically and horizontally
+	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("PC builder application").x) * 0.5f);
+	ImGui::SetCursorPosY((ImGui::GetWindowSize().y - ImGui::CalcTextSize("PC builder application").y) * 0.5f);
 
-    ImGui::Text("PC builder application");
+	ImGui::Text("PC builder application");
 
-    ImGui::Spacing();
+	ImGui::Spacing();
 
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
+	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
-    if (ImGui::Button("PC Builder", ImVec2(150, 30)))
-    {
-        showMenuScreen = false;
-        showTutorialScreen = false;
-        showPcBuilderScreen = true;
-        controller.setIsDrawing(true);
-    }
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
+	if (ImGui::Button("PC Builder", ImVec2(150, 30)))
+	{
+		showMenuScreen = false;
+		showTutorialScreen = false;
+		showPcBuilderScreen = true;
+		controller.setIsDrawing(true);
+	}
+	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
-    if (ImGui::Button("Tutorial", ImVec2(150, 30)))
-    {
-        showMenuScreen = false;
-        showTutorialScreen = true;
+	if (ImGui::Button("Tutorial", ImVec2(150, 30)))
+	{
+		showMenuScreen = false;
+		showTutorialScreen = true;
 		showPcBuilderScreen = false;
 		controller.setIsDrawing(false);
-    }
+	}
 
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
+	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
 
-    if (ImGui::Button("Exit", ImVec2(100, 30)))
-    {
-        glfwSetWindowShouldClose(window, true);
-    }
+	if (ImGui::Button("Exit", ImVec2(100, 30)))
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
 
-    ImGui::End();
+	ImGui::End();
 }
 
 void GUIManager::drawTutorialScreen()
@@ -174,49 +173,33 @@ int partType;
 
 void GUIManager::drawPCBuilderScreen()
 {
-
 	//Top left window
 	ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
 
-	if (ImGui::CollapsingHeader("CPU's"))
-	{
-		drawPartList(cpuList, CPU_TYPE);
+	ImGui::Text("Processors");
+	drawPartList(cpuList, CPU_TYPE);
 
-	}
+	ImGui::Text("Cpu coolers");
+	drawPartList(fanList, FAN_TYPE);
 
-	if (ImGui::CollapsingHeader("RAM"))
-	{
-		drawPartList(ramList, RAM_TYPE);
+	ImGui::Text("Memory modules");
+	drawPartList(ramList, RAM_TYPE);
 
-	}
+	ImGui::Text("Graphics cards");
+	drawPartList(gpuList, GPU_TYPE);
 
-	if (ImGui::CollapsingHeader("GPU's"))
-	{
-		drawPartList(gpuList, GPU_TYPE);
+	ImGui::Text("Mother boards");
+	drawPartList(mbuList, MBU_TYPE);
 
-	}
+	ImGui::Text("Power supplies");
+	drawPartList(psuList, PSU_TYPE);
 
-	if (ImGui::CollapsingHeader("Motherboards"))
-	{
-		drawPartList(mbuList, MBU_TYPE);
+	ImGui::Text("Pc cases");
+	drawPartList(pcCaseList, PC_CASE_TYPE);
 
-	}
+	ImGui::Text("Storage");
+	drawPartList(storageList, STORAGE_TYPE);
 
-	if (ImGui::CollapsingHeader("PSU"))
-	{
-		drawPartList(psuList, PSU_TYPE);
-
-	}
-	if (ImGui::CollapsingHeader("PC CASE"))
-	{
-		drawPartList(pcCaseList, PC_CASE_TYPE);
-
-	}
-	if (ImGui::CollapsingHeader("STORAGE"))
-	{
-		drawPartList(storageList, STORAGE_TYPE);
-
-	}
 
 	drawAddPartButton();
 
@@ -233,26 +216,23 @@ void GUIManager::drawPCBuilderScreen()
 
 	if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
 	{
-
 	}
 
 
 	if (ImGui::Button("DRAW NEW OBJECTS", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
 	{
-		pcDrawObjects();
-
+		setPcObjects();
 	}
 	if (ImGui::Button("CLEAR OBJECTS", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
 	{
-		pcClearObjects();
-
+		clearPcObjects();
 	}
 	ImGui::Text("Chosen Pc parts");
 
 	for (int n = 0; n < pcParts.size(); n++)
 	{
 		ImGui::PushID(n);
-		if (ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20)));
+		if (ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 40)));
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
@@ -272,10 +252,11 @@ void GUIManager::drawPCBuilderScreen()
 	drawDeletePartButton();
 
 	ImGui::End();
-
 }
-void GUIManager::pcDrawObjects() {
-	pcClearObjects();
+
+void GUIManager::setPcObjects()
+{
+	clearPcObjects();
 	for (const PcPart* part : pcParts)
 	{
 		std::string objectPath = part->getObjectPath();
@@ -283,15 +264,18 @@ void GUIManager::pcDrawObjects() {
 	}
 }
 
-void GUIManager::pcClearObjects(){
+void GUIManager::clearPcObjects()
+{
 	controller.objects.clear();
-
 }
+
 void GUIManager::drawAddPartButton()
 {
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.8f, 0.2f, 1.0f)); // Set button color to green
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.9f, 0.3f, 1.0f)); // Set button hover color to a lighter green
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.7f, 0.1f, 1.0f)); // Set button active color to a darker green
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.9f, 0.3f, 1.0f));
+	// Set button hover color to a lighter green
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.7f, 0.1f, 1.0f));
+	// Set button active color to a darker green
 
 	ImGui::Button("Add PC Part", ImVec2(250, 40));
 
@@ -311,8 +295,12 @@ void GUIManager::drawAddPartButton()
 				std::cout << "CPU type received: " << partType << std::endl;
 
 				pcParts.push_back(&cpuList[payload_n]);
-				
-				
+			}
+			else if (partType == FAN_TYPE)
+			{
+				std::cout << "FAN type received: " << partType << std::endl;
+
+				pcParts.push_back(&fanList[payload_n]);
 			}
 			else if (partType == GPU_TYPE)
 			{
@@ -350,21 +338,22 @@ void GUIManager::drawAddPartButton()
 
 				pcParts.push_back(&storageList[payload_n]);
 			}
-			pcDrawObjects();
+			setPcObjects();
 		}
 		ImGui::EndDragDropTarget();
-	
 	}
 }
+
 void GUIManager::drawDeletePartButton()
 {
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f)); // Set button color to red
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f)); // Set button hover color to a lighter red
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f)); // Set button active color to a darker red
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
+	// Set button hover color to a lighter red
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f));
+	// Set button active color to a darker red
 
 	if (ImGui::Button("Delete Part", ImVec2(250, 40)))
 	{
-		// Perform deletion here if needed
 	}
 
 	ImGui::PopStyleColor(3);
@@ -378,8 +367,8 @@ void GUIManager::drawDeletePartButton()
 
 			// Delete the dragged part from the pcParts vector
 			pcParts.erase(pcParts.begin() + payload_n);
+			setPcObjects();
 		}
-		pcDrawObjects();
 
 		ImGui::EndDragDropTarget();
 	}
@@ -391,7 +380,7 @@ void GUIManager::drawPartList(const std::vector<T>& partsList, int part)
 	for (int n = 0; n < partsList.size(); n++)
 	{
 		ImGui::PushID(n);
-		if (ImGui::Button(partsList[n].getName().c_str(), ImVec2(250, 40)));
+		if (ImGui::Button(partsList[n].getName().c_str(), ImVec2(110, 40)));
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
@@ -402,5 +391,9 @@ void GUIManager::drawPartList(const std::vector<T>& partsList, int part)
 		}
 
 		ImGui::PopID();
+		if (n + 1 < partsList.size())
+		{
+			ImGui::SameLine();
+		}
 	}
 }

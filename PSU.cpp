@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-PSU::PSU(const std::string& name, const std::string& objectPath) : PcPart(name) {}
+PSU::PSU(const std::string& name, const std::string& objectPath) : PcPart(name), objectPath(objectPath) {}
 
 PSU::~PSU() {}
 std::string PSU::getName() const {

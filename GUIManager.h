@@ -22,7 +22,8 @@ enum PartType
     PC_CASE_TYPE,
     PSU_TYPE,
     STORAGE_TYPE,
-    MBU_TYPE
+    MBU_TYPE,
+    FAN_TYPE
 };
 class GUIManager {
 public:
@@ -45,8 +46,8 @@ private:
     void drawPCBuilderScreen();
     void drawAddPartButton();
     void drawDeletePartButton();
-    void pcDrawObjects();
-    void pcClearObjects();
+    void setPcObjects();
+    void clearPcObjects();
     template <typename T>
     void drawPartList(const std::vector<T>& partsList, int partType);
  
