@@ -24,8 +24,8 @@ std::vector<PcCase> pcCaseList;
 std::vector<Storage> storageList;
 std::vector<PcPart*> pcParts;
 
-GUIManager::GUIManager(GLFWwindow* window, const ComputerController& controller)
-    : window(window), controller(controller)
+GUIManager::GUIManager(GLFWwindow* window, const ComputerController& controller, std::string objectDirectory)
+    : window(window), controller(controller), directory(objectDirectory)
 {
 	
 }
@@ -40,37 +40,37 @@ void GUIManager::init()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD, "path1"));
+	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD, "CPU"));
 	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD, "path2"));
 	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL, "path3"));
 	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL, "path4"));
 
-	mbuList.push_back(Motherboard("mbu1", MbuSocketType::AMD, "path5"));
+	mbuList.push_back(Motherboard("mbu1", MbuSocketType::AMD, "MBD"));
 	mbuList.push_back(Motherboard("mbu2", MbuSocketType::AMD, "path6"));
 	mbuList.push_back(Motherboard("mbu3", MbuSocketType::INTEL, "path7"));
 	mbuList.push_back(Motherboard("mbu4", MbuSocketType::INTEL, "path8"));
 
-	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080", "path9"));
+	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080", "GPU"));
 	gpuList.push_back(GPU("AMD Radeon RX 6800 XT", "path10"));
 	gpuList.push_back(GPU("Geforce RTX 3060", "path11"));
 	gpuList.push_back(GPU("AMD Radeon RX 5700 ", "path12"));
 
-	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4, "path13"));
+	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4, "RAM"));
 	ramList.push_back(RAM("G.SKILL Ripjaws V", RamSocketType::DDR4, "path14"));
 	ramList.push_back(RAM("ValueRam 2 x 8", RamSocketType::DDR4, "path15"));
 	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4, "path16"));
 
-	psuList.push_back(PSU("Power Supply Unit 1", "path17"));
+	psuList.push_back(PSU("Power Supply Unit 1", "PSU"));
 	psuList.push_back(PSU("Power Supply Unit 2", "path18"));
 	psuList.push_back(PSU("Power Supply Unit 3", "path19"));
 	psuList.push_back(PSU("Power Supply Unit 4", "path20"));
 
-	pcCaseList.push_back(PcCase("PC Case 1", "path21"));
+	pcCaseList.push_back(PcCase("PC Case 1", "Case"));
 	pcCaseList.push_back(PcCase("PC Case 2", "path22"));
 	pcCaseList.push_back(PcCase("PC Case 3", "path23"));
 	pcCaseList.push_back(PcCase("PC Case 4", "path24"));
 
-	storageList.push_back(Storage("Storage 1", "path25"));
+	storageList.push_back(Storage("Storage 1", "SSD"));
 	storageList.push_back(Storage("Storage 2", "path26"));
 	storageList.push_back(Storage("Storage 3", "path27"));
 	storageList.push_back(Storage("Storage 4", "path28"));
@@ -236,17 +236,17 @@ void GUIManager::drawPCBuilderScreen()
 
 	}
 
-	if (ImGui::Button("Test", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+
+	if (ImGui::Button("DRAW NEW OBJECTS", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
 	{
-		std::cout << "Object Paths to draw: ";
-		for (const PcPart* part : pcParts)
-		{
-			std::cout << part->getObjectPath() << " ";
-		}
-		std::cout << std::endl;
+		pcDrawObjects();
+
 	}
+	if (ImGui::Button("CLEAR OBJECTS", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+	{
+		pcClearObjects();
 
-
+	}
 	ImGui::Text("Chosen Pc parts");
 
 	for (int n = 0; n < pcParts.size(); n++)
@@ -274,7 +274,19 @@ void GUIManager::drawPCBuilderScreen()
 	ImGui::End();
 
 }
+void GUIManager::pcDrawObjects() {
+	pcClearObjects();
+	for (const PcPart* part : pcParts)
+	{
+		std::string objectPath = part->getObjectPath();
+		controller.objects.emplace_back(directory, objectPath);
+	}
+}
 
+void GUIManager::pcClearObjects(){
+	controller.objects.clear();
+
+}
 void GUIManager::drawAddPartButton()
 {
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.8f, 0.2f, 1.0f)); // Set button color to green
@@ -332,6 +344,7 @@ void GUIManager::drawAddPartButton()
 
 				pcParts.push_back(&storageList[payload_n]);
 			}
+			pcDrawObjects();
 		}
 		ImGui::EndDragDropTarget();
 	
@@ -360,6 +373,7 @@ void GUIManager::drawDeletePartButton()
 			// Delete the dragged part from the pcParts vector
 			pcParts.erase(pcParts.begin() + payload_n);
 		}
+		pcDrawObjects();
 
 		ImGui::EndDragDropTarget();
 	}

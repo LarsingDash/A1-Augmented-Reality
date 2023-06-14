@@ -80,7 +80,7 @@ int main()
 			glfwSetWindowShouldClose(window, true);
 	});
 
-	GUIManager guiManager = GUIManager(window, controller);
+	GUIManager guiManager = GUIManager(window, controller, objectDir);
 	guiManager.init();
 
 	//Init

@@ -26,7 +26,7 @@ enum PartType
 };
 class GUIManager {
 public:
-    GUIManager(GLFWwindow* window, const ComputerController& controller);
+    GUIManager(GLFWwindow* window, const ComputerController& controller, std::string objectDirectory);
 
     void init();
     void Draw(const glm::vec3& position, const glm::mat4& rotation);
@@ -38,12 +38,15 @@ private:
     bool showTutorialScreen = false;
     bool showPcBuilderScreen = false;
     bool showPcPartList = false;
+    std::string directory;
 
     void drawMenuScreen();
     void drawTutorialScreen();
     void drawPCBuilderScreen();
     void drawAddPartButton();
     void drawDeletePartButton();
+    void pcDrawObjects();
+    void pcClearObjects();
     template <typename T>
     void drawPartList(const std::vector<T>& partsList, int partType);
  
