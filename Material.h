@@ -7,20 +7,20 @@
 
 class Material
 {
-public:
-	Material(const std::string& matName);
-	void SetTexture(const std::string& texPath);
-	std::string GetTexturePath() const;
-	void SetMaterialColor(const glm::vec4 color);
+	public:
+		Material(const std::string& matName);
+		void SetTexture(const std::string& texPath, const std::string& texName, const std::string& objectDir);
+		void SetMaterialColor(const glm::vec4 color);
 
-	void SelectMaterial();
+		void SelectMaterial() const;
 
-	std::string GetName();
+		std::string GetName();
 
-private:
-	std::string name;
-	std::string texturePath;
-	std::vector<Texture> textures;
+	private:
+		std::string name;
+		std::vector<Texture*> textures;
 
-	glm::vec4 diffuse{};
+		glm::vec4 diffuse{};
 };
+
+static Texture* baseTexture = nullptr;

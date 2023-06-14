@@ -33,7 +33,7 @@ private:
 	std::vector<ObjectGroup*> groups;
 
 	//Material loader
-	void LoadMaterialFile(const std::string& mtlPath);
+	void LoadMaterialFile(const std::string& mtlPath, const std::string& objectDir);
 
 protected:
 	std::vector<Material*> materials;
