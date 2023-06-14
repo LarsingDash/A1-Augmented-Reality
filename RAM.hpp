@@ -14,7 +14,7 @@ private:
 	RamSocketType socketType;
 
 public:
-	RAM(const std::string& name, RamSocketType socketType);
+	RAM(const std::string& name, RamSocketType socketType, const std::string& objectPath);
 	~RAM();
 	std::string getName() const override;
 	void display() const override;

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-PcCase::PcCase(const std::string& name) : PcPart(name) {}
+PcCase::PcCase(const std::string& name, const std::string& objectPath) : PcPart(name) {}
 
 PcCase::~PcCase() {
     for (PcPart* component : childComponents) {

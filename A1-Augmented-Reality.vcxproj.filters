@@ -164,9 +164,6 @@
     <ClInclude Include="PcCase.hpp">
       <Filter>Header Files\PcParts</Filter>
     </ClInclude>
-    <ClInclude Include="PSU.hpp">
-      <Filter>Header Files\PcParts</Filter>
-    </ClInclude>
     <ClInclude Include="RAM.hpp">
       <Filter>Header Files\PcParts</Filter>
     </ClInclude>
@@ -174,6 +171,9 @@
       <Filter>Header Files\PcParts</Filter>
     </ClInclude>
     <ClInclude Include="PcPart.hpp">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="PSU.h">
       <Filter>Header Files\PcParts</Filter>
     </ClInclude>
   </ItemGroup>

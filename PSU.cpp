@@ -1,9 +1,9 @@
-#include "PSU.hpp"
+#include "PSU.h"
 
 
 #include <iostream>
 
-PSU::PSU(const std::string& name) : PcPart(name) {}
+PSU::PSU(const std::string& name, const std::string& objectPath) : PcPart(name) {}
 
 PSU::~PSU() {}
 std::string PSU::getName() const {

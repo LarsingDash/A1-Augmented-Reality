@@ -9,7 +9,7 @@ private:
 	std::vector<PcPart*> childComponents;
 
 public:
-	PcCase(const std::string& name);
+	PcCase(const std::string& name, const std::string& objectPath);
 	~PcCase();
 
 	void addComponent(PcPart* component);

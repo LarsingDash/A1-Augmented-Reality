@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-RAM::RAM(const std::string& name, RamSocketType socketType) : PcPart(name), socketType(socketType) {}
+RAM::RAM(const std::string& name, RamSocketType socketType, const std::string& objectPath) : PcPart(name), socketType(socketType) {}
 
 RAM::~RAM() {}
 std::string RAM::getName() const {

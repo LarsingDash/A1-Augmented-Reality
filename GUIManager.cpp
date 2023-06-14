@@ -10,7 +10,7 @@
 #include "CPU.hpp"
 #include "GPU.hpp"
 #include "PcCase.hpp"
-#include "PSU.hpp"
+#include "PSU.h"
 #include "RAM.hpp"
 #include "Storage.hpp"
 
@@ -38,35 +38,35 @@ void GUIManager::init()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD));
-	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD));
-	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL));
-	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL));
+	cpuList.push_back(CPU("AMD Ryzen 5", CpuSocketType::AMD, ""));
+	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD, ""));
+	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL, ""));
+	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL, ""));
 
-	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080"));
-	gpuList.push_back(GPU("AMD Radeon RX 6800 XT"));
-	gpuList.push_back(GPU("Geforce RTX 3060"));
-	gpuList.push_back(GPU("AMD Radeon RX 5700 "));
+	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080", ""));
+	gpuList.push_back(GPU("AMD Radeon RX 6800 XT", ""));
+	gpuList.push_back(GPU("Geforce RTX 3060", ""));
+	gpuList.push_back(GPU("AMD Radeon RX 5700 ", ""));
 
-	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4));
-	ramList.push_back(RAM("G.SKILL Ripjaws V", RamSocketType::DDR4));
-	ramList.push_back(RAM("ValueRam 2 x 8", RamSocketType::DDR4));
-	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4));
+	ramList.push_back(RAM("Corsair Vengeance", RamSocketType::DDR4, ""));
+	ramList.push_back(RAM("G.SKILL Ripjaws V", RamSocketType::DDR4, ""));
+	ramList.push_back(RAM("ValueRam 2 x 8", RamSocketType::DDR4, ""));
+	ramList.push_back(RAM("Trident Z royal 2 x 16", RamSocketType::DDR4, ""));
 
-	psuList.push_back(PSU("Power Supply Unit 1"));
-	psuList.push_back(PSU("Power Supply Unit 2"));
-	psuList.push_back(PSU("Power Supply Unit 3"));
-	psuList.push_back(PSU("Power Supply Unit 4"));
+	psuList.push_back(PSU("Power Supply Unit 1", ""));
+	psuList.push_back(PSU("Power Supply Unit 2", ""));
+	psuList.push_back(PSU("Power Supply Unit 3", ""));
+	psuList.push_back(PSU("Power Supply Unit 4", ""));
 
-	pcCaseList.push_back(PcCase("PC Case 1"));
-	pcCaseList.push_back(PcCase("PC Case 2"));
-	pcCaseList.push_back(PcCase("PC Case 3"));
-	pcCaseList.push_back(PcCase("PC Case 4"));
+	pcCaseList.push_back(PcCase("PC Case 1", ""));
+	pcCaseList.push_back(PcCase("PC Case 2", ""));
+	pcCaseList.push_back(PcCase("PC Case 3", ""));
+	pcCaseList.push_back(PcCase("PC Case 4", ""));
 
-	storageList.push_back(Storage("Storage 1"));
-	storageList.push_back(Storage("Storage 2"));
-	storageList.push_back(Storage("Storage 3"));
-	storageList.push_back(Storage("Storage 4"));
+	storageList.push_back(Storage("Storage 1", ""));
+	storageList.push_back(Storage("Storage 2", ""));
+	storageList.push_back(Storage("Storage 3", ""));
+	storageList.push_back(Storage("Storage 4", ""));
 }
 
 void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
