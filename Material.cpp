@@ -8,17 +8,20 @@ Material::Material(const std::string& matName)
 	name = matName;
 }
 
-void Material::SetTexture(const std::string& texPath)
+void Material::SetTexture(const std::string& texPath, const std::string& texName, const std::string& objectDir)
 {
-	texturePath = texPath;
-
 	textures.clear();
-	textures.emplace_back(texturePath);
-}
 
-std::string Material::GetTexturePath() const
-{
-	return texturePath;
+	if (texName == "PC.png")
+	{
+		if (baseTexture == nullptr)
+		{
+			baseTexture = new Texture(objectDir + "/objects/PC.png");
+		}
+
+		textures.push_back(baseTexture);
+	}
+	else textures.push_back(new Texture(texPath + texName));
 }
 
 void Material::SetMaterialColor(const glm::vec4 color)
@@ -26,7 +29,7 @@ void Material::SetMaterialColor(const glm::vec4 color)
 	diffuse = color;
 }
 
-void Material::SelectMaterial()
+void Material::SelectMaterial() const
 {
 	if (!textures.empty())
 	{
@@ -34,7 +37,7 @@ void Material::SelectMaterial()
 		tigl::shader->enableTexture(true);
 		tigl::shader->enableColorMult(false);
 
-		textures[0].bind();
+		textures[0]->bind();
 	}
 	else
 	{

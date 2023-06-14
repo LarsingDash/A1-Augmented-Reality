@@ -23,10 +23,6 @@ using tigl::Vertex;
 //Init
 void Init();
 
-//Update
-void Update();
-void UpdateKeys();
-
 //Other
 void GetObjectDir();
 void reset_position();
@@ -86,10 +82,10 @@ int main()
 	//Create test object
 	guiManager.controller.objects.emplace_back(objectDir, "Case");
 	guiManager.controller.objects.emplace_back(objectDir, "CPU");
-	guiManager.controller.objects.emplace_back(objectDir, "Fan");
+	guiManager.controller.objects.emplace_back(objectDir, "FAN");
 	guiManager.controller.objects.emplace_back(objectDir, "GPU");
 	guiManager.controller.objects.emplace_back(objectDir, "HDD");
-	guiManager.controller.objects.emplace_back(objectDir, "Motherboard");
+	guiManager.controller.objects.emplace_back(objectDir, "MB");
 	guiManager.controller.objects.emplace_back(objectDir, "PSU");
 	guiManager.controller.objects.emplace_back(objectDir, "RAM");
 	guiManager.controller.objects.emplace_back(objectDir, "SSD");
@@ -98,8 +94,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		//Program cycle
-		// HandUpdate();
-		Update();
+		HandUpdate();
 		guiManager.Draw(window);
 
 		//glfw cycle
@@ -142,30 +137,19 @@ void Init()
 	//Light
 	tigl::shader->enableLighting(true);
 	tigl::shader->setLightCount(1);
-	tigl::shader->setShinyness(45);
+	tigl::shader->setShinyness(25);
 
 	//Camera Light
 	tigl::shader->setLightDirectional(0, false);
 	tigl::shader->setLightPosition(0, glm::vec3(0, 0, 5));
 	tigl::shader->setLightAmbient(0, glm::vec3(1, 1, 1));
-	tigl::shader->setLightDiffuse(0, glm::vec3(0.9f, 0.9f, 0.9f));
+	tigl::shader->setLightDiffuse(0, glm::vec3(1, 1, 1));
+	// tigl::shader->setLightSpecular(0, glm::vec3(1, 1, 1));
 
 	//GL settings
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0, 196.f / 255.f, 255.f / 255.f, 1);
 }
-
-//Updates
-void Update()
-{
-	UpdateKeys();
-}
-
-void UpdateKeys()
-{
-	
-}
-
 
 //Other
 void GetObjectDir()

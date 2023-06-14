@@ -1,6 +1,6 @@
 # Blender v3.0.1 OBJ File: 'PC.blend'
 # www.blender.org
-mtllib Motherboard.mtl
+mtllib MB.mtl
 o Motherboard_Cylinder.070
 v -4.064443 0.791091 -0.723464
 v -4.153394 0.759822 -0.723464

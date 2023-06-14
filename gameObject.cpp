@@ -133,30 +133,6 @@ void GameObject::LoadObjectFile(const std::string& dir, const std::string& fileN
 				}
 				currentGroup->faces.push_back(face);
 			}
-
-			//Triangle only
-			//Create vertex list
-			// std::vector<IndexedVertex> face = std::vector<IndexedVertex>();
-			//
-			// //For each parameter
-			// for (size_t i = 1; i < params.size(); i++)
-			// {
-			// 	//Create new vertex
-			// 	IndexedVertex vertex = IndexedVertex();
-			//
-			// 	//Split position, normal and texture coordinate
-			// 	std::vector<std::string> indices = Split(params[i], "/");
-			//
-			// 	//Assign values
-			// 	vertex.pos = atoi(indices[0].c_str()) - 1;
-			// 	vertex.texture = atoi(indices[1].c_str()) - 1;
-			// 	vertex.normal = atoi(indices[2].c_str()) - 1;
-			//
-			// 	//Add vertex to face
-			// 	face.push_back(vertex);
-			// }
-			// //Add face to group
-			// currentGroup->faces.push_back(face);
 		}
 
 		//Load material file
@@ -165,7 +141,7 @@ void GameObject::LoadObjectFile(const std::string& dir, const std::string& fileN
 			std::string mtlPath = fullDir;
 			Replace(mtlPath, ".obj", ".mtl");
 
-			LoadMaterialFile(mtlPath);
+			LoadMaterialFile(mtlPath, dir);
 		}
 
 		//Switch to a new group
@@ -203,7 +179,7 @@ void GameObject::LoadObjectFile(const std::string& dir, const std::string& fileN
 }
 
 //Load a material file with the specified name and path
-void GameObject::LoadMaterialFile(const std::string& mtlPath)
+void GameObject::LoadMaterialFile(const std::string& mtlPath, const std::string& objectDir)
 {
 	//Open the file
 	std::cout << "Loading " << mtlPath << std::endl;
@@ -252,7 +228,7 @@ void GameObject::LoadMaterialFile(const std::string& mtlPath)
 				tex = tex.substr(tex.rfind("\\") + 1);
 
 			//Save the texture path to the mtl
-			currentMaterial->SetTexture(mtlPath.substr(0, mtlPath.rfind('/')) + "/" + tex);
+			currentMaterial->SetTexture(mtlPath.substr(0, mtlPath.rfind('/')) + "/", tex, objectDir);
 		}
 		else if (params[0] == "kd")
 		{

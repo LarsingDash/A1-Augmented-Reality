@@ -1,6 +1,6 @@
 # Blender v3.0.1 OBJ File: 'PC.blend'
 # www.blender.org
-mtllib Fan.mtl
+mtllib FAN.mtl
 o Fan_Cube.223
 v -1.759582 2.953758 -1.263428
 v -1.759582 2.953758 -0.997286
