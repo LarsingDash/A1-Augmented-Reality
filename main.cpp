@@ -29,19 +29,16 @@ void UpdateKeys();
 
 //Other
 void GetObjectDir();
+void reset_position();
 
 //Default window size, will be overridden by fullscreen values
 int windowWidth = 700;
 int windowHeight = 700;
 
 //temp rotate var
-float angleX = 0.f;
-float angleY = 0.f;
-float angleZ = 0.f;
-glm::mat4 rotate = glm::mat4(1.0f);
 glm::vec3 rotations = glm::vec3(0, 0, 0);
 glm::mat4 translate = glm::mat4(1.0f);
-glm::vec3 cubePosition(0, 0, 0);
+
 
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 std::string objectDir;
@@ -96,7 +93,7 @@ int main()
 		//Program cycle
 		// HandUpdate();
 		Update();
-		guiManager.Draw(cubePosition, rotate);
+		guiManager.Draw(window);
 
 		//glfw cycle
 		glfwSwapBuffers(window);
@@ -155,40 +152,13 @@ void Init()
 void Update()
 {
 	UpdateKeys();
-
-	rotate = glm::rotate(rotate, glm::radians(angleZ), glm::vec3(0.f, 0.f, 1.f));
-	rotate = glm::rotate(rotate, glm::radians(angleY), glm::vec3(0.f, 1.f, 0.f));
-	rotate = glm::rotate(rotate, glm::radians(angleX), glm::vec3(1.f, 0.f, 0.f));
 }
 
 void UpdateKeys()
 {
-	if (glfwGetKey(window, GLFW_KEY_X))
-		angleX += 0.2f;
-	if (glfwGetKey(window, GLFW_KEY_Y))
-		angleY += 0.2f;
-	if (glfwGetKey(window, GLFW_KEY_Z))
-		angleZ += 0.2f;
-	if (glfwGetKey(window, GLFW_KEY_LEFT))
-		cubePosition.x -= 0.1f;
-	if (glfwGetKey(window, GLFW_KEY_RIGHT))
-		cubePosition.x += 0.1f;
-	if (glfwGetKey(window, GLFW_KEY_UP))
-		cubePosition.y += 0.1f;
-	if (glfwGetKey(window, GLFW_KEY_DOWN))
-		cubePosition.y -= 0.1f;
-	if (glfwGetKey(window, GLFW_KEY_F))
-		cubePosition.z += 0.1f;
-	if (glfwGetKey(window, GLFW_KEY_B))
-		cubePosition.z -= 0.1f;
-
-	if (!glfwGetKey(window, GLFW_KEY_X) && !glfwGetKey(window, GLFW_KEY_Y) && !glfwGetKey(window, GLFW_KEY_Z))
-	{
-		angleX = 0;
-		angleY = 0;
-		angleZ = 0;
-	}
+	
 }
+
 
 //Other
 void GetObjectDir()

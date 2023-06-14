@@ -26,7 +26,7 @@ public:
     GUIManager(GLFWwindow* window, const ComputerController& controller);
 
     void init();
-    void Draw(const glm::vec3& position, const glm::mat4& rotation);
+    void Draw(GLFWwindow* window);
     ComputerController controller;
 
 private:

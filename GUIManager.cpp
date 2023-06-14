@@ -55,7 +55,7 @@ void GUIManager::init()
 	
 }
 
-void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
+void GUIManager::Draw(GLFWwindow* window)
 {
     // Clear background
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -77,7 +77,7 @@ void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
 		drawPCBuilderScreen();
 	}
 
-    controller.handleDraw(position, rotation);
+    controller.handleDraw(window);
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
