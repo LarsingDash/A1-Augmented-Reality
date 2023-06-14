@@ -2,15 +2,15 @@
 
 #include <iostream>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 #include "PcPart.h"
 #include "ComputerController.h"
 
 //GameObject currentObject;
 
-GUIManager::GUIManager(GLFWwindow* window, ComputerController controller)
+GUIManager::GUIManager(GLFWwindow* window, const ComputerController& controller)
     : window(window), controller(controller)
 {
 }
@@ -24,15 +24,13 @@ void GUIManager::init()
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-
-    controller.setCurrentObject(GameObject("models/car/honda_jazz.obj"));
     
 }
-void GUIManager::update()
+
+void GUIManager::Draw(const glm::vec3& position, const glm::mat4& rotation)
 {
-    // Clear achtergrond
-    /*glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);*/
+    // Clear background
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -48,13 +46,10 @@ void GUIManager::update()
         drawPCBuilderScreen();
     }
 
+    controller.handleDraw(position, rotation);
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void GUIManager::draw()
-{
-    
 }
 
 void GUIManager::drawMenuScreen()
@@ -84,6 +79,7 @@ void GUIManager::drawMenuScreen()
         showMenuScreen = false;
         showTutorialScreen = false;
         showPcBuilderScreen = true;
+        controller.setIsDrawing(true);
     }
 
     ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
@@ -266,7 +262,6 @@ void GUIManager::drawPCBuilderScreen()
     if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
     {
         //currentObject.changeColor(glm::vec4(1.0, 0.0f, 0.0f, 1.0f));
-        controller.setIsDrawing(true);
     }
 
     if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
@@ -307,6 +302,7 @@ void GUIManager::drawPCBuilderScreen()
         showMenuScreen = true;
         showTutorialScreen = false;
         showPcBuilderScreen = false;
+        controller.setIsDrawing(false);
     }
 
     //ImGui::EndChild();

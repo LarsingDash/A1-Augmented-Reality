@@ -39,6 +39,7 @@ Texture::~Texture()
 
 void Texture::bind()
 {
+
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 

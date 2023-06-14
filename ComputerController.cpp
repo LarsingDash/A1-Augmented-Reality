@@ -1,28 +1,18 @@
-#include <iostream>
 #include "ComputerController.h"
 
-bool isDrawing;
-
-ComputerController::ComputerController(GameObject currentObject, bool newIsDrawing) {
-	ComputerController::currentObject = currentObject;
-	isDrawing = newIsDrawing;
+ComputerController::ComputerController(bool newIsDrawing) {
+	setIsDrawing(newIsDrawing);
 }
 
 void ComputerController::setIsDrawing(bool newIsDrawing) {
 	isDrawing = newIsDrawing;
 }
 
-void ComputerController::handleDraw() {
-	std::cout << "IsDrawing: " << isDrawing << std::endl;
+void ComputerController::handleDraw(const glm::vec3& position, const glm::mat4& rotation) {
 	if (isDrawing) {
-		drawCurrentObject();
+		for (const auto& object : objects)
+		{
+			object.Draw(position, rotation);
+		}
 	}
-}
-
-void ComputerController::setCurrentObject(GameObject currentObject) {
-	ComputerController::currentObject = currentObject;
-}
-
-void ComputerController::drawCurrentObject() {
-	ComputerController::currentObject.Draw(glm::mat4(1.0f));
 }
