@@ -155,7 +155,7 @@ void Init()
 void Update()
 {
 	UpdateKeys();
-
+	rotate = glm::mat4(1.f);
 	rotate = glm::rotate(rotate, glm::radians(angleZ), glm::vec3(0.f, 0.f, 1.f));
 	rotate = glm::rotate(rotate, glm::radians(angleY), glm::vec3(0.f, 1.f, 0.f));
 	rotate = glm::rotate(rotate, glm::radians(angleX), glm::vec3(1.f, 0.f, 0.f));
