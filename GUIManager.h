@@ -39,8 +39,15 @@ private:
     bool showTutorialScreen = false;
     bool showPcBuilderScreen = false;
     bool showPcPartList = false;
+    bool isCinematicMode = false;
+    bool isBuildMode = true;
+    float verticalOffset = 0.f;
+    float horizontalOffset = 0.f;
     std::string directory;
-
+    void drawCinematicViewControls();
+    void drawPartSelectionList();
+    void drawBuilderTopRight();
+    void drawChosenPcPartsList();
     void drawMenuScreen();
     void drawTutorialScreen();
     void drawPCBuilderScreen();

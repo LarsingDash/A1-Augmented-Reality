@@ -170,8 +170,96 @@ void GUIManager::drawTutorialScreen()
 int mode = Mode_Copy;
 int partType;
 
-
 void GUIManager::drawPCBuilderScreen()
+{
+	if (isBuildMode)
+	{
+		ImGui::Begin("PC Builder");
+
+		drawPartSelectionList();
+
+		drawBuilderTopRight();
+
+		drawChosenPcPartsList();
+
+		ImGui::End();
+	}
+	else if (isCinematicMode)
+	{
+		ImGui::SetNextWindowBgAlpha(0.0f);
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
+		ImGui::Begin("Cinematic View", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
+
+		drawCinematicViewControls();
+
+		drawBuilderTopRight();
+		ImGui::End();
+
+	}
+}
+void GUIManager::drawCinematicViewControls()
+{
+	// Calculate the button positions
+	ImVec2 windowSize = ImGui::GetWindowSize();
+	ImVec2 buttonSize(100, 100);
+	float padding = 10.0f;
+	float x = (windowSize.x - buttonSize.x) * 0.5f;
+	float y = (windowSize.y - buttonSize.y) * 0.5f;
+
+	// Set button style
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4 greenColor(0.0f, 0.8f, 0.0f, 1.0f); 
+	ImVec4 greenColor2(0.0f, 0.6f, 0.0f, 0.7f);
+	ImVec4 whiteColor(1.0f, 1.0f, 1.0f, 1.0f); 
+
+	ImVec4 originalButtonColor = style.Colors[ImGuiCol_Button];
+	ImVec4 originalButtonHoveredColor = style.Colors[ImGuiCol_ButtonHovered];
+	ImVec4 originalButtonActiveColor = style.Colors[ImGuiCol_ButtonActive];
+	ImVec4 originalTextColor = style.Colors[ImGuiCol_Text];
+
+	style.Colors[ImGuiCol_Button] = greenColor;
+	style.Colors[ImGuiCol_ButtonHovered] = greenColor2;
+	style.Colors[ImGuiCol_ButtonActive] = greenColor;
+	style.Colors[ImGuiCol_Text] = whiteColor;
+
+	// Draw the buttons
+	ImGui::SetCursorPos(ImVec2(x, padding));
+	if (ImGui::Button("Top", buttonSize))
+	{
+		// Handle button click
+	}
+
+	ImGui::SetCursorPos(ImVec2(windowSize.x - buttonSize.x - padding, y));
+	if (ImGui::Button("Right", buttonSize))
+	{
+		// Handle button click
+	}
+
+	ImGui::SetCursorPos(ImVec2(x, windowSize.y - buttonSize.y - padding));
+	if (ImGui::Button("Bottom", buttonSize))
+	{
+		// Handle button click
+	}
+
+	ImGui::SetCursorPos(ImVec2(padding, y));
+	if (ImGui::Button("Left", buttonSize))
+	{
+		// Handle button click
+	}
+
+	// Restore the original style
+	style.Colors[ImGuiCol_Button] = originalButtonColor;
+	style.Colors[ImGuiCol_ButtonHovered] = originalButtonHoveredColor;
+	style.Colors[ImGuiCol_ButtonActive] = originalButtonActiveColor;
+	style.Colors[ImGuiCol_Text] = originalTextColor;
+
+	ImGui::End();
+}
+
+
+
+
+void GUIManager::drawPartSelectionList()
 {
 	//Top left window
 	ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
@@ -204,18 +292,24 @@ void GUIManager::drawPCBuilderScreen()
 	drawAddPartButton();
 
 	ImGui::End();
-
+}
+void GUIManager::drawBuilderTopRight()
+{
 	//Top right window
 	ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 400.0f, 0.0f));
 	ImGui::Begin("Navigation Buttons", nullptr, ImGuiWindowFlags_NoTitleBar);
 
 	if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
 	{
-		controller.setIsDrawing(true);
+		isBuildMode = true;
+		isCinematicMode = false;
 	}
 
 	if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
 	{
+		isCinematicMode = true;
+		isBuildMode = false;
+
 	}
 
 
@@ -227,6 +321,9 @@ void GUIManager::drawPCBuilderScreen()
 	{
 		clearPcObjects();
 	}
+}
+void GUIManager::drawChosenPcPartsList()
+{
 	ImGui::Text("Chosen Pc parts");
 
 	for (int n = 0; n < pcParts.size(); n++)
@@ -244,14 +341,7 @@ void GUIManager::drawPCBuilderScreen()
 		ImGui::PopID();
 	}
 
-	// for (int n = 0; n < pcParts.size(); n++)
-	// {
-	// 	ImGui::Button(pcParts[n]->getName().c_str(), ImVec2(250, 20));
-	//
-	// }
 	drawDeletePartButton();
-
-	ImGui::End();
 }
 
 void GUIManager::setPcObjects()
