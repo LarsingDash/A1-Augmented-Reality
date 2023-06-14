@@ -21,7 +21,8 @@ enum PartType
     RAM_TYPE,
     PC_CASE_TYPE,
     PSU_TYPE,
-    STORAGE_TYPE
+    STORAGE_TYPE,
+    MBU_TYPE
 };
 class GUIManager {
 public:

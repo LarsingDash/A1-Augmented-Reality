@@ -13,9 +13,11 @@
 #include "PSU.h"
 #include "RAM.hpp"
 #include "Storage.hpp"
+#include "Motherboard.hpp"
 
 std::vector<CPU> cpuList;
 std::vector<GPU> gpuList;
+std::vector<Motherboard> mbuList;
 std::vector<RAM> ramList;
 std::vector<PSU> psuList;
 std::vector<PcCase> pcCaseList;
@@ -42,6 +44,11 @@ void GUIManager::init()
 	cpuList.push_back(CPU("AMD Ryzen 7", CpuSocketType::AMD, ""));
 	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL, ""));
 	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL, ""));
+
+	mbuList.push_back(Motherboard("mbu1", MbuSocketType::AMD, ""));
+	mbuList.push_back(Motherboard("mbu2", MbuSocketType::AMD, ""));
+	mbuList.push_back(Motherboard("mbu3", MbuSocketType::INTEL, ""));
+	mbuList.push_back(Motherboard("mbu4", MbuSocketType::INTEL, ""));
 
 	gpuList.push_back(GPU("NVIDIA GeForce RTX 3080", ""));
 	gpuList.push_back(GPU("AMD Radeon RX 6800 XT", ""));
@@ -171,24 +178,46 @@ void GUIManager::drawPCBuilderScreen()
 	//Top left window
 	ImGui::Begin("Components chooser", nullptr, ImGuiWindowFlags_NoTitleBar);
 
-	ImGui::Text("Memory (RAM)");
-	drawPartList(ramList, RAM_TYPE);
+	if (ImGui::CollapsingHeader("CPU's"))
+	{
+		drawPartList(cpuList, CPU_TYPE);
 
-	ImGui::Text("Processor (CPU)");
-	drawPartList(cpuList, CPU_TYPE);
+	}
 
-	ImGui::Text("Graphics Card (GPU)");
-	drawPartList(gpuList, GPU_TYPE);
+	if (ImGui::CollapsingHeader("RAM"))
+	{
+		drawPartList(ramList, RAM_TYPE);
 
-	ImGui::Text("Pc case");
-	drawPartList(pcCaseList, PC_CASE_TYPE);
+	}
 
-	ImGui::Text("Power Supply (PSU)");
-	drawPartList(psuList, PSU_TYPE);
+	if (ImGui::CollapsingHeader("GPU's"))
+	{
+		drawPartList(gpuList, GPU_TYPE);
 
-	ImGui::Text("Storage");
-	drawPartList(storageList, STORAGE_TYPE);
-	drawAddPartButton();
+	}
+
+	if (ImGui::CollapsingHeader("Motherboards"))
+	{
+		drawPartList(mbuList, MBU_TYPE);
+
+	}
+
+	if (ImGui::CollapsingHeader("PSU"))
+	{
+		drawPartList(psuList, PSU_TYPE);
+
+	}
+	if (ImGui::CollapsingHeader("PC CASE"))
+	{
+		drawPartList(pcCaseList, PC_CASE_TYPE);
+
+	}
+	if (ImGui::CollapsingHeader("STORAGE"))
+	{
+		drawPartList(storageList, STORAGE_TYPE);
+
+	}
+
 
 	ImGui::End();
 
@@ -242,7 +271,7 @@ void GUIManager::drawAddPartButton()
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.9f, 0.3f, 1.0f)); // Set button hover color to a lighter green
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.7f, 0.1f, 1.0f)); // Set button active color to a darker green
 
-	ImGui::Button("Add PC Part", ImVec2(250, 20));
+	ImGui::Button("Add PC Part", ImVec2(250, 40));
 
 	ImGui::PopStyleColor(3); // Pop the three style colors
 
@@ -301,7 +330,7 @@ void GUIManager::drawDeletePartButton()
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f)); // Set button hover color to a lighter red
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f)); // Set button active color to a darker red
 
-	if (ImGui::Button("Delete Part", ImVec2(250, 20)))
+	if (ImGui::Button("Delete Part", ImVec2(250, 40)))
 	{
 		// Perform deletion here if needed
 	}
@@ -329,7 +358,7 @@ void GUIManager::drawPartList(const std::vector<T>& partsList, int part)
 	for (int n = 0; n < partsList.size(); n++)
 	{
 		ImGui::PushID(n);
-		if (ImGui::Button(partsList[n].getName().c_str(), ImVec2(250, 20)));
+		if (ImGui::Button(partsList[n].getName().c_str(), ImVec2(250, 40)));
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
