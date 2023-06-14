@@ -27,5 +27,6 @@ static int cursorX;
 static int cursorY;
 
 constexpr float CURSOR_SPEED = 0.25f;
+static bool lastIsClicked = false;
 
 #endif
