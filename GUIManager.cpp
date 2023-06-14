@@ -45,7 +45,7 @@ void GUIManager::init()
 	cpuList.push_back(CPU("Intel Core i5", CpuSocketType::INTEL, "path3"));
 	cpuList.push_back(CPU("Intel Core i7", CpuSocketType::INTEL, "path4"));
 
-	mbuList.push_back(Motherboard("mbu1", MbuSocketType::AMD, "MBD"));
+	mbuList.push_back(Motherboard("mbu1", MbuSocketType::AMD, "MB"));
 	mbuList.push_back(Motherboard("mbu2", MbuSocketType::AMD, "path6"));
 	mbuList.push_back(Motherboard("mbu3", MbuSocketType::INTEL, "path7"));
 	mbuList.push_back(Motherboard("mbu4", MbuSocketType::INTEL, "path8"));
@@ -331,6 +331,12 @@ void GUIManager::drawAddPartButton()
 				std::cout << "PC case type received: " << partType << std::endl;
 
 				pcParts.push_back(&pcCaseList[payload_n]);
+			}
+			else if (partType == MBU_TYPE)
+			{
+				std::cout << "Motherboard type received: " << partType << std::endl;
+
+				pcParts.push_back(&mbuList[payload_n]);
 			}
 			else if (partType == PSU_TYPE)
 			{
