@@ -59,18 +59,20 @@ void HandUpdate()
     handInArea = false;
 
     for (const auto& hand : total) {
-	    constexpr int thickness = 2;
-	    const cv::Point center(hand.x + hand.width / 2, hand.y + hand.height / 2);
-        cv::circle(frame, center, hand.width / 2, cv::Scalar(255, 0, 255), 2);
+        constexpr int thickness = 2;
+        const cv::Point center(hand.x + hand.width / 2, hand.y + hand.height / 2);
+        cv::Scalar color(255, 0, 255);  // Purple color for hand circle
 
-	    const float length = static_cast<float>(center.x) - static_cast<float>(frame.cols) / 2.f;
-	    const float height = static_cast<float>(center.y) - static_cast<float>(frame.rows) / 2.f;
-	    const float distance = sqrt(pow(abs(length), 2.f) + pow(abs(height), 2.f));
+        cv::circle(frame, center, hand.width / 2, color, thickness);
 
-	    if (distance > 100)
-	    {
-		    glm::vec2 direction(length, height);
-		    direction = glm::normalize(direction);
+        const float length = static_cast<float>(center.x) - static_cast<float>(frame.cols) / 2.f;
+        const float height = static_cast<float>(center.y) - static_cast<float>(frame.rows) / 2.f;
+        const float distance = sqrt(pow(abs(length), 2.f) + pow(abs(height), 2.f));
+
+        if (distance > 50)
+        {
+            glm::vec2 direction(length, height);
+            direction = glm::normalize(direction);
 
             constexpr glm::vec2 invert(-1, 1);
             direction *= invert;
@@ -78,16 +80,29 @@ void HandUpdate()
             cursorX += static_cast<int>(direction.x * (distance * CURSOR_SPEED));
             cursorY += static_cast<int>(direction.y * (distance * CURSOR_SPEED));
 
-            cv::line(frame, cv::Point(frame.cols / 2, frame.rows / 2), center, cv::Scalar(0, 255, 0), 2);
+            cv::line(frame, cv::Point(frame.cols / 2, frame.rows / 2), center, cv::Scalar(0, 255, 0), thickness);
             SetCursorPos(cursorX, cursorY);
-	    }        
-
+        }
+        else
+        {
+            color = cv::Scalar(0, 0, 255);  // Red color for closed hand circle
+            // Simulate left mouse button press when closed hand is detected
+            if (!handInArea)
+            {
+                INPUT input;
+                input.type = INPUT_MOUSE;
+                input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                SendInput(1, &input, sizeof(INPUT));
+                handInArea = true;
+            }
+        }
     }
-    
+
     cv::Mat flipped;
     cv::flip(frame, flipped, 1);
     cv::imshow("Hand Gesture Recognition", flipped);
 }
+
 
 void HandTeardown()
 {
