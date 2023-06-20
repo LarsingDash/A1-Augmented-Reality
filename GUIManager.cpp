@@ -182,6 +182,8 @@ void GUIManager::drawPCBuilderScreen()
 
 		drawChosenPcPartsList();
 
+		drawCompatabilityInterface();
+
 		ImGui::End();
 	}
 	else if (isCinematicMode)
@@ -197,6 +199,8 @@ void GUIManager::drawPCBuilderScreen()
 
 	}
 }
+
+
 void GUIManager::drawCinematicViewControls()
 {
 	// Calculate the button positions
@@ -224,27 +228,34 @@ void GUIManager::drawCinematicViewControls()
 
 	// Draw the buttons
 	ImGui::SetCursorPos(ImVec2(x, padding));
-	if (ImGui::Button("Top", buttonSize))
+	while (ImGui::Button("Top", buttonSize))
 	{
-		// Handle button click
+		std::cout << "Rotating upwards" << std::endl;
+		// Handle button click for rotating upwards
 	}
 
 	ImGui::SetCursorPos(ImVec2(windowSize.x - buttonSize.x - padding, y));
-	if (ImGui::Button("Right", buttonSize))
+	while (ImGui::Button("Right", buttonSize))
 	{
-		// Handle button click
+		std::cout << "Rotating Right" << std::endl;
+
+		// Handle button click  for rotating right
 	}
 
 	ImGui::SetCursorPos(ImVec2(x, windowSize.y - buttonSize.y - padding));
-	if (ImGui::Button("Bottom", buttonSize))
+	while (ImGui::Button("Bottom", buttonSize))
 	{
-		// Handle button click
+		std::cout << "Rotating downwards" << std::endl;
+
+		// Handle button click for rotating downwards
 	}
 
 	ImGui::SetCursorPos(ImVec2(padding, y));
-	if (ImGui::Button("Left", buttonSize))
+	while (ImGui::Button("Left", buttonSize))
 	{
-		// Handle button click
+		std::cout << "Rotating left" << std::endl;
+
+		// Handle button click for rotating left
 	}
 
 	// Restore the original style
@@ -257,6 +268,24 @@ void GUIManager::drawCinematicViewControls()
 }
 
 
+void GUIManager::drawCompatabilityInterface()
+{
+	if (ImGui::Button("Show Compatibility Tips", ImVec2(ImGui::GetItemRectSize().x, 60.0f)))
+	{
+		if(showCompatability)
+		{
+			showCompatability = false;
+		}else
+		{
+			showCompatability = true;
+		}
+	}
+	if(showCompatability)
+	{
+		ImGui::Text("Hello compatibility");
+	}
+
+}
 
 
 void GUIManager::drawPartSelectionList()

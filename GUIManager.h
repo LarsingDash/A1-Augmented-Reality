@@ -36,6 +36,7 @@ public:
 private:
     GLFWwindow* window;
     bool showMenuScreen = true;
+    bool showCompatability = false;
     bool showTutorialScreen = false;
     bool showPcBuilderScreen = false;
     bool showPcPartList = false;
@@ -53,6 +54,7 @@ private:
     void drawPCBuilderScreen();
     void drawAddPartButton();
     void drawDeletePartButton();
+    void drawCompatabilityInterface();
     void setPcObjects();
     void clearPcObjects();
     template <typename T>
