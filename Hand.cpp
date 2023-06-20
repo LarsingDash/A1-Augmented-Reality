@@ -13,7 +13,7 @@ int HandInit(const int windowWidth, const int windowHeight) {
     cursorY = screenHeight / 2;
 
     //Camera input
-    cap = cv::VideoCapture(0);
+    cap = cv::VideoCapture(1);
     cap.set(cv::CAP_PROP_FRAME_WIDTH, camWidth);
     cap.set(cv::CAP_PROP_FRAME_HEIGHT, camHeight);
 

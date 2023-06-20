@@ -4,21 +4,18 @@
 #include <vector>
 #include "PcPart.hpp"
 #include "RAM.hpp"
+#include "CPU.hpp"
 
-enum class MbuSocketType {
-    INTEL,
-    AMD
-};
 
 class Motherboard : public PcPart {
 private:
     std::vector<PcPart*> childComponents;
-    MbuSocketType socketType;
-    RamSocketType ramSocketType;
     std::string objectPath;
 
 public:
-    Motherboard(const std::string& name, MbuSocketType socketType, RamSocketType ramSocketType, const std::string& objectPath);
+    CpuSocketType socketType;
+    RamSocketType ramSocketType;
+    Motherboard(const std::string& name, CpuSocketType socketType, RamSocketType ramSocketType, const std::string& objectPath);
     ~Motherboard();
 
     void addComponent(PcPart* component);

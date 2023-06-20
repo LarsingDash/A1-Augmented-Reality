@@ -11,9 +11,9 @@ enum class CpuSocketType {
 
 class CPU : public PcPart {
 private:
-	CpuSocketType socketType;
 	std::string objectPath;
 public:
+    CpuSocketType socketType;
     CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath);
     ~CPU();
     std::string getName() const override;

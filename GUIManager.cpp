@@ -59,9 +59,9 @@ void GUIManager::init()
 	fanList.push_back(Fan("Level 2 FAN", "path2"));
 	fanList.push_back(Fan("Level 3 FAN", "path3"));
 
-	mbuList.push_back(Motherboard("Level 1 AMD MBD", MbuSocketType::AMD, RamSocketType::DDR3, "MB"));
-	mbuList.push_back(Motherboard("Level 2 AMD MBD", MbuSocketType::AMD, RamSocketType::DDR4, "path6"));
-	mbuList.push_back(Motherboard("Level 3 AMD MBD", MbuSocketType::INTEL, RamSocketType::DDR4, "path7"));
+	mbuList.push_back(Motherboard("Level 1 AMD MBD", CpuSocketType::AMD, RamSocketType::DDR3, "MB"));
+	mbuList.push_back(Motherboard("Level 2 AMD MBD", CpuSocketType::AMD, RamSocketType::DDR4, "path6"));
+	mbuList.push_back(Motherboard("Level 3 AMD MBD", CpuSocketType::INTEL, RamSocketType::DDR4, "path7"));
 
 	gpuList.push_back(GPU("Level 1 GPU", "GPU"));
 	gpuList.push_back(GPU("Level 2 GPU", "path10"));
@@ -82,7 +82,6 @@ void GUIManager::init()
 	storageList.push_back(Storage("Level 1 Storage", "SSD"));
 	storageList.push_back(Storage("Level 2 Storage", "path26"));
 	storageList.push_back(Storage("Level 3 Storage", "path27"));
-
 }
 
 void GUIManager::Draw(GLFWwindow* window)
@@ -206,7 +205,6 @@ void GUIManager::drawPCBuilderScreen()
 
 		drawBuilderTopRight();
 		ImGui::End();
-
 	}
 }
 
@@ -222,9 +220,9 @@ void GUIManager::drawCinematicViewControls()
 
 	// Set button style
 	ImGuiStyle& style = ImGui::GetStyle();
-	ImVec4 greenColor(0.0f, 0.8f, 0.0f, 1.0f); 
+	ImVec4 greenColor(0.0f, 0.8f, 0.0f, 1.0f);
 	ImVec4 greenColor2(0.0f, 0.6f, 0.0f, 0.7f);
-	ImVec4 whiteColor(1.0f, 1.0f, 1.0f, 1.0f); 
+	ImVec4 whiteColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	ImVec4 originalButtonColor = style.Colors[ImGuiCol_Button];
 	ImVec4 originalButtonHoveredColor = style.Colors[ImGuiCol_ButtonHovered];
@@ -282,57 +280,68 @@ void GUIManager::drawCompatabilityInterface()
 {
 	if (ImGui::Button("Show Compatibility Tips", ImVec2(ImGui::GetItemRectSize().x, 60.0f)))
 	{
-		if(showCompatability)
+		if (showCompatability)
 		{
 			showCompatability = false;
-		}else
+		}
+		else
 		{
 			showCompatability = true;
 		}
 	}
-	if(showCompatability)
+	if (showCompatability)
 	{
-		ImGui::Text("Hello compatibility");
-		if (pickedCPU != nullptr)
-			ImGui::Text(pickedCPU->getName().c_str());
-		else
-			ImGui::Text("No CPU selected");
+		if (pickedCPU == nullptr)
+			ImGui::TextWrapped("CPU ISSUE: No CPU selected, this is the heart of the computer and it wont function without it.");
+			ImGui::Spacing();
 
-		if (pickedFan != nullptr)
-			ImGui::Text(pickedFan->getName().c_str());
-		else
-			ImGui::Text("No fan selected");
+		if (pickedFan == nullptr)
+			ImGui::TextWrapped("FAN ISSUE: No fan selected, your pc will boot without one but it will quickly crash due to overheating which will greatly wear down your CPU");
+			ImGui::Spacing();
 
-		if (pickedGPU != nullptr)
-			ImGui::Text(pickedGPU->getName().c_str());
-		else
-			ImGui::Text("No GPU selected");
-		if (pickedRAM != nullptr)
-			ImGui::Text(pickedRAM->getName().c_str());
-		else
-			ImGui::Text("No RAM selected");
+		if (pickedGPU == nullptr)
+			ImGui::TextWrapped("GPU TIP: No GPU selected. This is definitely not essential but you might want to consider picking one if you are planning on gaming");
+			ImGui::Spacing();
+
+		if (pickedRAM == nullptr)
+			ImGui::TextWrapped("RAM ISSUE: No RAM selected. Memory is an essential component for a pc");
+			ImGui::Spacing();
 
 		if (pickedMotherboard != nullptr)
-			ImGui::Text(pickedMotherboard->getName().c_str());
+		{
+			if (pickedRAM != nullptr)
+			{
+				if (pickedRAM->socketType != pickedMotherboard->ramSocketType)
+				{
+					ImGui::TextWrapped("INCOMPATIBILITY ISSUE: You have picked incompatible sockets for your RAM and motherboard. You're trying to match DDR3 with DDR4. Make sure the RAM types match");
+					ImGui::Spacing();
+				}
+			}
+			if (pickedCPU != nullptr)
+			{
+				if (pickedCPU->socketType != pickedMotherboard->socketType)
+				{
+					ImGui::TextWrapped("INCOMPATIBILITY ISSUE: You have picked incompatible sockets for your CPU and motherboard. You're trying to match and AMD socket with an Intel socket. Make sure the CPU socket types match");
+					ImGui::Spacing();
+				}
+			}
+		}
 		else
-			ImGui::Text("No motherboard selected");
+			ImGui::TextWrapped("MOTHERBOARD ISSUE: No motherboard selected, this part is essential for allowing communication between your selected pc parts");
+			ImGui::Spacing();
 
-		if (pickedPSU != nullptr)
-			ImGui::Text(pickedPSU->getName().c_str());
-		else
-			ImGui::Text("No PSU selected");
+		if (pickedPSU == nullptr)
+			ImGui::TextWrapped("PSU ISSUE: No PSU selected, this part is necessary to power your components.");
+			ImGui::Spacing();
 
-		if (pickedCase != nullptr)
-			ImGui::Text(pickedCase->getName().c_str());
-		else
-			ImGui::Text("No case selected");
+		if (pickedCase == nullptr)
+			ImGui::TextWrapped("CASE WARNING: No case is selected. You need a case to safely house and ventilate your components");
+			ImGui::Spacing();
 
-		if (pickedStorage != nullptr)
-			ImGui::Text(pickedStorage->getName().c_str());
-		else
-			ImGui::Text("No storage selected");
+		if (pickedStorage == nullptr)
+			ImGui::TextWrapped("STORAGE ISSUE: No storage selected. You storage to be able to boot an operating system");
+			ImGui::Spacing();
 	}
-
 }
 
 
@@ -370,6 +379,7 @@ void GUIManager::drawPartSelectionList()
 
 	ImGui::End();
 }
+
 void GUIManager::drawBuilderTopRight()
 {
 	//Top right window
@@ -386,7 +396,6 @@ void GUIManager::drawBuilderTopRight()
 	{
 		isCinematicMode = true;
 		isBuildMode = false;
-
 	}
 
 
@@ -399,6 +408,7 @@ void GUIManager::drawBuilderTopRight()
 		clearPcObjects();
 	}
 }
+
 void GUIManager::drawChosenPcPartsList()
 {
 	ImGui::Text("Chosen Pc parts");
@@ -466,7 +476,6 @@ void GUIManager::drawAddPartButton()
 				}
 				pickedCPU = &cpuList[payload_n];
 				pcParts.push_back(&cpuList[payload_n]);
-				
 			}
 			else if (partType == FAN_TYPE)
 			{
@@ -564,7 +573,78 @@ void GUIManager::drawDeletePartButton()
 		{
 			IM_ASSERT(payload->DataSize == sizeof(int));
 			int payload_n = *(const int*)payload->Data;
+			std::string partName = pcParts[payload_n]->getName().c_str();
+			for (CPU& cpu : cpuList)
+			{
+				if (cpu.getName() == partName)
+				{
+					pickedCPU = nullptr;  // Set pickedCPU to nullptr
+					break;
+				}
+			}
 
+			for (Fan& fan : fanList)
+			{
+				if (fan.getName() == partName)
+				{
+					pickedFan = nullptr;  // Set pickedFan to nullptr
+					break;
+				}
+			}
+
+			for (RAM& ram : ramList)
+			{
+				if (ram.getName() == partName)
+				{
+					pickedRAM = nullptr;  // Set pickedRAM to nullptr
+					break;
+				}
+			}
+
+			for (GPU& gpu : gpuList)
+			{
+				if (gpu.getName() == partName)
+				{
+					pickedGPU = nullptr;  // Set pickedGPU to nullptr
+					break;
+				}
+			}
+
+			for (Motherboard& mbu : mbuList)
+			{
+				if (mbu.getName() == partName)
+				{
+					pickedMotherboard = nullptr;  // Set pickedMotherboard to nullptr
+					break;
+				}
+			}
+
+			for (PSU& psu : psuList)
+			{
+				if (psu.getName() == partName)
+				{
+					pickedPSU = nullptr;  // Set pickedPSU to nullptr
+					break;
+				}
+			}
+
+			for (PcCase& pcCase : pcCaseList)
+			{
+				if (pcCase.getName() == partName)
+				{
+					pickedCase = nullptr;  // Set pickedCase to nullptr
+					break;
+				}
+			}
+
+			for (Storage& storage : storageList)
+			{
+				if (storage.getName() == partName)
+				{
+					pickedStorage = nullptr;  // Set pickedStorage to nullptr
+					break;
+				}
+			}
 			// Delete the dragged part from the pcParts vector
 			pcParts.erase(pcParts.begin() + payload_n);
 			setPcObjects();

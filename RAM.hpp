@@ -11,10 +11,11 @@ enum class RamSocketType {
 
 class RAM : public PcPart {
 private:
-    RamSocketType socketType;
     std::string objectPath;
 
 public:
+    RamSocketType socketType;
+
     RAM(const std::string& name, RamSocketType socketType, const std::string& objectPath);
     ~RAM();
 
