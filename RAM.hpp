@@ -5,19 +5,22 @@
 #include <string>
 
 enum class RamSocketType {
-	DDR3,
-	DDR4
+    DDR3,
+    DDR4
 };
 
 class RAM : public PcPart {
 private:
-	RamSocketType socketType;
+    RamSocketType socketType;
+    std::string objectPath;
 
 public:
-	RAM(const std::string& name, RamSocketType socketType);
-	~RAM();
-	std::string getName() const override;
-	void display() const override;
+    RAM(const std::string& name, RamSocketType socketType, const std::string& objectPath);
+    ~RAM();
+
+    std::string getName() const override;
+    std::string getObjectPath() const override;
+    void display() const override;
 };
 
-#endif  
+#endif  // RAM_HPP

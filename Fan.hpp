@@ -1,13 +1,13 @@
-#ifndef GPU_HPP
-#define GPU_HPP
+#ifndef FAN_FPP
+#define FAN_HPP
 
 #include "PcPart.hpp"
 #include <string>
 
-class GPU : public PcPart {
+class Fan : public PcPart {
 public:
-    GPU(const std::string& name, const std::string& objectPath);
-    ~GPU();
+    Fan(const std::string& name, const std::string& objectPath);
+    ~Fan();
 
     std::string getName() const override;
     std::string getObjectPath() const override;
@@ -18,4 +18,4 @@ private:
 
 };
 
-#endif  // GPU_HPP
+#endif  

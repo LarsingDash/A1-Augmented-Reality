@@ -2,11 +2,20 @@
 
 #include <iostream>
 
-Storage::Storage(const std::string& name) : PcPart(name) {}
+Storage::Storage(const std::string& name, const std::string& objectPath) : PcPart(name), objectPath(objectPath) {}
 
 Storage::~Storage() {}
 
+std::string Storage::getName() const {
+    return name;
+}
+
+std::string Storage::getObjectPath() const {
+    return objectPath;
+}
+
+
 void Storage::display() const {
-	std::cout << "Storage: " << name << "\n";
-	std::cout << "Position: (" << position.x << ", " << position.y << ", " << position.z << ")\n";
+    std::cout << "Storage: " << name << "\n";
+    std::cout << "Position: (" << position.x << ", " << position.y << ", " << position.z << ")\n";
 }

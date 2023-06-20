@@ -11,3 +11,5 @@ void PcPart::setPosition(const glm::vec3& pos) {
 glm::vec3 PcPart::getPosition() const {
 	return position;
 }
+
+

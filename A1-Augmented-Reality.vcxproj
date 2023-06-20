@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="ComputerController.cpp" />
     <ClCompile Include="CPU.cpp" />
+    <ClCompile Include="Fan.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GPU.cpp" />
     <ClCompile Include="GUIManager.cpp" />
@@ -188,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="ComputerController.h" />
     <ClInclude Include="CPU.hpp" />
+    <ClInclude Include="Fan.hpp" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GPU.hpp" />
     <ClInclude Include="GUIManager.h" />
@@ -202,11 +204,11 @@
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="PSU.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Motherboard.hpp" />
     <ClInclude Include="PcCase.hpp" />
     <ClInclude Include="PcPart.hpp" />
-    <ClInclude Include="PSU.h" />
     <ClInclude Include="RAM.hpp" />
     <ClInclude Include="Storage.hpp" />
     <ClInclude Include="texture.h" />

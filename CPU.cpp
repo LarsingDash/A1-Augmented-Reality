@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-CPU::CPU(const std::string& name, CpuSocketType socketType) : PcPart(name), socketType(socketType) {}
+CPU::CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath) : PcPart(name), socketType(socketType), objectPath(objectPath) {}
 
 CPU::~CPU() {}
 std::string CPU::getName() const{
@@ -13,3 +13,7 @@ void CPU::display() const {
 	std::cout << "Socket Type: " << (socketType == CpuSocketType::INTEL ? "Intel" : "AMD") << "\n";
 	std::cout << "Position: (" << position.x << ", " << position.y << ", " << position.z << ")\n";
 }
+std::string CPU::getObjectPath() const {
+	return objectPath;
+}
+

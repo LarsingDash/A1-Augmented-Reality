@@ -4,24 +4,27 @@
 #include <vector>
 #include "PcPart.hpp"
 
-enum class CpuSocketType {
-	INTEL,
-	AMD
+enum class MbuSocketType {
+    INTEL,
+    AMD
 };
 
 class Motherboard : public PcPart {
 private:
-	std::vector<PcPart*> childComponents;
-	CpuSocketType socketType;
+    std::vector<PcPart*> childComponents;
+    MbuSocketType socketType;
+    std::string objectPath;
 
 public:
-	Motherboard(const std::string& name, CpuSocketType socketType);
-	~Motherboard();
+    Motherboard(const std::string& name, MbuSocketType socketType, const std::string& objectPath);
+    ~Motherboard();
 
-	void addComponent(PcPart* component);
-	void removeComponent(PcPart* component);
+    void addComponent(PcPart* component);
+    void removeComponent(PcPart* component);
+    std::string getObjectPath() const override;
 
-	void display() const override;
+    void display() const override;
+    std::string getName() const override;
 };
 
-#endif 
+#endif  // MOTHERBOARD_HPP
