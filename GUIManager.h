@@ -32,7 +32,7 @@ public:
     void init();
     void Draw(GLFWwindow* window);
     ComputerController controller;
-
+    
 private:
     GLFWwindow* window;
     bool showMenuScreen = true;
@@ -45,6 +45,7 @@ private:
     float verticalOffset = 0.f;
     float horizontalOffset = 0.f;
     std::string directory;
+
     void drawCinematicViewControls();
     void drawPartSelectionList();
     void drawBuilderTopRight();
