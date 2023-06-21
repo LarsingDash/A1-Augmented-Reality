@@ -49,6 +49,7 @@ void ComputerController::update_position(GLFWwindow* window)
 			cubePosition.z -= 0.1f;
 		if (glfwGetKey(window, GLFW_KEY_R))
 			reset_position();
+		changeRotation();
 	}
 }
 
@@ -59,18 +60,21 @@ void ComputerController::reset_position()
 	angle_Z = 0.f;
 }
 
+void ComputerController::changeRotation()
+{
+	rotate = glm::rotate(glm::mat4(1.f), glm::radians(angle_X), glm::vec3(1, 0, 0));
+	rotate = glm::rotate(rotate, glm::radians(angle_Y), glm::vec3(0, 1, 0));
+	rotate = glm::rotate(rotate, glm::radians(angle_Z), glm::vec3(0, 0, 1));
+}
+
 
 void ComputerController::handleDraw(GLFWwindow* window) {
 	update_position(window);
 
-	rotate = glm::rotate(glm::mat4(1.f), glm::radians(angle_X), glm::vec3(1, 0, 0));
-	rotate = glm::rotate(rotate, glm::radians(angle_Y), glm::vec3(0, 1, 0));
-	rotate = glm::rotate(rotate, glm::radians(angle_Z), glm::vec3(0, 0, 1));
-
 	if (isDrawing) {
 		for (const auto& object : objects)
 		{
-			object.Draw(glm::vec3(cubePosition.x, cubePosition.y, cubePosition.z - 10), rotate);
+			object.Draw(glm::vec3(cubePosition.x, cubePosition.y, cubePosition.z - 7), rotate);
 		}
 	}
 }

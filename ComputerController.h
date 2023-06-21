@@ -18,6 +18,7 @@ public:
 	void reset_position();
 	void startCinematicMode();
 	void stopCinematicMode();
+	void changeRotation();
 	void setIsDrawing(bool isDrawing);
 	std::vector<GameObject> objects;
 

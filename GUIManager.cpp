@@ -137,6 +137,7 @@ void GUIManager::drawMenuScreen()
 		showMenuScreen = false;
 		showTutorialScreen = false;
 		showPcBuilderScreen = true;
+		controller.changeRotation();
 		controller.setIsDrawing(true);
 	}
 	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
