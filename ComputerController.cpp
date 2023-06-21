@@ -1,7 +1,4 @@
 #include "ComputerController.h"
-float angle_X = 0.f;
-float angle_Y = 0.f;
-float angle_Z = 0.f;
 glm::mat4 rotate = glm::mat4(1.0f);
 glm::vec3 cubePosition(0, 0, 0);
 
@@ -15,6 +12,9 @@ void ComputerController::setIsDrawing(bool newIsDrawing) {
 }
 void ComputerController::startCinematicMode()
 {
+	angle_X = 0.f;
+	angle_Y = 20.f;
+	angle_Z = 0.f;
 	cin_mode = true;
 }
 

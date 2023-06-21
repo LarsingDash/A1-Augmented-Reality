@@ -8,6 +8,9 @@
 class ComputerController
 {
 public:
+	float angle_X = 0.f;
+	float angle_Y = 20.f;
+	float angle_Z = 0.f;
 	bool cin_mode = false;
 	ComputerController(bool isDrawing);
 	void handleDraw(GLFWwindow* window);
