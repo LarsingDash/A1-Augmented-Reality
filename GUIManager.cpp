@@ -298,13 +298,18 @@ void GUIManager::drawCinematicViewControls()
 	while (ImGui::Button("Rotate Z backward", buttonSize))
 		controller.changeRotationZ(24);
 	//reset knop
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f)); // Set button color to red
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
+	// Set button hover color to a lighter red
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f));
+	// Set button active color to a darker red
+
 	ImGui::SetCursorPos(ImVec2(windowSize.x / 2, windowSize.y - padding - buttonSize.x));
 	while (ImGui::Button("Reset", buttonSize))
 	{
 		controller.ResetRotation(); 
 		controller.resetTranslation();
-	}
-		
+	}	
 
 	// Restore the original style
 	style.Colors[ImGuiCol_Button] = originalButtonColor;
