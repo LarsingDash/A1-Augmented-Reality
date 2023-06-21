@@ -239,6 +239,7 @@ void GUIManager::drawCinematicViewControls()
 	while (ImGui::Button("Top", buttonSize))
 	{
 		std::cout << "Rotating upwards" << std::endl;
+		controller.angle_X += 3.6f;
 		// Handle button click for rotating upwards
 	}
 
@@ -246,7 +247,7 @@ void GUIManager::drawCinematicViewControls()
 	while (ImGui::Button("Right", buttonSize))
 	{
 		std::cout << "Rotating Right" << std::endl;
-
+		controller.angle_Y -= 3.6f;
 		// Handle button click  for rotating right
 	}
 
@@ -254,7 +255,7 @@ void GUIManager::drawCinematicViewControls()
 	while (ImGui::Button("Bottom", buttonSize))
 	{
 		std::cout << "Rotating downwards" << std::endl;
-
+		controller.angle_X -= 3.6f;
 		// Handle button click for rotating downwards
 	}
 
@@ -262,7 +263,7 @@ void GUIManager::drawCinematicViewControls()
 	while (ImGui::Button("Left", buttonSize))
 	{
 		std::cout << "Rotating left" << std::endl;
-
+		controller.angle_Y += 3.6f;
 		// Handle button click for rotating left
 	}
 

@@ -49,9 +49,6 @@ void ComputerController::update_position(GLFWwindow* window)
 			cubePosition.z -= 0.1f;
 		if (glfwGetKey(window, GLFW_KEY_R))
 			reset_position();
-		rotate = glm::rotate(glm::mat4(1.f), glm::radians(angle_X), glm::vec3(1, 0, 0));
-		rotate = glm::rotate(rotate, glm::radians(angle_Y), glm::vec3(0, 1, 0));
-		rotate = glm::rotate(rotate, glm::radians(angle_Z), glm::vec3(0, 0, 1));
 	}
 }
 
@@ -65,7 +62,11 @@ void ComputerController::reset_position()
 
 void ComputerController::handleDraw(GLFWwindow* window) {
 	update_position(window);
-	
+
+	rotate = glm::rotate(glm::mat4(1.f), glm::radians(angle_X), glm::vec3(1, 0, 0));
+	rotate = glm::rotate(rotate, glm::radians(angle_Y), glm::vec3(0, 1, 0));
+	rotate = glm::rotate(rotate, glm::radians(angle_Z), glm::vec3(0, 0, 1));
+
 	if (isDrawing) {
 		for (const auto& object : objects)
 		{
