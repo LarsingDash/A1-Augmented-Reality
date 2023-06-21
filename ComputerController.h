@@ -20,6 +20,7 @@ class ComputerController
 		void changePosition(const glm::vec3 pos);
 		void setIsDrawing(bool isDrawing);
 		std::vector<GameObject> objects;
+    	void resetTranslation();
 
 	private:
 		void UpdateRotation();

@@ -61,6 +61,7 @@ int main()
 	glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &windowWidth, &windowHeight);
 
 	window = glfwCreateWindow(windowWidth, windowHeight, "A1 Augmented Reality", monitor, nullptr);
+	glfwSwapInterval(1);
 
 	//Check if the window was successfully made
 	if (!window)
@@ -88,7 +89,7 @@ int main()
 	{
 		//Clock speed
 		const clock_t currentTime = clock();
-		const clock_t deltaTime = currentTime - lastDeltaTime;
+		clock_t deltaTime = currentTime - lastDeltaTime;
 		lastDeltaTime = currentTime;
 
 		//FPS
@@ -102,7 +103,7 @@ int main()
 		}
 
 		//Program cycle
-		// HandUpdate();
+		HandUpdate();
 		guiManager.Draw(window);
 
 		//glfw cycle

@@ -131,7 +131,10 @@ void ComputerController::ResetRotation()
 	targetY = 0.f;
 	targetZ = 0.f;
 }
-
+void ComputerController::resetTranslation()
+{
+	translation = glm::vec3(0, 0, 0);
+}
 void ComputerController::changeRotationX(const float x)
 {
 	targetX += x;

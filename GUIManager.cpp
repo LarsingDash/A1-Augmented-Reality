@@ -36,6 +36,7 @@ Storage* pickedSSD = nullptr;
 Storage* pickedHDD = nullptr;
 Fan* pickedFan = nullptr;
 PcCase* pickedCase = nullptr;
+glm::vec3 translate;
 
 
 GUIManager::GUIManager(GLFWwindow* window, const ComputerController& controller, std::string objectDirectory)
@@ -242,21 +243,73 @@ void GUIManager::drawCinematicViewControls()
 	style.Colors[ImGuiCol_Text] = whiteColor;
 
 	// Draw the buttons
-	ImGui::SetCursorPos(ImVec2(x, padding));
-	while (ImGui::Button("Top", buttonSize))
-		controller.changeRotationX(24);
-
-	ImGui::SetCursorPos(ImVec2(windowSize.x - buttonSize.x - padding, y));
+	// rotation buttons
+	ImGui::SetCursorPos(ImVec2(padding, padding));
+	while (ImGui::Button("Left", buttonSize))
+		controller.changePosition(glm::vec3(-0.25, 0, 0));
+		//controller.changeRotationY(-24);
+	ImGui::SetCursorPos(ImVec2(padding + buttonSize.x + padding, padding ));
 	while (ImGui::Button("Right", buttonSize))
+		controller.changePosition(glm::vec3(0.25, 0, 0));
+		//controller.changeRotationY(24);
+
+	ImGui::SetCursorPos(ImVec2(padding, padding + (buttonSize.y + padding)));
+	while (ImGui::Button("Up", buttonSize))
+		controller.changePosition(glm::vec3(0, 0.25, 0));
+		//controller.changeRotationX(-24);
+
+	ImGui::SetCursorPos(ImVec2(padding + (buttonSize.x + padding), padding + (buttonSize.y + padding)));
+	while (ImGui::Button("Down", buttonSize))
+		controller.changePosition(glm::vec3(0, -0.25, 0));
+		//controller.changeRotationX(24);
+
+	ImGui::SetCursorPos(ImVec2(padding, padding + ((buttonSize.y + padding) * 2) ));
+	while (ImGui::Button("Forward", buttonSize))
+		controller.changePosition(glm::vec3(0, 0, 0.25));
+		//controller.changeRotationX(-24);
+
+	ImGui::SetCursorPos(ImVec2(padding + (buttonSize.x + padding), padding + ((buttonSize.y + padding) * 2)));
+	while (ImGui::Button("backward", buttonSize ))
+		controller.changePosition(glm::vec3(0, 0, -0.25));
+		//controller.changeRotationX(24);
+
+	// translation buttons
+	ImGui::SetCursorPos(ImVec2(windowSize.x - ((buttonSize.x + padding) * 2) , padding));
+	while (ImGui::Button("Rotate Y left", buttonSize))
+		controller.changeRotationY(-24);
+
+	ImGui::SetCursorPos(ImVec2(windowSize.x - padding - buttonSize.x , padding));
+	while (ImGui::Button("Rotate Y right", buttonSize))
 		controller.changeRotationY(24);
 
-	ImGui::SetCursorPos(ImVec2(x, windowSize.y - buttonSize.y - padding));
-	while (ImGui::Button("Bottom", buttonSize))
+	ImGui::SetCursorPos(ImVec2(windowSize.x - ((buttonSize.x + padding) * 2), padding + (buttonSize.y + padding)));
+	while (ImGui::Button("Rotate X up", buttonSize))
+		controller.changeRotationX(24);
+
+	ImGui::SetCursorPos(ImVec2(windowSize.x - padding - buttonSize.x, padding + (buttonSize.y + padding)));
+	while (ImGui::Button("Rotate X down", buttonSize))
 		controller.changeRotationX(-24);
 
-	ImGui::SetCursorPos(ImVec2(padding, y));
-	while (ImGui::Button("Left", buttonSize))
-		controller.changeRotationY(-24);
+	ImGui::SetCursorPos(ImVec2(windowSize.x - ((buttonSize.x + padding) * 2), padding + ((buttonSize.y + padding) * 2)));
+	while (ImGui::Button("Rotate Z forward", buttonSize))
+		controller.changeRotationZ(-24);
+
+	ImGui::SetCursorPos(ImVec2(windowSize.x - padding - buttonSize.x, padding + ((buttonSize.y + padding) * 2)));
+	while (ImGui::Button("Rotate Z backward", buttonSize))
+		controller.changeRotationZ(24);
+	//reset knop
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f)); // Set button color to red
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
+	// Set button hover color to a lighter red
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f));
+	// Set button active color to a darker red
+
+	ImGui::SetCursorPos(ImVec2(windowSize.x / 2, windowSize.y - padding - buttonSize.x));
+	while (ImGui::Button("Reset", buttonSize))
+	{
+		controller.ResetRotation(); 
+		controller.resetTranslation();
+	}	
 
 	// Restore the original style
 	style.Colors[ImGuiCol_Button] = originalButtonColor;
