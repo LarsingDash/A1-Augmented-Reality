@@ -2,39 +2,30 @@
 
 #include <iostream>
 
-ComputerController::ComputerController(bool newIsDrawing)
-{
-	setIsDrawing(newIsDrawing);
-}
-
-void ComputerController::setIsDrawing(bool newIsDrawing)
-{
-	isDrawing = newIsDrawing;
-}
-
-void ComputerController::startCinematicMode()
-{
-	cin_mode = true;
-	ResetRotation();
-	resetTranslation();
-	UpdateRotation();
-}
-
-void ComputerController::stopCinematicMode()
-{
-	cin_mode = false;
-
-	ResetRotation();
-	resetTranslation();
-	changeRotationY(24);
-}
-
 constexpr float ROTATION_SPEED = 0.25f;
 constexpr float MAX_ROTATION_SPEED = 6;
 constexpr glm::vec3 MOVEMENT_SPEED = glm::vec3(0.2f);
-constexpr float MAX_MOVEMENT_DISTANCE = 0.1f;
 constexpr glm::vec3 MAX_MOVEMENT_SPEED = glm::vec3(0.0625f, 0.0625f, 0.0625f);
-constexpr glm::vec3 ORIGIN = glm::vec3(0);
+
+//Constructor
+ComputerController::ComputerController(const bool isDrawing)
+{
+	SetIsDrawing(isDrawing);
+}
+
+//Updates
+void ComputerController::HandleDraw(GLFWwindow* window)
+{
+	UpdateTargets();
+
+	if (isDrawing)
+	{
+		for (const auto& object : objects)
+		{
+			object.Draw(trans, rotate);
+		}
+	}
+}
 
 void ComputerController::UpdateTargets()
 {
@@ -46,8 +37,8 @@ void ComputerController::UpdateTargets()
 		const float difference = targetX - angleX;
 		const float move =
 			difference > 0
-				? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
-				: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
+			? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
+			: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
 
 		angleX += move;
 		UpdateRotation();
@@ -67,8 +58,8 @@ void ComputerController::UpdateTargets()
 
 		const float move =
 			difference > 0
-				? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
-				: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
+			? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
+			: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
 
 		angleY += move;
 		UpdateRotation();
@@ -88,8 +79,8 @@ void ComputerController::UpdateTargets()
 
 		const float move =
 			difference > 0
-				? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
-				: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
+			? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
+			: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
 
 		angleZ += move;
 		UpdateRotation();
@@ -108,7 +99,7 @@ void ComputerController::UpdateTargets()
 		const glm::vec3 difference = targetTrans - trans;
 
 		glm::vec3 move = difference * MOVEMENT_SPEED;
-		move = clamp(move, -0.1f, 0.1f);
+		move = clamp(move, -MAX_MOVEMENT_SPEED, MAX_MOVEMENT_SPEED);
 
 		trans += move;
 	}
@@ -119,17 +110,50 @@ void ComputerController::UpdateTargets()
 	}
 }
 
+void ComputerController::UpdateRotation()
+{
+	rotate = glm::rotate(glm::mat4(1.f), glm::radians(angleX), glm::vec3(1, 0, 0));
+	rotate = glm::rotate(rotate, glm::radians(angleY), glm::vec3(0, 1, 0));
+	rotate = glm::rotate(rotate, glm::radians(angleZ), glm::vec3(0, 0, 1));
+}
+
+//Resets
 void ComputerController::ResetRotation()
 {
 	targetX = 0.f;
 	targetY = 0.f;
 	targetZ = 0.f;
 }
-void ComputerController::resetTranslation()
+
+void ComputerController::ResetTranslation()
 {
 	targetTrans = glm::vec3(0, 0, 0);
 }
-void ComputerController::changeRotationX(const float x)
+
+//Setters
+void ComputerController::SetIsDrawing(const bool drawing)
+{
+	isDrawing = drawing;
+}
+
+void ComputerController::SetCinematicMode(const bool cinState)
+{
+	cinematicMode = cinState;
+
+	if (cinematicMode) {
+		ResetRotation();
+		ResetTranslation();
+		UpdateRotation();
+	} else
+	{
+		ResetRotation();
+		ResetTranslation();
+		ChangeRotationY(24);
+	}
+}
+
+//Transformations
+void ComputerController::ChangeRotationX(const float x)
 {
 	targetX += x;
 
@@ -151,7 +175,7 @@ void ComputerController::changeRotationX(const float x)
 	}
 }
 
-void ComputerController::changeRotationY(const float y)
+void ComputerController::ChangeRotationY(const float y)
 {
 	targetY += y;
 
@@ -173,7 +197,7 @@ void ComputerController::changeRotationY(const float y)
 	}
 }
 
-void ComputerController::changeRotationZ(const float z)
+void ComputerController::ChangeRotationZ(const float z)
 {
 	targetZ += z;
 
@@ -195,27 +219,7 @@ void ComputerController::changeRotationZ(const float z)
 	}
 }
 
-void ComputerController::changePosition(const glm::vec3 pos)
+void ComputerController::ChangePosition(const glm::vec3 pos)
 {
 	targetTrans += pos;
-}
-
-void ComputerController::UpdateRotation()
-{
-	rotate = glm::rotate(glm::mat4(1.f), glm::radians(angleX), glm::vec3(1, 0, 0));
-	rotate = glm::rotate(rotate, glm::radians(angleY), glm::vec3(0, 1, 0));
-	rotate = glm::rotate(rotate, glm::radians(angleZ), glm::vec3(0, 0, 1));
-}
-
-void ComputerController::handleDraw(GLFWwindow* window)
-{
-	UpdateTargets();
-
-	if (isDrawing)
-	{
-		for (const auto& object : objects)
-		{
-			object.Draw(trans, rotate);
-		}
-	}
 }

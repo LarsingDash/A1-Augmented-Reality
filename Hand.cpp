@@ -2,8 +2,8 @@
 #include "glm/glm.hpp"
 
 //Camera image variables
-const int camHeight = 342;
-const int camWidth = 607;
+constexpr int CAM_HEIGHT = 342;
+constexpr int CAM_WIDTH = 607;
 
 //Init
 int HandInit(const int windowWidth, const int windowHeight) {
@@ -14,8 +14,8 @@ int HandInit(const int windowWidth, const int windowHeight) {
 
     //Camera input
     cap = cv::VideoCapture(0);
-    cap.set(cv::CAP_PROP_FRAME_WIDTH, camWidth);
-    cap.set(cv::CAP_PROP_FRAME_HEIGHT, camHeight);
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, CAM_WIDTH);
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
 
     if (!cap.isOpened()) {
         std::cerr << "Failed to open camera." << std::endl;
@@ -23,14 +23,14 @@ int HandInit(const int windowWidth, const int windowHeight) {
     }
 
     //Open and closed hand cascades.
-    handcascade_fist.load("fist.xml");  // Path to the hand cascade XML file
-    handcascade_palm.load("rpalm.xml");  // Path to the hand cascade XML file
+    handCascadeFist.load("fist.xml");  // Path to the hand cascade XML file
+    handCascadePalm.load("rpalm.xml");  // Path to the hand cascade XML file
 
-    if (handcascade_palm.empty()) {
+    if (handCascadePalm.empty()) {
         std::cerr << "Failed to load hand cascade file." << std::endl;
         return -1;
     }
-    if (handcascade_fist.empty()) {
+    if (handCascadeFist.empty()) {
         std::cerr << "Failed to load hand cascade file." << std::endl;
         return -1;
     }
@@ -56,8 +56,8 @@ void HandUpdate()
     std::vector<cv::Rect> fists;
     std::vector<cv::Rect> total;
 
-    handcascade_palm.detectMultiScale(frameGray, hands, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
-    handcascade_fist.detectMultiScale(frameGray, fists, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+    handCascadePalm.detectMultiScale(frameGray, hands, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+    handCascadeFist.detectMultiScale(frameGray, fists, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
     total.reserve(hands.size() + fists.size());
     total.insert(total.end(), hands.begin(), hands.end());

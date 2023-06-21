@@ -10,29 +10,29 @@ PcCase::~PcCase() {
     }
 }
 
-std::string PcCase::getName() const {
+std::string PcCase::GetName() const {
     return name;
 }
 
-std::string PcCase::getObjectPath() const {
+std::string PcCase::GetObjectPath() const {
     return objectPath;
 }
 
-void PcCase::addComponent(PcPart* component) {
+void PcCase::AddComponent(PcPart* component) {
     childComponents.push_back(component);
 }
 
-void PcCase::removeComponent(PcPart* component) {
+void PcCase::RemoveComponent(PcPart* component) {
     auto it = std::find(childComponents.begin(), childComponents.end(), component);
     if (it != childComponents.end()) {
         childComponents.erase(it);
     }
 }
 
-void PcCase::display() const {
+void PcCase::Display() const {
     std::cout << "PC Case: " << name << "\n";
     std::cout << "Position: (" << position.x << ", " << position.y << ", " << position.z << ")\n";
     for (PcPart* component : childComponents) {
-        component->display();
+        component->Display();
     }
 }

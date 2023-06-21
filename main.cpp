@@ -1,19 +1,17 @@
 #include "GameObject.h"
+#include "ComputerController.h"
+#include "GUIManager.h"
+#include "hand.h"
 
-#include <iostream>
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+
+#include "tigl.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "tigl.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "GUIManager.h"
-#include "ComputerController.h"
-
-#include "hand.h"
-
-using tigl::Vertex;
+#include <iostream>
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "glew32s.lib")
@@ -25,20 +23,10 @@ void Init();
 
 //Other
 void GetObjectDir();
-void reset_position();
 
 //Default window size, will be overridden by fullscreen values
 int windowWidth = 700;
 int windowHeight = 700;
-
-clock_t lastDeltaTime = 0;
-clock_t fpsCounter = 0;
-int fps = 0;
-
-//temp rotate var
-glm::vec3 rotations = glm::vec3(0, 0, 0);
-glm::mat4 translate = glm::mat4(1.0f);
-
 
 std::vector<GameObject> gameObjects = std::vector<GameObject>();
 std::string objectDir;
@@ -78,8 +66,8 @@ int main()
 			glfwSetWindowShouldClose(window, true);
 	});
 
-	GUIManager guiManager = GUIManager(window, controller, objectDir);
-	guiManager.init();
+	GuiManager guiManager = GuiManager(window, controller, objectDir);
+	guiManager.Init();
 
 	//Init
 	Init();
@@ -89,7 +77,7 @@ int main()
 	{
 		//Program cycle
 		HandUpdate();
-		guiManager.Draw(window);
+		guiManager.Draw();
 
 		//glfw cycle
 		glfwSwapBuffers(window);
@@ -138,11 +126,10 @@ void Init()
 	tigl::shader->setLightPosition(0, glm::vec3(0, 0, 5));
 	tigl::shader->setLightAmbient(0, glm::vec3(1, 1, 1));
 	tigl::shader->setLightDiffuse(0, glm::vec3(1, 1, 1));
-	// tigl::shader->setLightSpecular(0, glm::vec3(1, 1, 1));
 
 	//GL settings
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0, 196.f / 255.f, 255.f / 255.f, 1);
+	glClearColor(0, 196.f / 255.f, 1, 1);
 }
 
 //Other

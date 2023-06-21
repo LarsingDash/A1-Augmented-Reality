@@ -9,50 +9,50 @@ class Material;
 
 class GameObject
 {
-private:
-	//Inner classes
-	class IndexedVertex
-	{
 	public:
-		int pos;
-		int texture;
-		int normal;
-	};
+		GameObject() = default;
+		explicit GameObject(glm::vec3 trans);
+		GameObject(const std::string& dir, const std::string& fileName, const int tier);
+		~GameObject(void);
 
-	struct ObjectGroup
-	{
-		std::string name;
-		int materialIndex = -1;
-		std::vector<std::vector<IndexedVertex>> faces;
-	};
+		void Draw(const glm::vec3& position, const glm::mat4& rotation) const;
 
-	//Vars
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normals;
-	std::vector<glm::vec2> textureCoords;
-	std::vector<ObjectGroup*> groups;
+		//Object loader
+		void LoadObjectFile(const std::string& dir, const std::string& fileName, const int tier);
 
-	//Material loader
-	void LoadMaterialFile(const std::string& mtlPath, const std::string& objectDir);
+		//String extension methods
+		std::string Replace(std::string& str, const std::string& toReplace, const std::string& replacement);
+		std::vector<std::string> Split(std::string str, const std::string& separator);
+		inline std::string ToLower(std::string data);
+		inline std::string CleanLine(std::string line);
 
-protected:
-	std::vector<Material*> materials;
-	glm::vec3 transform = glm::vec3(0, 0, 0);
+	protected:
+		std::vector<Material*> materials;
+		glm::vec3 transform = glm::vec3(0, 0, 0);
 
-public:
-	GameObject() = default;
-	explicit GameObject(glm::vec3 trans);
-	GameObject(const std::string& dir, const std::string& fileName, const int tier);
-	~GameObject(void);
+	private:
+		//Inner classes
+		class IndexedVertex
+		{
+			public:
+				int pos;
+				int texture;
+				int normal;
+		};
 
-	void Draw(const glm::vec3& position, const glm::mat4& rotation) const;
+		struct ObjectGroup
+		{
+			std::string name;
+			int materialIndex = -1;
+			std::vector<std::vector<IndexedVertex>> faces;
+		};
 
-	//Object loader
-	void LoadObjectFile(const std::string& dir, const std::string& fileName, const int tier);
+		//Vars
+		std::vector<glm::vec3> vertices;
+		std::vector<glm::vec3> normals;
+		std::vector<glm::vec2> textureCoords;
+		std::vector<ObjectGroup*> groups;
 
-	//String extension methods
-	std::string Replace(std::string& str, const std::string& toReplace, const std::string& replacement);
-	std::vector<std::string> Split(std::string str, const std::string& separator);
-	inline std::string ToLower(std::string data);
-	inline std::string CleanLine(std::string line);
+		//Material loader
+		void LoadMaterialFile(const std::string& mtlPath, const std::string& objectDir);
 };

@@ -4,20 +4,25 @@
 #include "PcPart.hpp"
 #include <string>
 
-enum class CpuSocketType {
+enum class CpuSocketType
+{
 	INTEL,
 	AMD
 };
 
-class CPU : public PcPart {
-private:
-	std::string objectPath;
-public:
-    CpuSocketType socketType;
-    CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath, const int tier);
-    ~CPU();
-    std::string getName() const override;
-    void display() const override;
-    std::string getObjectPath() const override; 
+class CPU final : public PcPart
+{
+	public:
+		CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath, const int tier);
+		~CPU();
+
+		std::string GetName() const override;
+		void Display() const override;
+		std::string GetObjectPath() const override;
+
+		CpuSocketType socketType;
+
+	private:
+		std::string objectPath;
 };
-#endif  
+#endif

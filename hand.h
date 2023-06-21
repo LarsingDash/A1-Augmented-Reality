@@ -5,17 +5,17 @@
 #include <Windows.h>
 #include <opencv2/opencv.hpp>
 
-void moveCursor(int x, int y);
-
+//Init - Update - Teardown
 int HandInit(int windowWidth, int windowHeight);
 void HandUpdate();
 void HandTeardown();
- 
+
+//Variables
 static cv::VideoCapture cap;
 static cv::Mat frame;
  
-static cv::CascadeClassifier handcascade_palm;
-static cv::CascadeClassifier handcascade_fist;
+static cv::CascadeClassifier handCascadePalm;
+static cv::CascadeClassifier handCascadeFist;
  
 static bool handInArea = false;
 static cv::Rect currentArea;

@@ -99,6 +99,9 @@
     <ClCompile Include="CPU.cpp">
       <Filter>Source Files\PcParts</Filter>
     </ClCompile>
+    <ClCompile Include="Fan.cpp">
+      <Filter>Source Files\PcParts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h">
@@ -146,7 +149,7 @@
     <ClInclude Include="texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hand.h">
+    <ClInclude Include="Hand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
@@ -174,6 +177,9 @@
       <Filter>Header Files\PcParts</Filter>
     </ClInclude>
     <ClInclude Include="PSU.h">
+      <Filter>Header Files\PcParts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fan.hpp">
       <Filter>Header Files\PcParts</Filter>
     </ClInclude>
   </ItemGroup>

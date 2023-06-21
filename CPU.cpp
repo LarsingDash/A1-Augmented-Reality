@@ -2,18 +2,28 @@
 
 #include <iostream>
 
-CPU::CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath, const int tier) : PcPart(name, tier), socketType(socketType), objectPath(objectPath) {}
+CPU::CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath, const int tier)
+	: PcPart(name, tier),
+	  socketType(socketType),
+	  objectPath(objectPath)
+{
+}
 
-CPU::~CPU() {}
-std::string CPU::getName() const{
+CPU::~CPU() = default;
+
+std::string CPU::GetName() const
+{
 	return name;
 }
-void CPU::display() const {
+
+void CPU::Display() const
+{
 	std::cout << "CPU: " << name << "\n";
 	std::cout << "Socket Type: " << (socketType == CpuSocketType::INTEL ? "Intel" : "AMD") << "\n";
 	std::cout << "Position: (" << position.x << ", " << position.y << ", " << position.z << ")\n";
 }
-std::string CPU::getObjectPath() const {
+
+std::string CPU::GetObjectPath() const
+{
 	return objectPath;
 }
-

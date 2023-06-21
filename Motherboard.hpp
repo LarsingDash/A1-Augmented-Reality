@@ -6,24 +6,26 @@
 #include "RAM.hpp"
 #include "CPU.hpp"
 
+class Motherboard : public PcPart
+{
+	public:
+		Motherboard(const std::string& name, CpuSocketType socketType, RamSocketType ramSocketType,
+		            const std::string& objectPath, const int tier);
+		~Motherboard();
 
-class Motherboard : public PcPart {
-private:
-    std::vector<PcPart*> childComponents;
-    std::string objectPath;
+		void AddComponent(PcPart* component);
+		void RemoveComponent(PcPart* component);
+		std::string GetObjectPath() const override;
 
-public:
-    CpuSocketType socketType;
-    RamSocketType ramSocketType;
-    Motherboard(const std::string& name, CpuSocketType socketType, RamSocketType ramSocketType, const std::string& objectPath, const int tier);
-    ~Motherboard();
+		void Display() const override;
+		std::string GetName() const override;
 
-    void addComponent(PcPart* component);
-    void removeComponent(PcPart* component);
-    std::string getObjectPath() const override;
+		CpuSocketType socketType;
+		RamSocketType ramSocketType;
 
-    void display() const override;
-    std::string getName() const override;
+	private:
+		std::vector<PcPart*> childComponents;
+		std::string objectPath;
 };
 
 #endif  // MOTHERBOARD_HPP

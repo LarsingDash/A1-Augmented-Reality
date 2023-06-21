@@ -4,24 +4,26 @@
 #include "PcPart.hpp"
 #include <string>
 
-enum class RamSocketType {
-    DDR3,
-    DDR4
+enum class RamSocketType
+{
+	DDR3,
+	DDR4
 };
 
-class RAM : public PcPart {
-private:
-    std::string objectPath;
+class RAM : public PcPart
+{
+	public:
+		RamSocketType socketType;
 
-public:
-    RamSocketType socketType;
+		RAM(const std::string& name, RamSocketType socketType, const std::string& objectPath, const int tier);
+		~RAM();
 
-    RAM(const std::string& name, RamSocketType socketType, const std::string& objectPath, const int tier);
-    ~RAM();
+		std::string GetName() const override;
+		std::string GetObjectPath() const override;
+		void Display() const override;
 
-    std::string getName() const override;
-    std::string getObjectPath() const override;
-    void display() const override;
+	private:
+		std::string objectPath;
 };
 
 #endif  // RAM_HPP

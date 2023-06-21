@@ -4,21 +4,23 @@
 #include <vector>
 #include "PcPart.hpp"
 
-class PcCase : public PcPart {
-private:
-    std::vector<PcPart*> childComponents;
-    std::string objectPath;
+class PcCase : public PcPart
+{
+	public:
+		PcCase(const std::string& name, const std::string& objectPath, const int tier);
+		~PcCase();
 
-public:
-    PcCase(const std::string& name, const std::string& objectPath, const int tier);
-    ~PcCase();
+		void AddComponent(PcPart* component);
+		void RemoveComponent(PcPart* component);
 
-    void addComponent(PcPart* component);
-    void removeComponent(PcPart* component);
-    std::string getName() const override;
-    std::string getObjectPath() const override;
+		std::string GetName() const override;
+		std::string GetObjectPath() const override;
 
-    void display() const override;
+		void Display() const override;
+
+	private:
+		std::vector<PcPart*> childComponents;
+		std::string objectPath;
 };
 
 #endif  // PCCASE_HPP
