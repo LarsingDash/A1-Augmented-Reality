@@ -96,25 +96,49 @@ void HandUpdate()
 
         // Left mouse click logic
         const bool isClicked = !fists.empty();
-        if (isClicked && !lastIsClicked)
+        const bool isFistVisible = !fists.empty();
+
+
+        if (isFistVisible)
         {
-            // Perform left mouse button click action
-            std::cout << "Left mouse button clicked!" << std::endl;
+            // Fist is visible, check if dragging action is required
+            if (isClicked && !lastIsClicked)
+            {
+                // Perform left mouse button press for dragging
+                std::cout << "Left mouse button pressed for dragging!" << std::endl;
 
-            // Simulate a left mouse button press and release
-            INPUT inputs[2] = {};
-            inputs[0].type = inputs[1].type = INPUT_MOUSE;
-            inputs[0].mi.dwFlags = inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-            SendInput(2, inputs, sizeof(INPUT));
+                INPUT input{};
+                input.type = INPUT_MOUSE;
+                input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                SendInput(1, &input, sizeof(INPUT));
 
-            // Wait a short delay to simulate button press
-            Sleep(50);
+                lastIsClicked = true; // Update lastIsClicked flag
+            }
+            else if (!isClicked && lastIsClicked)
+            {
+                // Perform left mouse button release for dragging
+                std::cout << "Left mouse button released after dragging!" << std::endl;
 
-            inputs[0].mi.dwFlags = inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTUP;
-            SendInput(2, inputs, sizeof(INPUT));
+                INPUT input{};
+                input.type = INPUT_MOUSE;
+                input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+                SendInput(1, &input, sizeof(INPUT));
+
+                lastIsClicked = false; // Update lastIsClicked flag
+            }
         }
+        else if (lastIsClicked)
+        {
+            // Fist is not visible, release the left mouse button
+            std::cout << "Left mouse button released!" << std::endl;
 
-        lastIsClicked = isClicked;
+            INPUT input{};
+            input.type = INPUT_MOUSE;
+            input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+            SendInput(1, &input, sizeof(INPUT));
+
+            lastIsClicked = false; // Update lastIsClicked flag
+        }
 
     }
 
