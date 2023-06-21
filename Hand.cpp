@@ -99,19 +99,19 @@ void HandUpdate()
         if (isClicked != lastIsClicked)
         {
             lastIsClicked = isClicked;
-            INPUT buffer[1];
+            INPUT buffer;
 
             if (isClicked)
             {
                 cv::circle(frame, cv::Point(0, 0), 10, cv::Scalar(255, 0, 0), 2);
 
-                buffer->mi.dwFlags = (MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN);
-                SendInput(1, buffer, sizeof(INPUT));
+                buffer.mi.dwFlags = (MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN);
+                SendInput(1, &buffer, sizeof(INPUT));
             }
             else
             {
-                buffer->mi.dwFlags = (MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTUP);
-                SendInput(1, buffer, sizeof(INPUT));
+                buffer.mi.dwFlags = (MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTUP);
+                SendInput(1, &buffer, sizeof(INPUT));
             }
         }
     }
