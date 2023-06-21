@@ -5,7 +5,7 @@
 constexpr float ROTATION_SPEED = 0.25f;
 constexpr float MAX_ROTATION_SPEED = 6;
 constexpr glm::vec3 MOVEMENT_SPEED = glm::vec3(0.2f);
-constexpr glm::vec3 MAX_MOVEMENT_SPEED = glm::vec3(0.0625f, 0.0625f, 0.0625f);
+constexpr glm::vec3 MAX_MOVEMENT_SPEED = glm::vec3(1.f);
 
 //Constructor
 ComputerController::ComputerController(const bool isDrawing)
