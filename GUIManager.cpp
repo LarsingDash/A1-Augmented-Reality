@@ -151,13 +151,13 @@ void GuiManager::DrawMenuScreen()
 	}
 	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
-	if (ImGui::Button("Tutorial", ImVec2(150, 50)))
-	{
-		showMenuScreen = false;
-		showTutorialScreen = true;
-		showPcBuilderScreen = false;
-		controller.SetIsDrawing(false);
-	}
+	// if (ImGui::Button("Tutorial", ImVec2(150, 50)))
+	// {
+	// 	showMenuScreen = false;
+	// 	showTutorialScreen = true;
+	// 	showPcBuilderScreen = false;
+	// 	controller.SetIsDrawing(false);
+	// }
 
 	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100.0f) * 0.5f);
 
