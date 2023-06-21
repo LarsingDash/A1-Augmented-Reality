@@ -137,7 +137,7 @@ void GUIManager::drawMenuScreen()
 		showMenuScreen = false;
 		showTutorialScreen = false;
 		showPcBuilderScreen = true;
-		controller.changeRotation();
+		controller.stopCinematicMode();
 		controller.setIsDrawing(true);
 	}
 	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
@@ -238,35 +238,19 @@ void GUIManager::drawCinematicViewControls()
 	// Draw the buttons
 	ImGui::SetCursorPos(ImVec2(x, padding));
 	while (ImGui::Button("Top", buttonSize))
-	{
-		std::cout << "Rotating upwards" << std::endl;
-		controller.angle_X += 3.6f;
-		// Handle button click for rotating upwards
-	}
+		controller.changeRotationX(3.6f);
 
 	ImGui::SetCursorPos(ImVec2(windowSize.x - buttonSize.x - padding, y));
 	while (ImGui::Button("Right", buttonSize))
-	{
-		std::cout << "Rotating Right" << std::endl;
-		controller.angle_Y -= 3.6f;
-		// Handle button click  for rotating right
-	}
+		controller.changeRotationY(-3.6f);
 
 	ImGui::SetCursorPos(ImVec2(x, windowSize.y - buttonSize.y - padding));
 	while (ImGui::Button("Bottom", buttonSize))
-	{
-		std::cout << "Rotating downwards" << std::endl;
-		controller.angle_X -= 3.6f;
-		// Handle button click for rotating downwards
-	}
+		controller.changeRotationX(-3.6f);
 
 	ImGui::SetCursorPos(ImVec2(padding, y));
 	while (ImGui::Button("Left", buttonSize))
-	{
-		std::cout << "Rotating left" << std::endl;
-		controller.angle_Y += 3.6f;
-		// Handle button click for rotating left
-	}
+		controller.changeRotationY(3.6f);
 
 	// Restore the original style
 	style.Colors[ImGuiCol_Button] = originalButtonColor;

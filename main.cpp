@@ -129,7 +129,7 @@ void Init()
 
 	//Camera position
 	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0, 0, 5),
+		glm::vec3(0, 0, 10),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	));
