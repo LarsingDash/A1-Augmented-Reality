@@ -15,8 +15,8 @@ void ComputerController::setIsDrawing(bool newIsDrawing)
 void ComputerController::startCinematicMode()
 {
 	cin_mode = true;
-	changePosition(glm::vec3(0.25f, 0.25, 0));
 	ResetRotation();
+	resetTranslation();
 	UpdateRotation();
 }
 
@@ -25,13 +25,16 @@ void ComputerController::stopCinematicMode()
 	cin_mode = false;
 
 	ResetRotation();
+	resetTranslation();
 	changeRotationY(24);
 }
 
 constexpr float ROTATION_SPEED = 0.25f;
 constexpr float MAX_ROTATION_SPEED = 6;
-constexpr glm::vec3 MOVEMENT_SPEED = glm::vec3(0.25f, 0.25f, 0.25f);
+constexpr glm::vec3 MOVEMENT_SPEED = glm::vec3(0.2f);
+constexpr float MAX_MOVEMENT_DISTANCE = 0.1f;
 constexpr glm::vec3 MAX_MOVEMENT_SPEED = glm::vec3(0.0625f, 0.0625f, 0.0625f);
+constexpr glm::vec3 ORIGIN = glm::vec3(0);
 
 void ComputerController::UpdateTargets()
 {
@@ -104,17 +107,8 @@ void ComputerController::UpdateTargets()
 
 		const glm::vec3 difference = targetTrans - trans;
 
-		// const glm::vec3 move =
-		// 	distance(difference, glm::vec3()) > 0
-		// 	? std::min(difference * MOVEMENT_SPEED, MAX_MOVEMENT_SPEED)
-		// 	: std::max(difference * MOVEMENT_SPEED, -MAX_MOVEMENT_SPEED);
-
-		const bool largerThanMax = abs(distance(difference, glm::vec3())) > distance(MAX_MOVEMENT_SPEED, glm::vec3());
-		const glm::vec3 move = largerThanMax
-			                       ? distance(difference, glm::vec3()) > 0
-				                         ? MAX_MOVEMENT_SPEED
-				                         : -MAX_MOVEMENT_SPEED
-			                       : difference;
+		glm::vec3 move = difference * MOVEMENT_SPEED;
+		move = clamp(move, -0.1f, 0.1f);
 
 		trans += move;
 	}
@@ -133,7 +127,7 @@ void ComputerController::ResetRotation()
 }
 void ComputerController::resetTranslation()
 {
-	translation = glm::vec3(0, 0, 0);
+	targetTrans = glm::vec3(0, 0, 0);
 }
 void ComputerController::changeRotationX(const float x)
 {

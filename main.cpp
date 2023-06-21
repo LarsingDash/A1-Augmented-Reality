@@ -87,21 +87,6 @@ int main()
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
 	{
-		//Clock speed
-		const clock_t currentTime = clock();
-		clock_t deltaTime = currentTime - lastDeltaTime;
-		lastDeltaTime = currentTime;
-
-		//FPS
-		fpsCounter += deltaTime;
-		fps++;
-		if (fpsCounter >= 1000)
-		{
-			std::cout << "FPS: " << fps << std::endl;
-			fps = 0;
-			fpsCounter = 0;
-		}
-
 		//Program cycle
 		HandUpdate();
 		guiManager.Draw(window);

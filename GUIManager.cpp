@@ -246,32 +246,26 @@ void GUIManager::drawCinematicViewControls()
 	// rotation buttons
 	ImGui::SetCursorPos(ImVec2(padding, padding));
 	while (ImGui::Button("Left", buttonSize))
-		controller.changePosition(glm::vec3(-0.25, 0, 0));
-		//controller.changeRotationY(-24);
+		controller.changePosition(glm::vec3(-0.5, 0, 0));
 	ImGui::SetCursorPos(ImVec2(padding + buttonSize.x + padding, padding ));
 	while (ImGui::Button("Right", buttonSize))
-		controller.changePosition(glm::vec3(0.25, 0, 0));
-		//controller.changeRotationY(24);
+		controller.changePosition(glm::vec3(0.5, 0, 0));
 
 	ImGui::SetCursorPos(ImVec2(padding, padding + (buttonSize.y + padding)));
 	while (ImGui::Button("Up", buttonSize))
-		controller.changePosition(glm::vec3(0, 0.25, 0));
-		//controller.changeRotationX(-24);
+		controller.changePosition(glm::vec3(0, 0.5, 0));
 
 	ImGui::SetCursorPos(ImVec2(padding + (buttonSize.x + padding), padding + (buttonSize.y + padding)));
 	while (ImGui::Button("Down", buttonSize))
-		controller.changePosition(glm::vec3(0, -0.25, 0));
-		//controller.changeRotationX(24);
+		controller.changePosition(glm::vec3(0, -0.5, 0));
 
 	ImGui::SetCursorPos(ImVec2(padding, padding + ((buttonSize.y + padding) * 2) ));
 	while (ImGui::Button("Forward", buttonSize))
-		controller.changePosition(glm::vec3(0, 0, 0.25));
-		//controller.changeRotationX(-24);
+		controller.changePosition(glm::vec3(0, 0, 0.5));
 
 	ImGui::SetCursorPos(ImVec2(padding + (buttonSize.x + padding), padding + ((buttonSize.y + padding) * 2)));
 	while (ImGui::Button("backward", buttonSize ))
-		controller.changePosition(glm::vec3(0, 0, -0.25));
-		//controller.changeRotationX(24);
+		controller.changePosition(glm::vec3(0, 0, -0.5));
 
 	// translation buttons
 	ImGui::SetCursorPos(ImVec2(windowSize.x - ((buttonSize.x + padding) * 2) , padding));
