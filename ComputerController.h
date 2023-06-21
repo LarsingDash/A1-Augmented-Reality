@@ -13,6 +13,7 @@ public:
 	void HandleKeys(GLFWwindow* window);
 	void UpdateTargets();
 	void ResetRotation();
+	void resetTranslation();
 	void startCinematicMode();
 	void stopCinematicMode();
 	void changeRotationX(const float x);
