@@ -730,13 +730,13 @@ void GuiManager::DrawPartList(const std::vector<T>& partsList, int part)
 	for (int n = 0; n < partsList.size(); n++)
 	{
 		ImGui::PushID(n);
-		if (ImGui::Button(partsList[n].getName().c_str(), ImVec2(110, 40)));
+		if (ImGui::Button(partsList[n].GetName().c_str(), ImVec2(110, 40)));
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
 			partType = part;
 			ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-			ImGui::Text("Copy %s", partsList[n].getName().c_str());
+			ImGui::Text("Copy %s", partsList[n].GetName().c_str());
 			ImGui::EndDragDropSource();
 		}
 

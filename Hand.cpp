@@ -38,7 +38,6 @@ int HandInit(const int windowWidth, const int windowHeight) {
     return 0;
 }
 
-
 //Update method
 void HandUpdate()
 {
@@ -95,7 +94,6 @@ void HandUpdate()
             SetCursorPos(cursorX, cursorY);
         }
 
-
         //Left mouse click logic
         const bool isClicked = !fists.empty();
         if (isClicked != lastIsClicked)
@@ -122,7 +120,6 @@ void HandUpdate()
     cv::flip(frame, flipped, 1);
     cv::imshow("Hand Gesture Recognition", flipped);
 }
-
 
 void HandTeardown()
 {
