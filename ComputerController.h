@@ -10,7 +10,8 @@ class ComputerController
 public:
 	ComputerController(bool isDrawing);
 	void handleDraw(GLFWwindow* window);
-	void update_position(GLFWwindow* window);
+	void HandleKeys(GLFWwindow* window);
+	void UpdateTargets();
 	void ResetRotation();
 	void startCinematicMode();
 	void stopCinematicMode();
@@ -27,9 +28,18 @@ private:
 	glm::mat4 rotate = glm::mat4(1.0f);
 	glm::vec3 translation{ 0, 0, 0 };
 
-	float angle_X = 0.f;
-	float angle_Y = 20.f;
-	float angle_Z = 0.f;
+	bool isRotatingX = false;
+	bool isRotatingY = false;
+	bool isRotatingZ = false;
+
+	float targetX = 0.f;
+	float targetY = 0.f;
+	float targetZ = 0.f;
+
+	float angleX = targetX;
+	float angleY = targetY;
+	float angleZ = targetZ;
+
 	bool cin_mode = false;
 
 	bool isDrawing = false;

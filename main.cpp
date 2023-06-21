@@ -79,22 +79,11 @@ int main()
 	//Init
 	Init();
 
-	//Create test object
-	//guiManager.controller.objects.emplace_back(objectDir, "Case");
-	// guiManager.controller.objects.emplace_back(objectDir, "CPU");
-	// guiManager.controller.objects.emplace_back(objectDir, "Fan");
-	// guiManager.controller.objects.emplace_back(objectDir, "GPU");
-	// guiManager.controller.objects.emplace_back(objectDir, "HDD");
-	// guiManager.controller.objects.emplace_back(objectDir, "MB");
-	// guiManager.controller.objects.emplace_back(objectDir, "PSU");
-	// guiManager.controller.objects.emplace_back(objectDir, "RAM");
-	// guiManager.controller.objects.emplace_back(objectDir, "SSD");
-
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
 	{
 		//Program cycle
-		// HandUpdate();
+		HandUpdate();
 		guiManager.Draw(window);
 
 		//glfw cycle
@@ -103,7 +92,7 @@ int main()
 	}
 
 	// Termination
-	// HandTeardown();
+	HandTeardown();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
@@ -117,7 +106,7 @@ void Init()
 	tigl::init();
 	glewInit();
 
-	// HandInit(windowWidth, windowHeight);
+	HandInit(windowWidth, windowHeight);
 
 	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(

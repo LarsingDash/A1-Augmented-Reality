@@ -244,19 +244,19 @@ void GUIManager::drawCinematicViewControls()
 	// Draw the buttons
 	ImGui::SetCursorPos(ImVec2(x, padding));
 	while (ImGui::Button("Top", buttonSize))
-		controller.changeRotationX(3.6f);
+		controller.changeRotationX(-24);
 
 	ImGui::SetCursorPos(ImVec2(windowSize.x - buttonSize.x - padding, y));
 	while (ImGui::Button("Right", buttonSize))
-		controller.changeRotationY(-3.6f);
+		controller.changeRotationY(24);
 
 	ImGui::SetCursorPos(ImVec2(x, windowSize.y - buttonSize.y - padding));
 	while (ImGui::Button("Bottom", buttonSize))
-		controller.changeRotationX(-3.6f);
+		controller.changeRotationX(24);
 
 	ImGui::SetCursorPos(ImVec2(padding, y));
 	while (ImGui::Button("Left", buttonSize))
-		controller.changeRotationY(3.6f);
+		controller.changeRotationY(-24);
 
 	// Restore the original style
 	style.Colors[ImGuiCol_Button] = originalButtonColor;
