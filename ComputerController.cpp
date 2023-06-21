@@ -15,7 +15,7 @@ void ComputerController::setIsDrawing(bool newIsDrawing)
 void ComputerController::startCinematicMode()
 {
 	cin_mode = true;
-
+	changePosition(glm::vec3(0.25f, 0.25, 0));
 	ResetRotation();
 	UpdateRotation();
 }
@@ -28,68 +28,14 @@ void ComputerController::stopCinematicMode()
 	changeRotationY(24);
 }
 
-void ComputerController::HandleKeys(GLFWwindow* window)
-{
-	if (cin_mode)
-	{
-		if (glfwGetKey(window, GLFW_KEY_X))
-		{
-			angleX += 0.2f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_Y))
-		{
-			angleY += 0.2f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_Z))
-		{
-			angleZ += 0.2f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_LEFT))
-		{
-			translation.x -= 0.1f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_RIGHT))
-		{
-			translation.x += 0.1f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_UP))
-		{
-			translation.y += 0.1f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_DOWN))
-		{
-			translation.y -= 0.1f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_F))
-		{
-			translation.z += 0.1f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_B))
-		{
-			translation.z -= 0.1f;
-			UpdateRotation();
-		}
-		if (glfwGetKey(window, GLFW_KEY_R))
-		{
-			ResetRotation();
-			UpdateRotation();
-		}
-	}
-}
-
 constexpr float ROTATION_SPEED = 0.25f;
 constexpr float MAX_ROTATION_SPEED = 6;
+constexpr glm::vec3 MOVEMENT_SPEED = glm::vec3(0.25f, 0.25f, 0.25f);
+constexpr glm::vec3 MAX_MOVEMENT_SPEED = glm::vec3(0.0625f, 0.0625f, 0.0625f);
 
 void ComputerController::UpdateTargets()
 {
+	//Rotation X
 	if (abs(targetX - angleX) > 0.01f)
 	{
 		isRotatingX = true;
@@ -109,17 +55,17 @@ void ComputerController::UpdateTargets()
 		angleX = targetX;
 	}
 
+	//Rotation Y
 	if (abs(targetY - angleY) > 0.01f)
 	{
 		isRotatingY = true;
 
 		const float difference = targetY - angleY;
-		const float max = difference > 0 ? MAX_ROTATION_SPEED : MAX_ROTATION_SPEED * -1;
 
 		const float move =
 			difference > 0
-			? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
-			: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
+				? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
+				: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
 
 		angleY += move;
 		UpdateRotation();
@@ -128,6 +74,54 @@ void ComputerController::UpdateTargets()
 	{
 		isRotatingY = false;
 		angleY = targetY;
+	}
+
+	//Rotation Z
+	if (abs(targetZ - angleZ) > 0.01f)
+	{
+		isRotatingZ = true;
+
+		const float difference = targetZ - angleZ;
+
+		const float move =
+			difference > 0
+				? std::min(difference * ROTATION_SPEED, MAX_ROTATION_SPEED)
+				: std::max(difference * ROTATION_SPEED, -MAX_ROTATION_SPEED);
+
+		angleZ += move;
+		UpdateRotation();
+	}
+	else if (isRotatingZ)
+	{
+		isRotatingZ = false;
+		angleZ = targetZ;
+	}
+
+	//Translation
+	if (distance(targetTrans, trans) > 0.01f)
+	{
+		isMoving = true;
+
+		const glm::vec3 difference = targetTrans - trans;
+
+		// const glm::vec3 move =
+		// 	distance(difference, glm::vec3()) > 0
+		// 	? std::min(difference * MOVEMENT_SPEED, MAX_MOVEMENT_SPEED)
+		// 	: std::max(difference * MOVEMENT_SPEED, -MAX_MOVEMENT_SPEED);
+
+		const bool largerThanMax = abs(distance(difference, glm::vec3())) > distance(MAX_MOVEMENT_SPEED, glm::vec3());
+		const glm::vec3 move = largerThanMax
+			                       ? distance(difference, glm::vec3()) > 0
+				                         ? MAX_MOVEMENT_SPEED
+				                         : -MAX_MOVEMENT_SPEED
+			                       : difference;
+
+		trans += move;
+	}
+	else if (isMoving)
+	{
+		isMoving = false;
+		trans = targetTrans;
 	}
 }
 
@@ -185,11 +179,28 @@ void ComputerController::changeRotationY(const float y)
 void ComputerController::changeRotationZ(const float z)
 {
 	targetZ += z;
+
+	if (targetZ > 180)
+	{
+		targetZ = 180 - (targetZ - 180);
+		targetZ *= -1;
+
+		angleZ = 180 - (angleZ - 180);
+		angleZ *= -1;
+	}
+	else if (targetZ < -180)
+	{
+		targetZ = -180 - (targetZ + 180);
+		targetZ *= -1;
+
+		angleZ = -180 - (angleZ + 180);
+		angleZ *= -1;
+	}
 }
 
 void ComputerController::changePosition(const glm::vec3 pos)
 {
-	translation += pos;
+	targetTrans += pos;
 }
 
 void ComputerController::UpdateRotation()
@@ -201,14 +212,13 @@ void ComputerController::UpdateRotation()
 
 void ComputerController::handleDraw(GLFWwindow* window)
 {
-	HandleKeys(window);
 	UpdateTargets();
 
 	if (isDrawing)
 	{
 		for (const auto& object : objects)
 		{
-			object.Draw(translation, rotate);
+			object.Draw(trans, rotate);
 		}
 	}
 }

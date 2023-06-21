@@ -31,6 +31,10 @@ void reset_position();
 int windowWidth = 700;
 int windowHeight = 700;
 
+clock_t lastDeltaTime = 0;
+clock_t fpsCounter = 0;
+int fps = 0;
+
 //temp rotate var
 glm::vec3 rotations = glm::vec3(0, 0, 0);
 glm::mat4 translate = glm::mat4(1.0f);
@@ -82,8 +86,23 @@ int main()
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
 	{
+		//Clock speed
+		const clock_t currentTime = clock();
+		const clock_t deltaTime = currentTime - lastDeltaTime;
+		lastDeltaTime = currentTime;
+
+		//FPS
+		fpsCounter += deltaTime;
+		fps++;
+		if (fpsCounter >= 1000)
+		{
+			std::cout << "FPS: " << fps << std::endl;
+			fps = 0;
+			fpsCounter = 0;
+		}
+
 		//Program cycle
-		HandUpdate();
+		// HandUpdate();
 		guiManager.Draw(window);
 
 		//glfw cycle

@@ -244,7 +244,7 @@ void GUIManager::drawCinematicViewControls()
 	// Draw the buttons
 	ImGui::SetCursorPos(ImVec2(x, padding));
 	while (ImGui::Button("Top", buttonSize))
-		controller.changeRotationX(-24);
+		controller.changeRotationX(24);
 
 	ImGui::SetCursorPos(ImVec2(windowSize.x - buttonSize.x - padding, y));
 	while (ImGui::Button("Right", buttonSize))
@@ -252,7 +252,7 @@ void GUIManager::drawCinematicViewControls()
 
 	ImGui::SetCursorPos(ImVec2(x, windowSize.y - buttonSize.y - padding));
 	while (ImGui::Button("Bottom", buttonSize))
-		controller.changeRotationX(24);
+		controller.changeRotationX(-24);
 
 	ImGui::SetCursorPos(ImVec2(padding, y));
 	while (ImGui::Button("Left", buttonSize))
