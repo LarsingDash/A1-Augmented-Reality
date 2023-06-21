@@ -80,7 +80,7 @@ int main()
 	Init();
 
 	//Create test object
-	// guiManager.controller.objects.emplace_back(objectDir, "Case");
+	//guiManager.controller.objects.emplace_back(objectDir, "Case");
 	// guiManager.controller.objects.emplace_back(objectDir, "CPU");
 	// guiManager.controller.objects.emplace_back(objectDir, "Fan");
 	// guiManager.controller.objects.emplace_back(objectDir, "GPU");
@@ -129,7 +129,7 @@ void Init()
 
 	//Camera position
 	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0, 0, 5),
+		glm::vec3(0, 0, 10),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	));
