@@ -94,26 +94,28 @@ void HandUpdate()
             SetCursorPos(cursorX, cursorY);
         }
 
-        //Left mouse click logic
+        // Left mouse click logic
         const bool isClicked = !fists.empty();
-        if (isClicked != lastIsClicked)
+        if (isClicked && !lastIsClicked)
         {
-            lastIsClicked = isClicked;
-            INPUT buffer;
+            // Perform left mouse button click action
+            std::cout << "Left mouse button clicked!" << std::endl;
 
-            if (isClicked)
-            {
-                cv::circle(frame, cv::Point(0, 0), 10, cv::Scalar(255, 0, 0), 2);
+            // Simulate a left mouse button press and release
+            INPUT inputs[2] = {};
+            inputs[0].type = inputs[1].type = INPUT_MOUSE;
+            inputs[0].mi.dwFlags = inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+            SendInput(2, inputs, sizeof(INPUT));
 
-                buffer.mi.dwFlags = (MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN);
-                SendInput(1, &buffer, sizeof(INPUT));
-            }
-            else
-            {
-                buffer.mi.dwFlags = (MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTUP);
-                SendInput(1, &buffer, sizeof(INPUT));
-            }
+            // Wait a short delay to simulate button press
+            Sleep(50);
+
+            inputs[0].mi.dwFlags = inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+            SendInput(2, inputs, sizeof(INPUT));
         }
+
+        lastIsClicked = isClicked;
+
     }
 
     cv::Mat flipped;
