@@ -506,7 +506,7 @@ void GuiManager::DrawAddPartButton()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.7f, 0.1f, 1.0f));
 	// Set button active color to a darker green
 
-	ImGui::Button("Add PC Part", ImVec2(250, 70));
+	ImGui::Button("Add PC Part", ImVec2(335, 230));
 
 	ImGui::PopStyleColor(3); // Pop the three style colors
 
