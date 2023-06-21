@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Storage::Storage(const std::string& name, const std::string& objectPath) : PcPart(name), objectPath(objectPath) {}
+Storage::Storage(const std::string& name, const std::string& objectPath, const int tier) : PcPart(name, tier), objectPath(objectPath) {}
 
 Storage::~Storage() {}
 

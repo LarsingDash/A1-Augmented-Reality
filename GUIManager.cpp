@@ -22,7 +22,8 @@ std::vector<Motherboard> mbuList;
 std::vector<RAM> ramList;
 std::vector<PSU> psuList;
 std::vector<PcCase> pcCaseList;
-std::vector<Storage> storageList;
+std::vector<Storage> ssdList;
+std::vector<Storage> hddList;
 std::vector<Fan> fanList;
 std::vector<PcPart*> pcParts;
 
@@ -31,7 +32,8 @@ GPU* pickedGPU = nullptr;
 PSU* pickedPSU = nullptr;
 RAM* pickedRAM = nullptr;
 Motherboard* pickedMotherboard = nullptr;
-Storage* pickedStorage = nullptr;
+Storage* pickedSSD = nullptr;
+Storage* pickedHDD = nullptr;
 Fan* pickedFan = nullptr;
 PcCase* pickedCase = nullptr;
 
@@ -51,37 +53,41 @@ void GUIManager::init()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	cpuList.push_back(CPU("Level 1 AMD CPU", CpuSocketType::AMD, "CPU"));
-	cpuList.push_back(CPU("Level 2 Intel CPU", CpuSocketType::INTEL, "path2"));
-	cpuList.push_back(CPU("Level 3 AMD CPU", CpuSocketType::AMD, "path3"));
+	cpuList.push_back(CPU("Level 1 AMD CPU", CpuSocketType::AMD, "CPU", 1));
+	cpuList.push_back(CPU("Level 2 Intel CPU", CpuSocketType::INTEL, "CPU", 2));
+	cpuList.push_back(CPU("Level 3 AMD CPU", CpuSocketType::AMD, "CPU", 3));
 
-	fanList.push_back(Fan("Level 1 FAN", "FAN"));
-	fanList.push_back(Fan("Level 2 FAN", "path2"));
-	fanList.push_back(Fan("Level 3 FAN", "path3"));
+	fanList.push_back(Fan("Level 1 FAN", "FAN", 1));
+	fanList.push_back(Fan("Level 2 FAN", "FAN", 2));
+	fanList.push_back(Fan("Level 3 FAN", "FAN", 3));
 
-	mbuList.push_back(Motherboard("Level 1 AMD MBD", CpuSocketType::AMD, RamSocketType::DDR3, "MB"));
-	mbuList.push_back(Motherboard("Level 2 AMD MBD", CpuSocketType::AMD, RamSocketType::DDR4, "path6"));
-	mbuList.push_back(Motherboard("Level 3 AMD MBD", CpuSocketType::INTEL, RamSocketType::DDR4, "path7"));
+	mbuList.push_back(Motherboard("Level 1 AMD MBD", CpuSocketType::AMD, RamSocketType::DDR3, "MB", 1));
+	mbuList.push_back(Motherboard("Level 2 AMD MBD", CpuSocketType::AMD, RamSocketType::DDR4, "MB", 2));
+	mbuList.push_back(Motherboard("Level 3 INTEL MBD", CpuSocketType::INTEL, RamSocketType::DDR4, "MB", 3));
 
-	gpuList.push_back(GPU("Level 1 GPU", "GPU"));
-	gpuList.push_back(GPU("Level 2 GPU", "path10"));
-	gpuList.push_back(GPU("Level 3 GPU", "path11"));
+	gpuList.push_back(GPU("Level 1 GPU", "GPU", 1));
+	gpuList.push_back(GPU("Level 2 GPU", "GPU", 2));
+	gpuList.push_back(GPU("Level 3 GPU", "GPU", 3));
 
-	ramList.push_back(RAM("Level 1 DDR3 RAM", RamSocketType::DDR3, "RAM"));
-	ramList.push_back(RAM("Level 2 DDR4 RAM", RamSocketType::DDR4, "path14"));
-	ramList.push_back(RAM("Level 3 DDR4 RAM", RamSocketType::DDR4, "path15"));
+	ramList.push_back(RAM("Level 1 DDR3 RAM", RamSocketType::DDR3, "RAM", 1));
+	ramList.push_back(RAM("Level 2 DDR4 RAM", RamSocketType::DDR4, "RAM", 2));
+	ramList.push_back(RAM("Level 3 DDR4 RAM", RamSocketType::DDR4, "RAM", 3));
 
-	psuList.push_back(PSU("Level 1 PSU", "PSU"));
-	psuList.push_back(PSU("Level 2 PSU", "path18"));
-	psuList.push_back(PSU("Level 3 PSU", "path19"));
+	psuList.push_back(PSU("Level 1 PSU", "PSU", 1));
+	psuList.push_back(PSU("Level 2 PSU", "PSU", 2));
+	psuList.push_back(PSU("Level 3 PSU", "PSU", 3));
 
-	pcCaseList.push_back(PcCase("Level 1 PC Case", "Case"));
-	pcCaseList.push_back(PcCase("Level 2 PC Case", "path22"));
-	pcCaseList.push_back(PcCase("Level 3 PC Case", "path23"));
+	pcCaseList.push_back(PcCase("Level 1 PC Case", "Case", 1));
+	pcCaseList.push_back(PcCase("Level 2 PC Case", "Case", 2));
+	pcCaseList.push_back(PcCase("Level 3 PC Case", "Case", 3));
 
-	storageList.push_back(Storage("Level 1 Storage", "SSD"));
-	storageList.push_back(Storage("Level 2 Storage", "path26"));
-	storageList.push_back(Storage("Level 3 Storage", "path27"));
+	ssdList.push_back(Storage("Level 1 SSD", "SSD", 1));
+	ssdList.push_back(Storage("Level 2 SSD", "SSD", 2));
+	ssdList.push_back(Storage("Level 3 SSD", "SSD", 3));
+
+	hddList.push_back(Storage("Level 1 HDD", "HDD", 1));
+	hddList.push_back(Storage("Level 2 HDD", "HDD", 2));
+	hddList.push_back(Storage("Level 3 HDD", "HDD", 3));
 }
 
 void GUIManager::Draw(GLFWwindow* window)
@@ -292,20 +298,23 @@ void GUIManager::drawCompatabilityInterface()
 	if (showCompatability)
 	{
 		if (pickedCPU == nullptr)
-			ImGui::TextWrapped("CPU ISSUE: No CPU selected, this is the heart of the computer and it wont function without it.");
-			ImGui::Spacing();
+			ImGui::TextWrapped(
+				"CPU ISSUE: No CPU selected, this is the heart of the computer and it wont function without it.");
+		ImGui::Spacing();
 
 		if (pickedFan == nullptr)
-			ImGui::TextWrapped("FAN ISSUE: No fan selected, your pc will boot without one but it will quickly crash due to overheating which will greatly wear down your CPU");
-			ImGui::Spacing();
+			ImGui::TextWrapped(
+				"FAN ISSUE: No fan selected, your pc will boot without one but it will quickly crash due to overheating which will greatly wear down your CPU");
+		ImGui::Spacing();
 
 		if (pickedGPU == nullptr)
-			ImGui::TextWrapped("GPU TIP: No GPU selected. This is definitely not essential but you might want to consider picking one if you are planning on gaming");
-			ImGui::Spacing();
+			ImGui::TextWrapped(
+				"GPU TIP: No GPU selected. This is definitely not essential but you might want to consider picking one if you are planning on gaming");
+		ImGui::Spacing();
 
 		if (pickedRAM == nullptr)
 			ImGui::TextWrapped("RAM ISSUE: No RAM selected. Memory is an essential component for a pc");
-			ImGui::Spacing();
+		ImGui::Spacing();
 
 		if (pickedMotherboard != nullptr)
 		{
@@ -313,7 +322,8 @@ void GUIManager::drawCompatabilityInterface()
 			{
 				if (pickedRAM->socketType != pickedMotherboard->ramSocketType)
 				{
-					ImGui::TextWrapped("INCOMPATIBILITY ISSUE: You have picked incompatible sockets for your RAM and motherboard. You're trying to match DDR3 with DDR4. Make sure the RAM types match");
+					ImGui::TextWrapped(
+						"INCOMPATIBILITY ISSUE: You have picked incompatible sockets for your RAM and motherboard. You're trying to match DDR3 with DDR4. Make sure the RAM types match");
 					ImGui::Spacing();
 				}
 			}
@@ -321,26 +331,35 @@ void GUIManager::drawCompatabilityInterface()
 			{
 				if (pickedCPU->socketType != pickedMotherboard->socketType)
 				{
-					ImGui::TextWrapped("INCOMPATIBILITY ISSUE: You have picked incompatible sockets for your CPU and motherboard. You're trying to match and AMD socket with an Intel socket. Make sure the CPU socket types match");
+					ImGui::TextWrapped(
+						"INCOMPATIBILITY ISSUE: You have picked incompatible sockets for your CPU and motherboard. You're trying to match and AMD socket with an Intel socket. Make sure the CPU socket types match");
 					ImGui::Spacing();
 				}
 			}
 		}
 		else
-			ImGui::TextWrapped("MOTHERBOARD ISSUE: No motherboard selected, this part is essential for allowing communication between your selected pc parts");
-			ImGui::Spacing();
+			ImGui::TextWrapped(
+				"MOTHERBOARD ISSUE: No motherboard selected, this part is essential for allowing communication between your selected pc parts");
+		ImGui::Spacing();
 
 		if (pickedPSU == nullptr)
 			ImGui::TextWrapped("PSU ISSUE: No PSU selected, this part is necessary to power your components.");
-			ImGui::Spacing();
+		ImGui::Spacing();
 
 		if (pickedCase == nullptr)
-			ImGui::TextWrapped("CASE WARNING: No case is selected. You need a case to safely house and ventilate your components");
-			ImGui::Spacing();
+			ImGui::TextWrapped(
+				"CASE WARNING: No case is selected. You need a case to safely house and ventilate your components");
+		ImGui::Spacing();
 
-		if (pickedStorage == nullptr)
-			ImGui::TextWrapped("STORAGE ISSUE: No storage selected. You storage to be able to boot an operating system");
-			ImGui::Spacing();
+		if (pickedSSD == nullptr)
+			ImGui::TextWrapped(
+				"SSD ISSUE: No ssd selected. You storage to be able to boot an operating system");
+		ImGui::Spacing();
+
+		if (pickedHDD == nullptr)
+			ImGui::TextWrapped(
+				"HDD ISSUE: No hdd selected. You storage to be able to boot an operating system");
+		ImGui::Spacing();
 	}
 }
 
@@ -371,9 +390,11 @@ void GUIManager::drawPartSelectionList()
 	ImGui::Text("Pc cases");
 	drawPartList(pcCaseList, PC_CASE_TYPE);
 
-	ImGui::Text("Storage");
-	drawPartList(storageList, STORAGE_TYPE);
+	ImGui::Text("SSD");
+	drawPartList(ssdList, SSD_TYPE);
 
+	ImGui::Text("HDD");
+	drawPartList(hddList, HDD_TYPE);
 
 	drawAddPartButton();
 
@@ -437,7 +458,7 @@ void GUIManager::setPcObjects()
 	for (const PcPart* part : pcParts)
 	{
 		std::string objectPath = part->getObjectPath();
-		controller.objects.emplace_back(directory, objectPath);
+		controller.objects.emplace_back(directory, objectPath, part->getTier());
 	}
 }
 
@@ -537,15 +558,25 @@ void GUIManager::drawAddPartButton()
 				pickedPSU = &psuList[payload_n];
 				pcParts.push_back(&psuList[payload_n]);
 			}
-			else if (partType == STORAGE_TYPE)
+			else if (partType == SSD_TYPE)
 			{
 				std::cout << "Storage type received: " << partType << std::endl;
-				if (pickedStorage != nullptr)
+				if (pickedSSD != nullptr)
 				{
-					pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), pickedStorage), pcParts.end());
+					pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), pickedSSD), pcParts.end());
 				}
-				pickedStorage = &storageList[payload_n];
-				pcParts.push_back(&storageList[payload_n]);
+				pickedSSD = &ssdList[payload_n];
+				pcParts.push_back(&ssdList[payload_n]);
+			}
+			else if (partType == HDD_TYPE)
+			{
+				std::cout << "Storage type received: " << partType << std::endl;
+				if (pickedHDD != nullptr)
+				{
+					pcParts.erase(std::remove(pcParts.begin(), pcParts.end(), pickedHDD), pcParts.end());
+				}
+				pickedHDD = &hddList[payload_n];
+				pcParts.push_back(&hddList[payload_n]);
 			}
 			setPcObjects();
 		}
@@ -578,7 +609,7 @@ void GUIManager::drawDeletePartButton()
 			{
 				if (cpu.getName() == partName)
 				{
-					pickedCPU = nullptr;  // Set pickedCPU to nullptr
+					pickedCPU = nullptr; // Set pickedCPU to nullptr
 					break;
 				}
 			}
@@ -587,7 +618,7 @@ void GUIManager::drawDeletePartButton()
 			{
 				if (fan.getName() == partName)
 				{
-					pickedFan = nullptr;  // Set pickedFan to nullptr
+					pickedFan = nullptr; // Set pickedFan to nullptr
 					break;
 				}
 			}
@@ -596,7 +627,7 @@ void GUIManager::drawDeletePartButton()
 			{
 				if (ram.getName() == partName)
 				{
-					pickedRAM = nullptr;  // Set pickedRAM to nullptr
+					pickedRAM = nullptr; // Set pickedRAM to nullptr
 					break;
 				}
 			}
@@ -605,7 +636,7 @@ void GUIManager::drawDeletePartButton()
 			{
 				if (gpu.getName() == partName)
 				{
-					pickedGPU = nullptr;  // Set pickedGPU to nullptr
+					pickedGPU = nullptr; // Set pickedGPU to nullptr
 					break;
 				}
 			}
@@ -614,7 +645,7 @@ void GUIManager::drawDeletePartButton()
 			{
 				if (mbu.getName() == partName)
 				{
-					pickedMotherboard = nullptr;  // Set pickedMotherboard to nullptr
+					pickedMotherboard = nullptr; // Set pickedMotherboard to nullptr
 					break;
 				}
 			}
@@ -623,7 +654,7 @@ void GUIManager::drawDeletePartButton()
 			{
 				if (psu.getName() == partName)
 				{
-					pickedPSU = nullptr;  // Set pickedPSU to nullptr
+					pickedPSU = nullptr; // Set pickedPSU to nullptr
 					break;
 				}
 			}
@@ -632,16 +663,24 @@ void GUIManager::drawDeletePartButton()
 			{
 				if (pcCase.getName() == partName)
 				{
-					pickedCase = nullptr;  // Set pickedCase to nullptr
+					pickedCase = nullptr; // Set pickedCase to nullptr
 					break;
 				}
 			}
 
-			for (Storage& storage : storageList)
+			for (Storage& ssd : ssdList)
 			{
-				if (storage.getName() == partName)
+				if (ssd.getName() == partName)
 				{
-					pickedStorage = nullptr;  // Set pickedStorage to nullptr
+					pickedSSD = nullptr; // Set pickedStorage to nullptr
+					break;
+				}
+			}
+			for (Storage& hdd : hddList)
+			{
+				if (hdd.getName() == partName)
+				{
+					pickedHDD = nullptr; // Set pickedStorage to nullptr
 					break;
 				}
 			}

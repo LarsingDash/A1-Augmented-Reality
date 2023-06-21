@@ -10,7 +10,7 @@ private:
     std::string objectPath;
 
 public:
-    PcCase(const std::string& name, const std::string& objectPath);
+    PcCase(const std::string& name, const std::string& objectPath, const int tier);
     ~PcCase();
 
     void addComponent(PcPart* component);

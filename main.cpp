@@ -94,7 +94,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		//Program cycle
-		HandUpdate();
+		// HandUpdate();
 		guiManager.Draw(window);
 
 		//glfw cycle
@@ -103,7 +103,7 @@ int main()
 	}
 
 	// Termination
-	HandTeardown();
+	// HandTeardown();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
@@ -117,7 +117,7 @@ void Init()
 	tigl::init();
 	glewInit();
 
-	HandInit(windowWidth, windowHeight);
+	// HandInit(windowWidth, windowHeight);
 
 	//Viewport
 	tigl::shader->setProjectionMatrix(glm::perspective(

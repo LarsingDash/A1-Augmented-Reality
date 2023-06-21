@@ -6,7 +6,7 @@
 
 class PSU : public PcPart {
 public:
-    PSU(const std::string& name, const std::string& objectPath);
+    PSU(const std::string& name, const std::string& objectPath, const int tier);
     ~PSU();
 
     std::string getName() const override;

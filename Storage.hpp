@@ -6,7 +6,7 @@
 
 class Storage : public PcPart {
 public:
-    Storage(const std::string& name, const std::string& objectPath);
+    Storage(const std::string& name, const std::string& objectPath, const int tier);
     ~Storage();
 
     std::string getName() const override;
