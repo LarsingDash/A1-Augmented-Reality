@@ -31,6 +31,10 @@ void reset_position();
 int windowWidth = 700;
 int windowHeight = 700;
 
+clock_t lastDeltaTime = 0;
+clock_t fpsCounter = 0;
+int fps = 0;
+
 //temp rotate var
 glm::vec3 rotations = glm::vec3(0, 0, 0);
 glm::mat4 translate = glm::mat4(1.0f);
@@ -57,6 +61,7 @@ int main()
 	glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &windowWidth, &windowHeight);
 
 	window = glfwCreateWindow(windowWidth, windowHeight, "A1 Augmented Reality", monitor, nullptr);
+	glfwSwapInterval(1);
 
 	//Check if the window was successfully made
 	if (!window)
@@ -73,22 +78,11 @@ int main()
 			glfwSetWindowShouldClose(window, true);
 	});
 
-	GUIManager guiManager = GUIManager(window, controller);
+	GUIManager guiManager = GUIManager(window, controller, objectDir);
 	guiManager.init();
 
 	//Init
 	Init();
-
-	//Create test object
-	guiManager.controller.objects.emplace_back(objectDir, "Case");
-	guiManager.controller.objects.emplace_back(objectDir, "CPU");
-	guiManager.controller.objects.emplace_back(objectDir, "Fan");
-	guiManager.controller.objects.emplace_back(objectDir, "GPU");
-	guiManager.controller.objects.emplace_back(objectDir, "HDD");
-	guiManager.controller.objects.emplace_back(objectDir, "MB");
-	guiManager.controller.objects.emplace_back(objectDir, "PSU");
-	guiManager.controller.objects.emplace_back(objectDir, "RAM");
-	guiManager.controller.objects.emplace_back(objectDir, "SSD");
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window))
@@ -129,7 +123,7 @@ void Init()
 
 	//Camera position
 	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0, 0, 5),
+		glm::vec3(0, 0, 10),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	));

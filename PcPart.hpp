@@ -7,15 +7,20 @@
 class PcPart {
 protected:
   std::string name;
+  int tier;
   glm::vec3 position;
+  std::string objectPath;
 
 public:
-  PcPart(const std::string& name);
+  PcPart(const std::string& name, int tier);
   virtual ~PcPart();
 
   // Getter and setter for position
   void setPosition(const glm::vec3& pos);
+  virtual std::string getObjectPath() const = 0;
+
   glm::vec3 getPosition() const;
+  int getTier() const;
   virtual std::string getName() const = 0;
   virtual void display() const = 0;
 };

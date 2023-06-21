@@ -11,13 +11,13 @@ enum class CpuSocketType {
 
 class CPU : public PcPart {
 private:
-	CpuSocketType socketType;
-
+	std::string objectPath;
 public:
-	CPU(const std::string& name, CpuSocketType socketType);
-	~CPU();
-	std::string getName() const override;
-	void display() const override;
+    CpuSocketType socketType;
+    CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath, const int tier);
+    ~CPU();
+    std::string getName() const override;
+    void display() const override;
+    std::string getObjectPath() const override; 
 };
-
 #endif  

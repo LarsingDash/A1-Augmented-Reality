@@ -1,13 +1,13 @@
-#ifndef STORAGE_HPP
-#define STORAGE_HPP
+#ifndef FAN_FPP
+#define FAN_HPP
 
 #include "PcPart.hpp"
 #include <string>
 
-class Storage : public PcPart {
+class Fan : public PcPart {
 public:
-    Storage(const std::string& name, const std::string& objectPath, const int tier);
-    ~Storage();
+    Fan(const std::string& name, const std::string& objectPath, const int tier);
+    ~Fan();
 
     std::string getName() const override;
     std::string getObjectPath() const override;
@@ -18,4 +18,4 @@ private:
 
 };
 
-#endif  // STORAGE_HPP
+#endif  

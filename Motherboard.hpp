@@ -3,25 +3,27 @@
 
 #include <vector>
 #include "PcPart.hpp"
+#include "RAM.hpp"
+#include "CPU.hpp"
 
-enum class CpuSocketType {
-	INTEL,
-	AMD
-};
 
 class Motherboard : public PcPart {
 private:
-	std::vector<PcPart*> childComponents;
-	CpuSocketType socketType;
+    std::vector<PcPart*> childComponents;
+    std::string objectPath;
 
 public:
-	Motherboard(const std::string& name, CpuSocketType socketType);
-	~Motherboard();
+    CpuSocketType socketType;
+    RamSocketType ramSocketType;
+    Motherboard(const std::string& name, CpuSocketType socketType, RamSocketType ramSocketType, const std::string& objectPath, const int tier);
+    ~Motherboard();
 
-	void addComponent(PcPart* component);
-	void removeComponent(PcPart* component);
+    void addComponent(PcPart* component);
+    void removeComponent(PcPart* component);
+    std::string getObjectPath() const override;
 
-	void display() const override;
+    void display() const override;
+    std::string getName() const override;
 };
 
-#endif 
+#endif  // MOTHERBOARD_HPP

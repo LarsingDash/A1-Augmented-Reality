@@ -2,12 +2,20 @@
 
 #include <iostream>
 
-PcCase::PcCase(const std::string& name) : PcPart(name) {}
+PcCase::PcCase(const std::string& name, const std::string& objectPath, const int tier) : PcPart(name, tier), objectPath(objectPath) {}
 
 PcCase::~PcCase() {
     for (PcPart* component : childComponents) {
         delete component;
     }
+}
+
+std::string PcCase::getName() const {
+    return name;
+}
+
+std::string PcCase::getObjectPath() const {
+    return objectPath;
 }
 
 void PcCase::addComponent(PcPart* component) {
