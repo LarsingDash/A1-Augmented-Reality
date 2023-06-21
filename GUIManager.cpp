@@ -390,12 +390,14 @@ void GUIManager::drawBuilderTopRight()
 	{
 		isBuildMode = true;
 		isCinematicMode = false;
+		controller.stopCinematicMode();
 	}
 
 	if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
 	{
 		isCinematicMode = true;
 		isBuildMode = false;
+		controller.startCinematicMode();
 	}
 
 

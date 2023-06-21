@@ -8,11 +8,13 @@
 class ComputerController
 {
 public:
+	bool cin_mode = false;
 	ComputerController(bool isDrawing);
 	void handleDraw(GLFWwindow* window);
 	void update_position(GLFWwindow* window);
 	void reset_position();
-
+	void startCinematicMode();
+	void stopCinematicMode();
 	void setIsDrawing(bool isDrawing);
 	std::vector<GameObject> objects;
 
