@@ -141,7 +141,7 @@ void GuiManager::DrawMenuScreen()
 
 	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
-	if (ImGui::Button("PC Builder", ImVec2(150, 30)))
+	if (ImGui::Button("PC Builder", ImVec2(150, 50)))
 	{
 		showMenuScreen = false;
 		showTutorialScreen = false;
@@ -151,7 +151,7 @@ void GuiManager::DrawMenuScreen()
 	}
 	ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 150.0f) * 0.5f);
 
-	if (ImGui::Button("Tutorial", ImVec2(150, 30)))
+	if (ImGui::Button("Tutorial", ImVec2(150, 50)))
 	{
 		showMenuScreen = false;
 		showTutorialScreen = true;
@@ -436,14 +436,14 @@ void GuiManager::DrawBuilderTopRight()
 	ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 400.0f, 0.0f));
 	ImGui::Begin("Navigation Buttons", nullptr, ImGuiWindowFlags_NoTitleBar);
 
-	if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+	if (ImGui::Button("Build Mode", ImVec2(ImGui::GetItemRectSize().x, 40.0f)))
 	{
 		isBuildMode = true;
 		isCinematicMode = false;
 		controller.SetCinematicMode(false);
 	}
 
-	if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+	if (ImGui::Button("Cinematic Mode", ImVec2(ImGui::GetItemRectSize().x, 40.0f)))
 	{
 		isCinematicMode = true;
 		isBuildMode = false;
@@ -451,11 +451,11 @@ void GuiManager::DrawBuilderTopRight()
 	}
 
 
-	if (ImGui::Button("DRAW NEW OBJECTS", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+	if (ImGui::Button("Show pc", ImVec2(ImGui::GetItemRectSize().x, 40.0f)))
 	{
 		SetPcObjects();
 	}
-	if (ImGui::Button("CLEAR OBJECTS", ImVec2(ImGui::GetItemRectSize().x, 25.0f)))
+	if (ImGui::Button("Hide pc", ImVec2(ImGui::GetItemRectSize().x, 40.0f)))
 	{
 		ClearPcObjects();
 	}
@@ -506,7 +506,7 @@ void GuiManager::DrawAddPartButton()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.7f, 0.1f, 1.0f));
 	// Set button active color to a darker green
 
-	ImGui::Button("Add PC Part", ImVec2(250, 40));
+	ImGui::Button("Add PC Part", ImVec2(250, 70));
 
 	ImGui::PopStyleColor(3); // Pop the three style colors
 
@@ -623,7 +623,7 @@ void GuiManager::DrawDeletePartButton()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f));
 	// Set button active color to a darker red
 
-	if (ImGui::Button("Delete Part", ImVec2(250, 40)))
+	if (ImGui::Button("Delete Part", ImVec2(250, 70)))
 	{
 	}
 
@@ -730,7 +730,7 @@ void GuiManager::DrawPartList(const std::vector<T>& partsList, int part)
 	for (int n = 0; n < partsList.size(); n++)
 	{
 		ImGui::PushID(n);
-		if (ImGui::Button(partsList[n].GetName().c_str(), ImVec2(110, 40)));
+		if (ImGui::Button(partsList[n].GetName().c_str(), ImVec2(110, 65)));
 
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
