@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-CPU::CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath) : PcPart(name), socketType(socketType), objectPath(objectPath) {}
+CPU::CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath, const int tier) : PcPart(name, tier), socketType(socketType), objectPath(objectPath) {}
 
 CPU::~CPU() {}
 std::string CPU::getName() const{

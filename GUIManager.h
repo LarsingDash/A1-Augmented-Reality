@@ -21,7 +21,8 @@ enum PartType
     RAM_TYPE,
     PC_CASE_TYPE,
     PSU_TYPE,
-    STORAGE_TYPE,
+    SSD_TYPE,
+    HDD_TYPE,
     MBU_TYPE,
     FAN_TYPE
 };

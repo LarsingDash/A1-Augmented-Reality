@@ -15,7 +15,7 @@ private:
 public:
     CpuSocketType socketType;
     RamSocketType ramSocketType;
-    Motherboard(const std::string& name, CpuSocketType socketType, RamSocketType ramSocketType, const std::string& objectPath);
+    Motherboard(const std::string& name, CpuSocketType socketType, RamSocketType ramSocketType, const std::string& objectPath, const int tier);
     ~Motherboard();
 
     void addComponent(PcPart* component);

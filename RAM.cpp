@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-RAM::RAM(const std::string& name, RamSocketType socketType, const std::string& objectPath)
-    : PcPart(name), socketType(socketType), objectPath(objectPath) {}
+RAM::RAM(const std::string& name, RamSocketType socketType, const std::string& objectPath, const int tier)
+    : PcPart(name, tier), socketType(socketType), objectPath(objectPath) {}
 
 RAM::~RAM() {}
 

@@ -42,13 +42,13 @@ protected:
 public:
 	GameObject() = default;
 	explicit GameObject(glm::vec3 trans);
-	GameObject(const std::string& dir, const std::string& fileName);
+	GameObject(const std::string& dir, const std::string& fileName, const int tier);
 	~GameObject(void);
 
 	void Draw(const glm::vec3& position, const glm::mat4& rotation) const;
 
 	//Object loader
-	void LoadObjectFile(const std::string& dir, const std::string& fileName);
+	void LoadObjectFile(const std::string& dir, const std::string& fileName, const int tier);
 
 	//String extension methods
 	std::string Replace(std::string& str, const std::string& toReplace, const std::string& replacement);

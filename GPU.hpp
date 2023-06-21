@@ -6,7 +6,7 @@
 
 class GPU : public PcPart {
 public:
-    GPU(const std::string& name, const std::string& objectPath);
+    GPU(const std::string& name, const std::string& objectPath, const int tier);
     ~GPU();
 
     std::string getName() const override;

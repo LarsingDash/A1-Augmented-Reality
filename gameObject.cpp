@@ -15,9 +15,9 @@ GameObject::GameObject(const glm::vec3 trans)
 	transform = trans;
 }
 
-GameObject::GameObject(const std::string& dir, const std::string& fileName)
+GameObject::GameObject(const std::string& dir, const std::string& fileName, const int tier)
 {
-	LoadObjectFile(dir, fileName);
+	LoadObjectFile(dir, fileName, tier);
 }
 
 //Destructor
@@ -54,9 +54,9 @@ void GameObject::Draw(const glm::vec3& position, const glm::mat4& rotation) cons
 }
 
 //Load an object file with the specified directory and filename
-void GameObject::LoadObjectFile(const std::string& dir, const std::string& fileName)
+void GameObject::LoadObjectFile(const std::string& dir, const std::string& fileName, const int tier)
 {
-	std::string fullDir = dir + "/objects/" + fileName + "/" + fileName + ".obj";
+	std::string fullDir = dir + "/objects/" + fileName + "/" + "TIER" + std::to_string(tier) + "/" + fileName + ".obj";
 
 	//Clean fileName
 	std::cout << "Loading " << fullDir << std::endl;

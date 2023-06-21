@@ -14,7 +14,7 @@ private:
 	std::string objectPath;
 public:
     CpuSocketType socketType;
-    CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath);
+    CPU(const std::string& name, CpuSocketType socketType, const std::string& objectPath, const int tier);
     ~CPU();
     std::string getName() const override;
     void display() const override;

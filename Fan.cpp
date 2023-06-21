@@ -4,7 +4,7 @@
 
 #include "PcPart.hpp"
 
-Fan::Fan(const std::string& name, const std::string& objectPath) : ::PcPart(name), objectPath(objectPath) {}
+Fan::Fan(const std::string& name, const std::string& objectPath, const int tier) : ::PcPart(name, tier), objectPath(objectPath) {}
 
 Fan::~Fan() {}
 

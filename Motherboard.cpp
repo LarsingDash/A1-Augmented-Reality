@@ -4,8 +4,8 @@
 
 #include "RAM.hpp"
 
-Motherboard::Motherboard(const std::string& name, CpuSocketType socketType, RamSocketType ramSocketType, const std::string& objectPath)
-    : PcPart(name), socketType(socketType), ramSocketType(ramSocketType), objectPath(objectPath) {}
+Motherboard::Motherboard(const std::string& name, CpuSocketType socketType, RamSocketType ramSocketType, const std::string& objectPath, const int tier)
+    : PcPart(name, tier), socketType(socketType), ramSocketType(ramSocketType), objectPath(objectPath) {}
 
 Motherboard::~Motherboard() {
     for (PcPart* component : childComponents) {

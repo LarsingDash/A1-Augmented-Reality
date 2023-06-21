@@ -1,6 +1,6 @@
 #include "PcPart.hpp"
 
-PcPart::PcPart(const std::string& name) : name(name), position(glm::vec3(0.0f)) {}
+PcPart::PcPart(const std::string& name, const int tier) : name(name), tier(tier), position(glm::vec3(0.0f)) {}
 
 PcPart::~PcPart() {}
 
@@ -12,4 +12,7 @@ glm::vec3 PcPart::getPosition() const {
 	return position;
 }
 
+int PcPart::getTier() const {
+	return tier;
+}
 

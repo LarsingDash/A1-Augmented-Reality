@@ -6,7 +6,7 @@
 
 class Fan : public PcPart {
 public:
-    Fan(const std::string& name, const std::string& objectPath);
+    Fan(const std::string& name, const std::string& objectPath, const int tier);
     ~Fan();
 
     std::string getName() const override;

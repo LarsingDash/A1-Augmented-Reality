@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-GPU::GPU(const std::string& name, const std::string& objectPath) : PcPart(name), objectPath(objectPath) {}
+GPU::GPU(const std::string& name, const std::string& objectPath, const int tier) : PcPart(name, tier), objectPath(objectPath) {}
 
 GPU::~GPU() {}
 
